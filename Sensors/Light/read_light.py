@@ -5,7 +5,7 @@ from platform_defs import *
 
 from machine import Pin, I2C
 from esp8266_i2c_lcd import I2cLcd
-from tsl25x1 import tsl25x1_sensor #, TSL2561, Tsl2591, read_tsl25x1
+from Light.tsl25x1 import tsl25x1_sensor #, TSL2561, Tsl2591, read_tsl25x1
 from time import sleep_ms
 
 # -------------------------------------------------------------------------------

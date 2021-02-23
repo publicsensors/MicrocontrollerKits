@@ -16,11 +16,18 @@ def main():
     global sensor # use a global variable to fix global vs. local namespace issues
     activeNames, activeFuncs, sensors =  [[] for i in range(3)]  # Lists for when we are going to use multiple sensors
     sensorFuncs = {'light': 'light', 'distance': 'dist', 'temperature': 'temp', 'GPS': 'GPS'}
-    for sensr in ['GPS','distance','light','temperature']: # lets try talking to all the sensors
+    sensorDirs = {'light': 'Light', 'distance': 'Acoustic', 'temperature': 'Temperature', 'GPS': 'GPS'}
+    for sensr in ['temperature','light','distance','GPS']: # lets try talking to all the sensors
+    #for sensr in ['GPS','distance','light','temperature']: # lets try talking to all the sensors
             try:
                 activeName = sensr
                 activeFunc = sensorFuncs[sensr]
-                exec('import read_'+activeFunc)
+                activeDir = sensorDirs[sensr]
+                #print('from .',activeDir+' import read_'+activeFunc)
+                #exec('from .',activeDir+' import read_'+activeFunc)
+                print('from %s import read_%s' % (activeDir,activeFunc))
+                exec('from %s import read_%s' % (activeDir,activeFunc))
+                #exec('import read_'+activeFunc)
                 sensor = eval('read_'+activeFunc+'.read_'+activeFunc+'()')
                 sleep(1)
                 print('success: queuing sensor driver ',activeFunc)
@@ -36,11 +43,22 @@ def main():
                 print('Error: sensor driver ',activeFunc,' was requested but failed to load')
 
     if asFlag ==1:
+        print('activeNames = ',activeNames)
+        print('activeFuncs = ',activeFuncs)
+        print('sensors = ',sensors)
+        print('activeNames = ',activeNames)
         activeList = [s for s in [item for item in dir(active_sensors) if not item.startswith("__")] if eval('active_sensors.'+s) == 1]
-        activeNamesMeasure = [k for k in activeList if k in (activeNames and activeList)] # check which from the active list work
-        activeIndex = [activeNames.index(k) for k in activeNamesMeasure] # get the index of the active & good sensors
+        print('activeList = ',activeList)
+        #activeNamesMeasure = [k for k in activeList if k in (activeNames and activeList)] # check which from the active list work
+        activeNamesMeasure = [k for k in activeList if ((k in activeNames) and (k in activeList))]
+        print('activeNamesMeasure = ',activeNamesMeasure)
+        activeIndex = [activeNamesMeasure.index(k) for k in activeNames] # get the index of the active & good sensors
+        #activeIndex = [activeNames.index(k) for k in activeNamesMeasure] # get the index of the active & good sensors
+        print('activeIndex = ',activeIndex)
         activeFuncs = [activeFuncs[k] for k in activeIndex] # use the index to get the good and active funcs
+        print('activeFuncs = ',activeFuncs)
         sensors = [sensors[k] for k in activeIndex] # get the good and active sensor objects
+        print('sensors = ',sensors)
     else: # if no active_sensors, use all the sensors found and the original lists as above
         activeNamesMeasure = activeNames
     try:

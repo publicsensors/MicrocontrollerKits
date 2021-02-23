@@ -5,7 +5,7 @@ from platform_defs import *
 
 from machine import Pin, I2C
 from esp8266_i2c_lcd import I2cLcd
-import hcsr04
+from Acoustic import hcsr04
 from time import sleep_ms
 
 # -------------------------------------------------------------------------------

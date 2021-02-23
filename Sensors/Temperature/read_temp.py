@@ -6,7 +6,7 @@ from platform_defs import *
 from machine import Pin, I2C
 from esp8266_i2c_lcd import I2cLcd
 from onewire import OneWire
-from ds18x20 import DS18X20
+from Temperature.ds18x20 import DS18X20
 from time import sleep_ms
 
 

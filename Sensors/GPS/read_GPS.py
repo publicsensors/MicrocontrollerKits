@@ -5,7 +5,7 @@ from platform_defs import *
 
 from machine import Pin, I2C
 from esp8266_i2c_lcd import I2cLcd
-from micropyGPS import MicropyGPS
+from GPS.micropyGPS import MicropyGPS
 from time import sleep_ms
 
 

@@ -15,16 +15,21 @@ except:
 '''
 
 from sys import print_exception
-from machine import I2C
+from machine import I2C, RTC
 from time import sleep
 from esp8266_i2c_lcd import I2cLcd
 
-from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle
+from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle, start_log_files
 from SetUp.lcd_setup import lcd_init
 
 # Load default and user-specified parameters
 new_pars=sample_params()
 params.update(new_pars)
+
+#print('main: params = ',params)
+
+# Initialize Real Time Clock
+rtc=RTC()
 
 # Initialize I2C interface
 print('Initializing I2C interface...')
@@ -50,12 +55,16 @@ params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or Fal
 
 # Detect and initialize sensor drivers
 print('Detecting/initializing sensor drivers...')
-new_pars=sensor_select(i2c,lcd,params)
+new_pars=sensor_select(i2c,lcd,params,rtc)
 params.update(new_pars)
+
+# If auto-logging is enabled, initialize log files
+if params['auto_logging']:
+          start_log_files(i2c,lcd,params,rtc)
 
 # Launch sampling cycle
 print('Launching sampling cycle...')
-sample_cycle(i2c,lcd,params,button)
+sample_cycle(i2c,lcd,params,button,rtc)
 
 
 

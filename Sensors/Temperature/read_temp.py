@@ -15,10 +15,13 @@ from time import sleep_ms
 # -------------------------------------------------------------------------------
 class read_temp:
 
-    def __init__(self,lcd=False,i2c=None):
+    def __init__(self,lcd=False,i2c=None,rtc=None):
         p_pwr1.value(1)
         self.i2c=i2c
         self.lcd=lcd
+        self.rtc=rtc
+        self.logging=False
+        self.logfile=None
 
         ow = OneWire(p_DS18B20)   # Pin 13 is the data pin for the DS18B20
         self.ds = DS18X20(ow)        # Initialize a ds18b20 object
@@ -45,12 +48,6 @@ class read_temp:
     # Progression for obtaining temperature readings from the sensor
     # -------------------------------------------------------------------------------
     def print_temp(self):
-        #i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
-        #try:
-        #    lcd = I2cLcd(i2c, 0x27,2,16)
-        #    lcdF = 1
-        #except:
-        #    lcdF = 0
         self.ds.convert_temp()       # Obtain temp readings from each of those sensors
         sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
         print("Temp: ",self.ds.read_temp(self.roms[0]), ' C')

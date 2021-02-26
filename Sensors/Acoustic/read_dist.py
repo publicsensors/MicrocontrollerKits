@@ -13,10 +13,13 @@ from time import sleep_ms
 # -------------------------------------------------------------------------------
 class read_dist:
 
-    def __init__(self,lcd=False,i2c=None):
+    def __init__(self,lcd=False,i2c=None,rtc=None):
         p_pwr1.value(1)
         self.i2c=i2c
         self.lcd=lcd
+        self.rtc=rtc
+        self.logging=False
+        self.logfile=None
 
         self.sensor = hcsr04.HCSR04(trigger_pin = p_hcsr_trig, echo_pin = p_hcsr_echo, c = hcsr_c)
 

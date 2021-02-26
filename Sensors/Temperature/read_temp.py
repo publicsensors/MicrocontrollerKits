@@ -4,7 +4,7 @@
 from platform_defs import *
 
 from machine import Pin, I2C
-from esp8266_i2c_lcd import I2cLcd
+from SetUp.esp8266_i2c_lcd import I2cLcd
 from onewire import OneWire
 from Temperature.ds18x20 import DS18X20
 from time import sleep_ms
@@ -32,6 +32,8 @@ class read_temp:
         else:
             print('DS18B20 address: ',str(self.roms))
             try: # Try to take a measurement, return 1 if successful, 0 if not
+                self.ds.convert_temp()       # Obtain temp readings from each of those sensors
+                sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
                 self.ds.read_temp(self.roms[0])
                 return 1
             except:

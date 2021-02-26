@@ -9,6 +9,9 @@
 ##pyb.usb_mode('VCP+HID') # act as a serial device and a mouse
 # Import platform-specific definitions
 
+# LCD initialization now moved to lcd_setup.py, and called from main.py
+
+'''
 from platform_defs import *
 
 from machine import Pin, I2C
@@ -25,4 +28,4 @@ try:
     sleep(5)
 except:
     pass
-
+'''

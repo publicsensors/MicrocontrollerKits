@@ -1,7 +1,7 @@
 """Implements a HD44780 character LCD connected via PCF8574 on I2C.
    This was tested with: https://www.wemos.cc/product/d1-mini.html"""
 
-from lcd_api import LcdApi
+from SetUp.lcd_api import LcdApi
 from machine import I2C
 from time import sleep_ms
 

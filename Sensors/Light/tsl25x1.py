@@ -8,14 +8,18 @@
 #    A wrapper function, read_tsl25x1, returns lux, full spectrum and IR light readings
 #    from either or both tsl2561 and tsl2591 sensors attached to the I2C bus specified
 #    in platform_defs.py for the relevant microcontroller board.
+#
+#    Modified 20210225 by DG to accept an externally generated I2C object
 
-from platform_defs import p_I2Cscl_lbl,p_I2Csda_lbl,p_pwr1
+from platform_defs import p_pwr1
+#from platform_defs import p_I2Cscl_lbl,p_I2Csda_lbl,p_pwr1
 #import time
 from time import sleep, sleep_ms
 #import ustruct
 from struct import pack, unpack
-from machine import I2C, Pin
-from esp8266_i2c_lcd import I2cLcd
+from machine import Pin
+#from machine import I2C, Pin
+#from esp8266_i2c_lcd import I2cLcd
 from gc import collect
 collect()
 
@@ -70,8 +74,24 @@ GAIN_MAX = 0x30
 def _bytes_to_int(data):
     return data[0] + (data[1]<<8)
 
-from machine import I2C, Pin
+#from machine import I2C, Pin
 class SMBusEmulator:
+    __slots__ = ('i2c',)
+    def __init__(self, i2c=None):
+        self.i2c = i2c
+
+    def write_byte_data(self, addr, cmd, val):
+        buf = bytes([cmd, val])
+        self.i2c.writeto(addr, buf)
+
+    def read_word_data(self, addr, cmd):
+        assert cmd < 256
+        buf = bytes([cmd])
+        self.i2c.writeto(addr, buf)
+        data = self.i2c.readfrom(addr, 4)
+        return _bytes_to_int(data)
+'''
+class origSMBusEmulator:
     __slots__ = ('i2c',)
     #def __init__(self, scl_pinno=5, sda_pinno=4):
     def __init__(self, scl_pinno=p_I2Cscl_lbl, sda_pinno=p_I2Csda_lbl):
@@ -88,7 +108,7 @@ class SMBusEmulator:
         self.i2c.writeto(addr, buf)
         data = self.i2c.readfrom(addr, 4)
         return _bytes_to_int(data)
-
+'''
 SENSOR_ADDRESS=0x29
 
 class Tsl2591:
@@ -96,10 +116,12 @@ class Tsl2591:
                  self,
                  sensor_id=None,
                  integration=INTEGRATIONTIME_100MS,
-                 gain=GAIN_LOW
-                 ):
+                 gain=GAIN_LOW,
+                 i2c=None):
+        self.i2c=i2c
         self.sensor_id = sensor_id
-        self.bus = SMBusEmulator()
+        self.bus = SMBusEmulator(i2c=self.i2c)
+        #self.bus = SMBusEmulator()
         self.integration_time = integration
         self.gain = gain
         self.set_timing(self.integration_time)
@@ -411,20 +433,21 @@ class TSL2561CS(TSL2561):
 
 class tsl25x1_sensor:
 
-    def __init__(self,sensor_type=None):
+    def __init__(self,sensor_type=None,i2c=None):
         p_pwr1.value(1)
+        #if i2c==None:
+        #    i2c = I2C(scl=Pin(p_I2Cscl_lbl), sda=Pin(p_I2Csda_lbl),freq=50000)            
 
         self.type=None
         if sensor_type==None or sensor_type=='tsl2591' or sensor_type=='TSL2591':
             try:
-                self.sensor = Tsl2591()  # initialize tsl2591 sensor
+                self.sensor = Tsl2591(i2c=i2c)  # initialize tsl2591 sensor
                 self.type='tsl2591'
                 print('tsl2591 sensor initialized')
             except:
                 pass
         if self.type==None or sensor_type=='tsl2561' or sensor_type=='TSL2561':
             try:
-                i2c = I2C(scl=Pin(p_I2Cscl_lbl), sda=Pin(p_I2Csda_lbl),freq=50000)
                 self.sensor = TSL2561(i2c)
                 self.type='tsl2561'
                 print('tsl2561 sensor initialized')

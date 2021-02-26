@@ -60,10 +60,11 @@ def sensor_select(i2c,lcd,pars):
             module_name=pars['sensor_dirs'][sensr]+'.read_'+pars['sensor_func_suffices'][sensr]
             print('importing module_name = ',module_name)
             sensor_module=__import__(module_name) # import module, defining a class to support sensor ops
-            cmd='sensor_module.read_'+pars['sensor_func_suffices'][sensr]+'.read_'+pars['sensor_func_suffices'][sensr]+'()'
+            cmd='sensor_module.read_'+pars['sensor_func_suffices'][sensr]+'.read_'+pars['sensor_func_suffices'][sensr]+'(lcd=lcd,i2c=i2c)'
+            #cmd='sensor_module.read_'+pars['sensor_func_suffices'][sensr]+'.read_'+pars['sensor_func_suffices'][sensr]+'()'
             sensor_obj=eval(cmd)                     # instantiate an object of that class
             print('success: queuing sensor driver ',pars['sensor_func_suffices'][sensr])
-            print('dir(sensor_obj) = ',dir(sensor_obj))
+            #print('dir(sensor_obj) = ',dir(sensor_obj))
             cmd='sensor_obj.test_'+pars['sensor_func_suffices'][sensr]+'()'
             print('testing sensor driver with: ',cmd)
             sensor_test = eval(cmd)

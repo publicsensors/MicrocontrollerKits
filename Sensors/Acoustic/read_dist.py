@@ -13,9 +13,9 @@ from time import sleep_ms
 # -------------------------------------------------------------------------------
 class read_dist:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None,hcsr_c = 343):
+    def __init__(self,lcd=False,i2c=None,rtc=None,hcsr_c=343):
         """ Note: hcsr_c is the speed of sound for hcsr04; default is sos in air, 343
-    
+        """
         p_pwr1.value(1)
         self.i2c=i2c
         self.lcd=lcd

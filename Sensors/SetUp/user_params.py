@@ -12,7 +12,7 @@ params={'sensor_list':{'distance':0,
                             'light':1,
                              'GPS':0},
         'auto_logging':True,
-        'sample_max':1000,
-        'sample_interval':60
+        'sample_max':10,
+        'sample_interval':10
 }
 

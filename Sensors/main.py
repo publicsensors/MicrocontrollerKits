@@ -63,8 +63,10 @@ if params['auto_logging']:
           start_log_files(i2c,lcd,params,rtc)
 
 # Launch sampling cycle
-print('Launching sampling cycle...')
-sample_cycle(i2c,lcd,params,button,rtc)
+sample_loop=p_sample_loop.value()
+print('Launching sampling cycle with sample_loop = ',sample_loop)
+sample_cycle(params,button,sample_loop=sample_loop)
+#sample_cycle(i2c,lcd,params,button,rtc)
 
 
 

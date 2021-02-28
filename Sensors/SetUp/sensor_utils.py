@@ -83,23 +83,33 @@ def sensor_select(i2c,lcd,pars,rtc):
     print(new_pars)
     return new_pars
 
-def sample_cycle(i2c,lcd,pars,button,rtc):
+def sample_cycle(pars,button,sample_loop=1):
     global sensor_obj, sensor_module
-    i=0
-    while True:
-        first = button.value()
-        sleep(0.01)
-        second = button.value()
-        if first and not second:
-            sensr=pars['active_sensors'][i]
-            sensor_obj=pars['sensor_objs'][sensr]
-            cmd='sensor_obj.print_'+pars['sensor_func_suffices'][sensr]+'()'
-            print('printing sensor reading with: ',cmd)
-            exec(cmd)
-            i = (i+1) % len(pars['active_sensors'])
-        elif not first and second:
-            pass
-
+    if sample_loop==1: # take sensor readings when button is pressed
+        i=0
+        while True:
+            first = button.value()
+            sleep(0.01)
+            second = button.value()
+            if first and not second:
+                sensr=pars['active_sensors'][i]
+                sensor_obj=pars['sensor_objs'][sensr]
+                cmd='sensor_obj.print_'+pars['sensor_func_suffices'][sensr]+'()'
+                print('printing sensor reading with: ',cmd)
+                exec(cmd)
+                i = (i+1) % len(pars['active_sensors'])
+            elif not first and second:
+                pass
+    elif sample_loop==0: # launch sampling at preset intervals determined by sample_max, sample_interval in pars
+        for sample_count in range(pars['sample_max']):
+            for i in range(len(pars['active_sensors'])):
+                sensr=pars['active_sensors'][i]
+                sensor_obj=pars['sensor_objs'][sensr]
+                cmd='sensor_obj.print_'+pars['sensor_func_suffices'][sensr]+'()'
+                print('printing sensor reading with: ',cmd)
+                exec(cmd)
+            sleep(pars['sample_interval'])
+                                   
 
 def start_log_files(i2c,lcd,pars,rtc):
     global sensor_obj, sensor_module

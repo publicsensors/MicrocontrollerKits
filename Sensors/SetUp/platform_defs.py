@@ -26,6 +26,8 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     #pin definitions for hcsr04/jsn sensors
     p_hcsr_trig = 'D12'
     p_hcsr_echo = 'D11'
+    #pin definition to automatically enable sampling loop (0=loop, 1= wait for button press)
+    p_sample_loop=Pin('MISO', Pin.OUT,pull=Pin.PULL_UP)
 
 elif platform.find('ESP module with ESP8266')>-1:  # Board-specific definitions: ESP8266 Huzzah Feather/Breakout Board
     print('Loading definitions for ESP8266')

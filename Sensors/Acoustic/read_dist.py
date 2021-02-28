@@ -13,13 +13,19 @@ from time import sleep_ms
 # -------------------------------------------------------------------------------
 class read_dist:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None):
+    def __init__(self,lcd=False,i2c=None,rtc=None,hcsr_c = 343):
+        """ Note: hcsr_c is the speed of sound for hcsr04; default is sos in air, 343
+    
         p_pwr1.value(1)
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc
         self.logging=False
+        self.logfilename=None
         self.logfile=None
+        self.log_format=None
+        self.fmt_keys=None
+        self.sample_num=0
 
         self.sensor = hcsr04.HCSR04(trigger_pin = p_hcsr_trig, echo_pin = p_hcsr_echo, c = hcsr_c)
 
@@ -41,11 +47,32 @@ class read_dist:
     # -------------------------------------------------------------------------------
 
     def print_dist(self):
+        global dist
         dist = self.sensor.distance()
         print(str(dist)+" cm")
         if self.lcd is not False:
             self.lcd.clear()      # Sleep for 1 sec
             self.lcd.putstr(str(dist)+" cm")
+        if self.logging:
+            timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+            self.sample_num+=1
+            print(self.fmt_keys)
+            for s in self.fmt_keys:
+                print(s)
+                print(eval(s))
+            data=[self.sample_num]
+            data.extend([t for t in timestamp])
+            data.extend([eval(s) for s in self.fmt_keys])
+            print('data = ',data)
+            print('self.log_format=',self.log_format)
+            log_line=self.log_format % tuple(data)
+            print('log_line = ',log_line)
+            print('logging to filename: ',self.logfilename)
+            logfile=open(self.logfilename,'a')
+            logfile.write(log_line)
+            logfile.close()
+            sync()
+            sleep_ms(250)
 
     # -------------------------------------------------------------------------------
     # Get continuous distance measurements

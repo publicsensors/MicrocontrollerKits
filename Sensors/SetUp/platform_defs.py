@@ -26,8 +26,6 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     #pin definitions for hcsr04/jsn sensors
     p_hcsr_trig = 'D12'
     p_hcsr_echo = 'D11'
-    # speed of sound in air (default) for hcsr04
-    hcsr_c = 343
 
 elif platform.find('ESP module with ESP8266')>-1:  # Board-specific definitions: ESP8266 Huzzah Feather/Breakout Board
     print('Loading definitions for ESP8266')
@@ -54,8 +52,7 @@ elif platform.find('ESP module with ESP8266')>-1:  # Board-specific definitions:
     #pin definitions for hcsr04/jsn sensors
     p_hcsr_trig = 12
     p_hcsr_echo = 14
-    # speed of sound in air (default) for hcsr04
-    hcsr_c = 343
+    
 
 elif platform.find('PYBv1.1 with STM32F405RG')>-1:  # Board-specific definitions: Pyboard v1.1
 

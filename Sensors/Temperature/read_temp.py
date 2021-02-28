@@ -8,6 +8,7 @@ from SetUp.esp8266_i2c_lcd import I2cLcd
 from onewire import OneWire
 from Temperature.ds18x20 import DS18X20
 from time import sleep_ms
+from os import sync
 
 
 # -------------------------------------------------------------------------------
@@ -21,7 +22,11 @@ class read_temp:
         self.lcd=lcd
         self.rtc=rtc
         self.logging=False
+        self.logfilename=None
         self.logfile=None
+        self.log_format=None
+        self.fmt_keys=None
+        self.sample_num=0
 
         ow = OneWire(p_DS18B20)   # Pin 13 is the data pin for the DS18B20
         self.ds = DS18X20(ow)        # Initialize a ds18b20 object
@@ -48,12 +53,34 @@ class read_temp:
     # Progression for obtaining temperature readings from the sensor
     # -------------------------------------------------------------------------------
     def print_temp(self):
+        global T
         self.ds.convert_temp()       # Obtain temp readings from each of those sensors
         sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
-        print("Temp: ",self.ds.read_temp(self.roms[0]), ' C')
+        T = self.ds.read_temp(self.roms[0])
+        print("Temp: ",T, ' C')
         if self.lcd is not False:
             self.lcd.clear()      # Sleep for 1 sec
-            self.lcd.putstr("Temp: "+str(round(self.ds.read_temp(self.roms[0]),2))+" C")
+            self.lcd.putstr("Temp: "+str(round(T,2))+" C")
+        if self.logging:
+            timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+            self.sample_num+=1
+            print(self.fmt_keys)
+            for s in self.fmt_keys:
+                print(s)
+                print(eval(s))
+            data=[self.sample_num]
+            data.extend([t for t in timestamp])
+            data.extend([eval(s) for s in self.fmt_keys])
+            print('data = ',data)
+            print('self.log_format=',self.log_format)
+            log_line=self.log_format % tuple(data)
+            print('log_line = ',log_line)
+            print('logging to filename: ',self.logfilename)
+            logfile=open(self.logfilename,'a')
+            logfile.write(log_line)
+            logfile.close()
+            sync()
+            sleep_ms(250)
 
     # -------------------------------------------------------------------------------
     # Get continuous temperature measurements

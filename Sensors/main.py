@@ -4,22 +4,17 @@ from SetUp.platform_defs import *
 global params
 global sensor_func  # attempt to fix global/local issues with eval of functions
 global sensor_obj, sensor_module
+global sample_trigger
+
 params={}
 
-'''
-try:
-    import active_sensors
-    asFlag = 1
-except:
-    asFlag = 0
-'''
 
 from sys import print_exception
 from machine import I2C, RTC
 from time import sleep
 from esp8266_i2c_lcd import I2cLcd
 
-from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle, start_log_files
+from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle, start_log_files, Sampler, trigger_sample
 from SetUp.lcd_setup import lcd_init
 
 # Load default and user-specified parameters
@@ -62,11 +57,25 @@ params.update(new_pars)
 if params['auto_logging']:
           start_log_files(i2c,lcd,params,rtc)
 
-# Launch sampling cycle
+# Instantiate a Sampler object
 sample_loop=p_sample_loop.value()
-print('Launching sampling cycle with sample_loop = ',sample_loop)
-sample_cycle(params,button,sample_loop=sample_loop)
-#sample_cycle(i2c,lcd,params,button,rtc)
+print('sample_loop = ',sample_loop)
+sampler=Sampler(params,button=button,p_sample_loop=p_sample_loop)
+#sampler=Sampler(params,button,sample_loop=sample_loop)
+#print('Launching single sample')
+#sampler.sample()
+          
+# Launch sampling cycle
+sampler.sample_loop()
+#print('Launching sampling cycle with sample_loop = ',sample_loop)
+#sampler.sample_cycle()
 
+
+
+#sample_cycle(params,button,sample_loop=sample_loop)
+
+
+# To halt timer, use
+#sampler.timer.deinit()
 
 

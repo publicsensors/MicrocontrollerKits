@@ -3,6 +3,17 @@
 from sys import print_exception
 from time import sleep, sleep_ms
 from os import sync
+from machine import Pin, Timer
+
+from pyb import ExtInt
+
+import micropython
+micropython.alloc_emergency_exception_buf(100)
+
+global sample_trigger # flag to trigger one sample in sample_loop
+sample_trigger=0
+global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
+sample_cycle_flag=0
 
 def sample_params(user_param_file=None,default_param_file='SetUp.default_params.py',pars={}):
     """ A function to load default and user-specified parameters for the sample cycle.
@@ -83,6 +94,95 @@ def sensor_select(i2c,lcd,pars,rtc):
     print(new_pars)
     return new_pars
 
+# Callback for irq attached to button or timer to trigger a sample
+def trigger_sample(p):
+    global sample_trigger # flag to trigger one sample in sample_loop
+    global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
+    print('irq ',p)
+    # Check the source of the irq:
+    if str(type(p)).find('Timer')>-1:
+        print('Timer irq')
+        if sample_cycle_flag>0:
+            sample_trigger=1
+    elif str(type(p)).find('Pin')>-1:
+        print('Pin irq')
+        sample_trigger=1    
+
+# Callback to switch flag turning cyclic sampling on/off
+def set_cycle_flag(p):
+    global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
+    print('set_cycle ',p)
+    sample_cycle_flag=p.value()
+
+
+class Sampler:
+    """ A class to handle sampling from sensors, data logging and user interfaces.
+    """
+    def __init__(self,pars,button=None,p_sample_loop=None):
+    #def __init__(self,pars,button=None,sample_loop=None):
+        self.pars=pars
+        self.button=button
+        self.p_sample_loop=p_sample_loop
+
+        # Button on Pin 13 gives lots of bounces
+        # set up irq for sampling on button-press
+        #self.button_sample(setting=True)
+       # set up/clear an irq for button-press controlled sampling
+        #self.button.irq(handler=self.button_sample,trigger=Pin.IRQ_RISING)
+
+        self.loop_flag=0  # flag turning loop sampling off/on
+
+        self.timer=Timer()
+        self.timer.init(mode=self.timer.PERIODIC,period=1000*pars['sample_interval'],callback=trigger_sample)
+
+        pSCK=Pin('SCK',mode=Pin.IN,pull=Pin.PULL_UP)
+        pSCK.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
+
+        pMISO=Pin('MISO',mode=Pin.IN,pull=Pin.PULL_UP)
+        pMISO.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
+        
+
+    #def button_sample(self,p):
+    #    """ A method to set up/clear an irq for button-press 
+    #        controlled sampling
+    #    """
+    #    print('button irq --> sample')
+    #    self.sample()
+    #    #if setting == True:
+    #    #    self.button.irq(handler=self.sample,trigger=Pin.IRQ_FALLING)
+    #    #elif setting == False:
+    #    #    button.irq(handler=pass,trigger=Pin.IRQ_FALLING)
+        
+    def sample(self):
+        """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 
+            controlled sampling
+        """
+        global sensor_obj, sensor_module
+        for i in range(len(self.pars['active_sensors'])):
+                sensr=self.pars['active_sensors'][i]
+                sensor_obj=self.pars['sensor_objs'][sensr]
+                cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
+                print('taking sensor reading with: ',cmd)
+                exec(cmd)
+                                  
+    def sample_loop(self):
+        global sample_trigger #sensor_obj, sensor_module
+        print('Starting sample_loop')
+        while True:
+            if sample_trigger==1:
+                print('sample triggered...')
+                sample_trigger=0
+                self.sample()
+                                   
+    def sample_cycle(self):
+        global sample_trigger #sensor_obj, sensor_module
+        print('Starting cycle with ',self.pars['sample_max'],' samples')
+        for sample_count in range(self.pars['sample_max']):
+            print('sample_count = ',sample_count)
+            self.sample()
+            sleep(self.pars['sample_interval'])
+                                   
+                                   
 def sample_cycle(pars,button,sample_loop=1):
     global sensor_obj, sensor_module
     if sample_loop==1: # take sensor readings when button is pressed

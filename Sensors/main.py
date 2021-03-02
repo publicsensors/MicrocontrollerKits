@@ -25,6 +25,7 @@ params.update(new_pars)
 
 # Initialize Real Time Clock
 rtc=RTC()
+params.update({'rtc':rtc}) # dictionary item is a valid RTC object
 
 # Initialize I2C interface
 print('Initializing I2C interface...')
@@ -42,31 +43,22 @@ print('Detecting/initializing LCD interface...')
 try:
     lcd = lcd_init(i2c)
     assert(lcd != False)
-    #print('Success: LCD initialized')
 except Exception as e:
     print_exception(e)
-    #print('Error: Unable to initalize LCD')    
 params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or False
 
-# Detect and initialize sensor drivers
-print('Detecting/initializing sensor drivers...')
-new_pars=sensor_select(i2c,lcd,params,rtc)
-params.update(new_pars)
-
-# If auto-logging is enabled, initialize log files
-if params['auto_logging']:
-          start_log_files(i2c,lcd,params,rtc)
 
 # Instantiate a Sampler object
 sample_loop=p_sample_loop.value()
 print('sample_loop = ',sample_loop)
 sampler=Sampler(params,button=button,p_sample_loop=p_sample_loop)
-#sampler=Sampler(params,button,sample_loop=sample_loop)
+
 #print('Launching single sample')
 #sampler.sample()
           
 # Launch sampling cycle
 sampler.sample_loop()
+
 #print('Launching sampling cycle with sample_loop = ',sample_loop)
 #sampler.sample_cycle()
 

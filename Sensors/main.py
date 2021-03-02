@@ -14,7 +14,8 @@ from machine import I2C, RTC
 from time import sleep
 from esp8266_i2c_lcd import I2cLcd
 
-from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle, start_log_files, Sampler, trigger_sample
+from SetUp.sensor_utils import sample_params, Sampler, trigger_sample
+#from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle, start_log_files, Sampler, trigger_sample
 from SetUp.lcd_setup import lcd_init
 
 # Load default and user-specified parameters

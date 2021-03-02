@@ -194,7 +194,8 @@ class Sampler:
         for sensr in self.pars['active_sensors']:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             timestamp_str=self.pars['timestamp_format'] % timestamp
-            logfilename=timestamp_str+'_'+self.pars['sensor_log_prefixes'][sensr]+'.csv'
+            logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+self.pars['sensor_log_prefixes'][sensr]+'.csv'
+            #logfilename=timestamp_str+'_'+self.pars['sensor_log_prefixes'][sensr]+'.csv'
             print('creating log file: ',logfilename)
             logfile=open(logfilename,'w')
             sensor_log_format=self.pars['sensor_log_formats'][sensr]

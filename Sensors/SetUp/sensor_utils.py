@@ -55,6 +55,7 @@ def trigger_sample(p):
     global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
     print('irq ',p)
     # Check the source of the irq:
+    # change this to use the __name__ field...
     if str(type(p)).find('Timer')>-1:
         print('Timer irq')
         if sample_cycle_flag>0:

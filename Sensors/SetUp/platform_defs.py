@@ -18,7 +18,7 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     p_pwr1 = Pin('D9', Pin.OUT)  # Pin 12 is power supplied to the DS18B20, V+
     #p_pwr2 = Pin('X18', Pin.OUT)  # Pin X18 is power supplied to the GPS, V+
     p_DS18B20 = Pin('D10', Pin.IN)  # Pin D10 is the data pin for DS18B20 temperature sensors
-    #uartGPS= UART(4, 9600)
+    uartGPS = UART(6, 9600)
     button = Pin('D13', Pin.IN, Pin.PULL_UP)
     # Define default I2C pins
     p_I2Cscl_lbl='SCL'

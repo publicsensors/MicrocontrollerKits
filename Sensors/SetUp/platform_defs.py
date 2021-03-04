@@ -15,7 +15,7 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     from machine import Pin, UART
 
     board='STM32feather'
-    p_pwr1 = Pin('D9', Pin.OUT,1)  # Pin 12 is power supplied to the DS18B20, V+
+    p_pwr1 = Pin('D9', Pin.OUT,value=1)  # Pin 12 is power supplied to the DS18B20, V+
     #p_pwr2 = Pin('X18', Pin.OUT)  # Pin X18 is power supplied to the GPS, V+
     p_DS18B20 = Pin('D10', Pin.IN)  # Pin D10 is the data pin for DS18B20 temperature sensors
     uartGPS = UART(6, 9600)
@@ -28,8 +28,9 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     #pin definitions for hcsr04/jsn sensors
     p_hcsr_trig = 'D12'
     p_hcsr_echo = 'D11'
-    #pin definition to automatically enable sampling loop (0=loop, 1= wait for button press)
-    p_sample_loop=Pin('MISO', Pin.OUT,pull=Pin.PULL_UP)
+    #pin definitions to automatically enable sampling loop (0=loop, 1= wait for button press)
+    p_smpl_loop_lbl='MISO'
+    p_smpl_trigger_lbl='SCK'
 
 elif platform.find('ESP module with ESP8266')>-1:  # Board-specific definitions: ESP8266 Huzzah Feather/Breakout Board
     print('Loading definitions for ESP8266')
@@ -62,13 +63,13 @@ elif platform.find('PYBv1.1 with STM32F405RG')>-1:  # Board-specific definitions
 
     print('Loading definitions for PYBv1.1')
     from machine import Pin, UART
-    from pyb import Switch
+    from pyb import Switch #, UART
 
     board='PBDv1.1'
-    p_pwr1 = Pin('X19', Pin.OUT)  # Pin X19 is power supplied to the DS18B20, V+
-    p_pwr2 = Pin('X18', Pin.OUT)  # Pin X18 is power supplied to the GPS, V+
-    p_pwr3 = Pin('X3', Pin.OUT)  # Pin X3 is power supplied to the GPS, V+
-    p_pwr4 = Pin('X4', Pin.OUT)  # Pin X4 is power supplied to the GPS, V+
+    p_pwr1 = Pin('X19', Pin.OUT,value=1)  # Pin X19 is power supplied to the DS18B20, V+
+    p_pwr2 = Pin('X18', Pin.OUT,value=1)  # Pin X18 is power supplied to the GPS, V+
+    p_pwr3 = Pin('X3', Pin.OUT,value=1)  # Pin X3 is power supplied to the GPS, V+
+    p_pwr4 = Pin('X4', Pin.OUT,value=1)  # Pin X4 is power supplied to the GPS, V+
     p_DS18B20 = Pin('X20', Pin.IN)  # Pin X20 is the data pin for DS18B20 temperature sensors
     uartGPS= UART(4, 9600)
     uartAQ= UART(3, 9600)
@@ -79,6 +80,12 @@ elif platform.find('PYBv1.1 with STM32F405RG')>-1:  # Board-specific definitions
     # Define default I2C pins
     p_I2Cscl_lbl='X9'
     p_I2Csda_lbl='X10'
+    #pin definitions for hcsr04/jsn sensors
+    p_hcsr_trig = 'D12'
+    p_hcsr_echo = 'D11'
+    #pin definitions to automatically enable sampling loop (0=loop, 1= wait for button press)
+    p_smpl_loop_lbl='Y4'
+    p_smpl_trigger_lbl='Y3'
 
 
 '''

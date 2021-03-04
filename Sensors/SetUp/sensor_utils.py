@@ -75,10 +75,12 @@ def set_cycle_flag(p):
 class Sampler:
     """ A class to handle sampling from sensors, data logging and user interfaces.
     """
-    def __init__(self,pars,button=None,p_sample_loop=None,select_sensors=True):
+    def __init__(self,pars,button=None,select_sensors=True):
+        global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
+        global sample_trigger # flag to trigger one sample in sample_loop
+
         self.pars=pars
         self.button=button
-        self.p_sample_loop=p_sample_loop
         self.rtc=self.pars['rtc']
         self.i2c=pars['i2c']
         self.lcd=pars['lcd']
@@ -101,11 +103,24 @@ class Sampler:
         self.timer=Timer()
         self.timer.init(mode=self.timer.PERIODIC,period=1000*pars['sample_interval'],callback=trigger_sample)
 
-        pSCK=Pin('SCK',mode=Pin.IN,pull=Pin.PULL_UP)
-        pSCK.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
+        #pin definitions to automatically enable sampling loop (0=loop, 1= wait for button press)
+        #p_smpl_trigger=ExtInt(Pin(self.pars['p_smpl_trigger_lbl']),ExtInt.IRQ_FALLING,Pin.PULL_UP,trigger_sample)
+        #p_smpl_loop=ExtInt(Pin(self.pars['p_smpl_loop_lbl']),ExtInt.IRQ_RISING_FALLING,Pin.PULL_UP,set_cycle_flag)
 
-        pMISO=Pin('MISO',mode=Pin.IN,pull=Pin.PULL_UP)
-        pMISO.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
+        self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
+        self.p_smpl_trigger.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
+        self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
+        self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
+        # Set up initial sampling if looping is turned on
+        if self.p_smpl_loop.value()==1:
+            sample_cycle_flag=1  # flag to trigger loop sampling
+            sample_trigger=1     # flag to trigger first sample
+
+        #pSCK=Pin('SCK',mode=Pin.IN,pull=Pin.PULL_UP)
+        #pSCK.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
+
+        #pMISO=Pin('MISO',mode=Pin.IN,pull=Pin.PULL_UP)
+        #pMISO.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
                 
     def sample(self):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 
@@ -159,6 +174,11 @@ class Sampler:
 
         # Create a list of sensors flagged for use
         requestedSensors = [s for s in list(self.pars['sensor_list'].keys()) if self.pars['sensor_list'][s]>0]
+        #
+        #  NOTE: A bug causes onewire to crash if initialized before the GPS and AQI uarts.
+        #        Reversing the order avoids this bug.
+        #
+        requestedSensors.reverse()
         print('requestedSensors = ',requestedSensors)
 
         # Import driver functions and test requested sensors

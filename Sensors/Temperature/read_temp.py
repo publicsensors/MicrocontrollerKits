@@ -45,7 +45,8 @@ class read_temp:
             try: # Try to take a measurement, return 1 if successful, 0 if not
                 self.ds.convert_temp()       # Obtain temp readings from each of those sensors
                 sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
-                self.ds.read_temp(self.roms[0])
+                print('test temp = ')
+                print(self.ds.read_temp(self.roms[0]))
                 return 1
             except:
                 return 0

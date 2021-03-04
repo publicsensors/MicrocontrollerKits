@@ -22,6 +22,8 @@ from SetUp.lcd_setup import lcd_init
 new_pars=sample_params()
 params.update(new_pars)
 
+params.update({'p_smpl_trigger_lbl':p_smpl_trigger_lbl,'p_smpl_loop_lbl':p_smpl_loop_lbl})
+
 #print('main: params = ',params)
 
 # Initialize Real Time Clock
@@ -50,9 +52,10 @@ params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or Fal
 
 
 # Instantiate a Sampler object
-sample_loop=p_sample_loop.value()
-print('sample_loop = ',sample_loop)
-sampler=Sampler(params,button=button,p_sample_loop=p_sample_loop)
+#sample_loop=p_sample_loop.value()
+#print('sample_loop = ',sample_loop)
+sampler=Sampler(params,button=button)
+#sampler=Sampler(params,button=button,p_sample_loop=p_sample_loop)
 
 #print('Launching single sample')
 #sampler.sample()

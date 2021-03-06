@@ -61,8 +61,11 @@ class read_temp:
         T = self.ds.read_temp(self.roms[0])
         print("Temp: ",T, ' C')
         if self.lcd is not False:
-            self.lcd.clear()      # Sleep for 1 sec
-            self.lcd.putstr("Temp: "+str(round(T,2))+" C")
+            try:
+                self.lcd.clear()      # Sleep for 1 sec
+                self.lcd.putstr("Temp: "+str(round(T,2))+" C")
+            except:
+                pass
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1

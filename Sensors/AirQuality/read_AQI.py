@@ -96,8 +96,11 @@ class read_AQI:
         self.PM10=PM10
 
         if self.lcd is not False:
-            self.lcd.clear()      # Sleep for 1 sec
-            self.lcd.putstr(str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10')
+            try:
+                self.lcd.clear()      # Sleep for 1 sec
+                self.lcd.putstr(str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10')
+            except:
+                pass
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1

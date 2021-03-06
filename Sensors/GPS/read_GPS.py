@@ -98,9 +98,12 @@ class read_GPS:
                                                                 dec_lat,dec_long)
                     print(GPSstr)
                     if self.lcd is not False: #
-                        self.lcd.clear()      # Sleep for 1 sec
-                        GPSstr2='GPS: {},\n   {}'.format(dec_lat,dec_long)
-                        self.lcd.putstr(GPSstr2)
+                        try:
+                            self.lcd.clear()      # Sleep for 1 sec
+                            GPSstr2='GPS: {},\n   {}'.format(dec_lat,dec_long)
+                            self.lcd.putstr(GPSstr2)
+                        except:
+                            pass
                     if self.logging:
                         timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
                         self.sample_num+=1

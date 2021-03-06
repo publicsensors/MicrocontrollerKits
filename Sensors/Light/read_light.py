@@ -52,8 +52,11 @@ class read_light:
         full, ir, lux = self.sensor.light()
         print('full: ',str(full),' ir: ',str(ir))
         if self.lcd is not False:
-            self.lcd.clear()      # Sleep for 1 sec
-            self.lcd.putstr(str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')')
+            try:
+                self.lcd.clear()      # Sleep for 1 sec
+                self.lcd.putstr(str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')')
+            except:
+                pass
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1

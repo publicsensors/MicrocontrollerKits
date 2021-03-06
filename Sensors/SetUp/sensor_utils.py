@@ -107,9 +107,18 @@ class Sampler:
         #p_smpl_trigger=ExtInt(Pin(self.pars['p_smpl_trigger_lbl']),ExtInt.IRQ_FALLING,Pin.PULL_UP,trigger_sample)
         #p_smpl_loop=ExtInt(Pin(self.pars['p_smpl_loop_lbl']),ExtInt.IRQ_RISING_FALLING,Pin.PULL_UP,set_cycle_flag)
 
+        
         self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
+        #self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
         self.p_smpl_trigger.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
-        self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
+        
+        # The parameter pars['default_sample_looping'] determines the default sample looping behavior.
+        # If True, the pin is pulled up and looping occurs unless there is a connection to GND.
+        # If False, the pin is pulled down and looping occurs only when the pin is connected to V+.
+        if pars['default_sample_looping']:
+            self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
+        else:
+            self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
         self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
         # Set up initial sampling if looping is turned on
         if self.p_smpl_loop.value()==1:

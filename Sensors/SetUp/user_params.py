@@ -14,6 +14,7 @@ params={'sensor_list':{'distance':0,
                              'GPS':1,
                              'AQI':1},
         'auto_logging':True,
+        'default_sample_looping':True,
         'sample_max':4,
         'sample_interval':120
 }

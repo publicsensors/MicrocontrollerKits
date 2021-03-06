@@ -28,9 +28,9 @@ global GPStime,dec_lat,dec_long
 class read_GPS:
 
     def __init__(self,num_sentences=3,timeout=5,lcd=False,i2c=None,rtc=None):
-        #for p in ['p_pwr2','p_pwr3','p_pwr4']:
-        #    if p in list(locals().keys()):
-        #        exec(p+'.value(1)')
+        for p in ['p_pwr2','p_pwr3','p_pwr4']:
+            if p in list(locals().keys()):
+                exec(p+'.value(1)')
         #p_pwr2.value(1)  # turn on power to the GPS
         #p_pwr3.value(1)  # the GPS requires power from multiple GPIOs
         #p_pwr4.value(1)

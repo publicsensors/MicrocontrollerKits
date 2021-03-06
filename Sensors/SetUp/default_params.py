@@ -47,6 +47,7 @@ params={'setup_dir':'SetUp',
         'sensor_objs':{},
         'active_sensors':[],
         'auto_logging':False,
+        'default_sample_looping':True,
         'timestamp_format':'%4d-%02d-%02dT%02d-%02d-%02d',
         'sample_max':10,
         'sample_interval':10

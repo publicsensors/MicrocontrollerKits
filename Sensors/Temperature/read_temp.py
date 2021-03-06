@@ -2,7 +2,7 @@
 
 # Import platform-specific definitions
 #from platform_defs import *
-from platform_defs import p_DS18B20
+from platform_defs import p_DS18B20, p_pwr1
 #from machine import Pin, I2C
 #from SetUp.esp8266_i2c_lcd import I2cLcd
 from onewire import OneWire
@@ -18,7 +18,7 @@ global T
 class read_temp:
 
     def __init__(self,lcd=False,i2c=None,rtc=None):
-        #p_pwr1.value(1)
+        p_pwr1.value(1)
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc

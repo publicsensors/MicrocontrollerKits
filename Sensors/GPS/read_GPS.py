@@ -1,7 +1,6 @@
 # This script prints GSP readings from a unit attached to uartGPS
 
 # Import platform-specific definitions
-#from platform_defs import *
 from Setup.platform_defs import uartGPS
 try:
     from Setup.platform_defs import p_pwr2
@@ -28,12 +27,10 @@ global GPStime,dec_lat,dec_long
 class read_GPS:
 
     def __init__(self,num_sentences=3,timeout=5,lcd=False,i2c=None,rtc=None):
+        # Turn on GPS power pins, if defined
         for p in ['p_pwr2','p_pwr3','p_pwr4']:
             if p in list(locals().keys()):
                 exec(p+'.value(1)')
-        #p_pwr2.value(1)  # turn on power to the GPS
-        #p_pwr3.value(1)  # the GPS requires power from multiple GPIOs
-        #p_pwr4.value(1)
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc
@@ -53,9 +50,7 @@ class read_GPS:
     # Test the GPS sensor
     # -------------------------------------------------------------------------------
     def test_GPS(self):
-        #global full,ir,lux
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            #full, ir, lux = self.sensor.light()
             return 1
         except:
             return 0
@@ -89,8 +84,6 @@ class read_GPS:
                     if not display: # if False, return GPS data instead of displaying it
                         return (self.my_gps.date,self.my_gps.timestamp,dec_lat,dec_long)
 
-                    #GPStime=(self.my_gps.date[0],self.my_gps.date[1],self.my_gps.date[2], \
-                    #              self.my_gps.timestamp[0],self.my_gps.timestamp[1],self.my_gps.timestamp[2])
                     GPStime=[self.my_gps.date[2],self.my_gps.date[1],self.my_gps.date[0], \
                                   self.my_gps.timestamp[0],self.my_gps.timestamp[1],self.my_gps.timestamp[2]]
                     GPSstr='GPS: {}-{}-{} {}:{}:{} {},{}'.format(self.my_gps.date[0],self.my_gps.date[1],self.my_gps.date[2], \
@@ -114,21 +107,16 @@ class read_GPS:
                         data=[self.sample_num]
                         data.extend([t for t in timestamp])
                         data.extend([eval(s) for s in self.fmt_keys])
-                        #print('data = ',data)
                         flat_data=[]
                         for d in data:
-                            #print(type(d).__name__)
                             if type(d).__name__=='list':
-                                #print(d)
                                 for dd in d:
-                                    #print(dd)
                                     flat_data.append(dd)
                             else:
                                 flat_data.append(d)
                         print('flat_data=',flat_data)
                         print('self.log_format=',self.log_format)
                         log_line=self.log_format % tuple(flat_data)
-                        #log_line=self.log_format % tuple(data)
                         print('log_line = ',log_line)
                         print('logging to filename: ',self.logfilename)
                         logfile=open(self.logfilename,'a')

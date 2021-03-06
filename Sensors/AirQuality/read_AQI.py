@@ -1,16 +1,11 @@
 # This script prints AQI readings from a SDS011 attached to uartAQ
 
 # Import platform-specific definitions
-#from platform_defs import *
 from Setup.platform_defs import uartAQ
 from AirQuality.sds011 import SDS011
 
-#from machine import Pin , I2C
-#from esp8266_i2c_lcd import I2cLcd
 from os import sync
-#from GPS.micropyGPS import MicropyGPS
 from time import sleep_ms, sleep
-
 
 # -------------------------------------------------------------------------------
 # Set up pins for power and usrtGPS
@@ -47,7 +42,6 @@ class read_AQI:
     # Test the AQI sensor
     # -------------------------------------------------------------------------------
     def test_AQI(self):
-        #global full,ir,lux
         try: # Try to take a measurement, return 1 if successful, 0 if not
             #full, ir, lux = self.sensor.light()
             return 1

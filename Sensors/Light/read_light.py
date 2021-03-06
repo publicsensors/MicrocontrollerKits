@@ -1,11 +1,5 @@
 # This script prints temperature readings from a DS18B20 sensor
 
-# Import platform-specific definitions
-#from platform_defs import *
-#from Setup.platform_defs import p_pwr1
-
-#from machine import Pin, I2C
-#from SetUp.esp8266_i2c_lcd import I2cLcd
 from Light.tsl25x1 import tsl25x1_sensor #, TSL2561, Tsl2591, read_tsl25x1
 from time import sleep_ms
 from os import sync
@@ -18,7 +12,6 @@ global full, ir, lux
 class read_light:
 
     def __init__(self,lcd=False,i2c=None,rtc=None):
-        #p_pwr1.value(1)
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc

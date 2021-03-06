@@ -15,7 +15,6 @@ from time import sleep
 from esp8266_i2c_lcd import I2cLcd
 
 from SetUp.sensor_utils import sample_params, Sampler, trigger_sample
-#from SetUp.sensor_utils import sample_params, sensor_select, sample_cycle, start_log_files, Sampler, trigger_sample
 from SetUp.lcd_setup import lcd_init
 
 # Load default and user-specified parameters
@@ -52,10 +51,7 @@ params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or Fal
 
 
 # Instantiate a Sampler object
-#sample_loop=p_sample_loop.value()
-#print('sample_loop = ',sample_loop)
 sampler=Sampler(params,button=button)
-#sampler=Sampler(params,button=button,p_sample_loop=p_sample_loop)
 
 #print('Launching single sample')
 #sampler.sample()
@@ -65,11 +61,6 @@ sampler.sample_loop()
 
 #print('Launching sampling cycle with sample_loop = ',sample_loop)
 #sampler.sample_cycle()
-
-
-
-#sample_cycle(params,button,sample_loop=sample_loop)
-
 
 # To halt timer, use
 #sampler.timer.deinit()

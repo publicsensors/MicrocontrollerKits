@@ -71,7 +71,7 @@ class read_volt:
             try:
                 self.lcd.clear()      # Sleep for 1 sec
                 #self.lcd.putstr(str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')')
-                self.lcd.putstr('volts: '+str(round(volt0,3))+','+str(round(volt1,3))+',\n'+str(round(volt2,3))+','+str(round(volt3,3)))
+                self.lcd.putstr('volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3)))
             except:
                 pass
         if self.logging:

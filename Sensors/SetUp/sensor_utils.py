@@ -170,7 +170,7 @@ class Sampler:
         #  NOTE: A bug causes onewire to crash if initialized before the GPS and AQI uarts.
         #        Reversing the order avoids this bug.
         #
-        requestedSensors.reverse()
+        #requestedSensors.reverse()
         print('requestedSensors = ',requestedSensors)
 
         # Import driver functions and test requested sensors

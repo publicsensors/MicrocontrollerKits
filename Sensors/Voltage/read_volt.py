@@ -90,5 +90,5 @@ class read_volt:
             logfile.write(log_line)
             logfile.close()
             sync()
-            sleep_ms(250)
+            sleep_ms(500)
             

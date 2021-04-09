@@ -1,6 +1,6 @@
-# This script prints temperature readings from a DS18B20 sensor
+# This script prints pressure, temperature, and (if available) humidity readings from a BMe280 or BMP280 sensor
 
-# Use driver by roberthh from https://github.com/robert-hh/ads1x15
+# Use driver by roberthh from https://github.com/robert-hh/BME280
 from Pressure.bme280_float import BME280
 from time import sleep_ms
 from os import sync
@@ -60,7 +60,6 @@ class read_press:
             except:
                 pass
         if self.logging:
-            print('yoohoo!')
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
             print(self.fmt_keys)
@@ -69,10 +68,8 @@ class read_press:
                 print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
-            print('got here')
             print([s for s in self.fmt_keys])
             print([eval(s) for s in self.fmt_keys])
-            print('here too')
 
             data.extend([eval(s) for s in self.fmt_keys])
             print('data = ',data)
@@ -84,5 +81,5 @@ class read_press:
             logfile.write(log_line)
             logfile.close()
             sync()
-            sleep_ms(250)
+            sleep_ms(500)
             

@@ -34,6 +34,7 @@ class read_press:
         global temp, press, humid
 
         try: # Try to take a measurement, return 1 if successful, 0 if not
+            #values=self.sensor.read_compensated_data()
             values=self.sensor.values
             print('test: values = ',values)
             return 1
@@ -47,7 +48,8 @@ class read_press:
         global values
         global temp, press, humid
 
-        (temp,press,humid)=self.sensor.values
+        (temp,press,humid)=self.sensor.read_compensated_data()
+        #(temp,press,humid)=self.sensor.values
         #values=self.sensor.values
 
         print('temp: ',str(temp),'press: ',str(press),'humid: ',str(humid))

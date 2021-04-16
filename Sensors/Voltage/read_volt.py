@@ -56,12 +56,12 @@ class read_volt:
 
         raw0=self.sensor.read(self.rate,0)
         volt0=self.sensor.raw_to_v(raw0)
-        raw1=self.sensor.read(self.rate,0)
-        volt1=self.sensor.raw_to_v(raw0)
-        raw2=self.sensor.read(self.rate,0)
-        volt2=self.sensor.raw_to_v(raw0)
-        raw3=self.sensor.read(self.rate,0)
-        volt3=self.sensor.raw_to_v(raw0)
+        raw1=self.sensor.read(self.rate,1)
+        volt1=self.sensor.raw_to_v(raw1)
+        raw2=self.sensor.read(self.rate,2)
+        volt2=self.sensor.raw_to_v(raw2)
+        raw3=self.sensor.read(self.rate,3)
+        volt3=self.sensor.raw_to_v(raw3)
 
         print('volt0: ',str(volt0),'volt1: ',str(volt1),'volt2: ',str(volt2),'volt3: ',str(volt3))
         if self.lcd is not False:

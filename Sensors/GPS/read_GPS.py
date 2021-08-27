@@ -26,7 +26,7 @@ global GPStime,dec_lat,dec_long
 # -------------------------------------------------------------------------------
 class read_GPS:
 
-    def __init__(self,num_sentences=3,timeout=5,lcd=False,i2c=None,rtc=None):
+    def __init__(self,num_sentences=3,timeout=5,init_timeout=15,lcd=False,i2c=None,rtc=None):
         # Turn on GPS power pins, if defined
         for p in ['p_pwr2','p_pwr3','p_pwr4']:
             if p in list(locals().keys()):
@@ -44,6 +44,7 @@ class read_GPS:
         self.uartGPS=uartGPS
         self.num_sentences=num_sentences
         self.timeout=timeout
+        self.init_timeout=init_timeout
         self.my_gps = MicropyGPS()  # create GPS parser object
 
     # -------------------------------------------------------------------------------
@@ -52,12 +53,19 @@ class read_GPS:
     def test_GPS(self):
         try: # Try to take a measurement, return 1 if successful, 0 if not
             print('starting test_GPS')
-            if uartGPS.any():
-                stat = self.my_gps.update(chr(uartGPS.readchar()))
-                if stat:
-                    print(stat)
-            return 1
+            t = ticks_ms() # Get initial time, to compare to timeout limit
+            while True:
+                if ticks_diff(ticks_ms(), t) >= 1000*self.init_timeout:
+                    print('no response from GPS...')
+                    return 0
+                else:
+                    if uartGPS.any():
+                        stat = self.my_gps.update(chr(uartGPS.readchar()))
+                        if stat:
+                            print('recieved from GPS: ',stat)
+                            return 1
         except:
+            print('error in query to GPS...')
             return 0
         
     # -------------------------------------------------------------------------------

@@ -5,14 +5,14 @@ from Setup.platform_defs import uartAQ
 from AirQuality.sds011 import SDS011
 
 from os import sync
-from time import sleep_ms, sleep
+from time import sleep_ms,sleep,ticks_ms,ticks_diff
 
 # -------------------------------------------------------------------------------
 # Set up pins for power and usrtGPS
 # -------------------------------------------------------------------------------
 class read_AQI:
 
-    def __init__(self,fan_start_sec=60,stop_fan=True,lcd=False,i2c=None,rtc=None):
+    def __init__(self,fan_start_sec=60,init_timeout=60,stop_fan=True,lcd=False,i2c=None,rtc=None):
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc
@@ -25,6 +25,7 @@ class read_AQI:
 
         self.fan_start_sec=fan_start_sec
         self.stop_fan=stop_fan
+        self.init_timeout=init_timeout
         
         self.uartAQ=uartAQ
         self.status=None
@@ -43,9 +44,29 @@ class read_AQI:
     # -------------------------------------------------------------------------------
     def test_AQI(self):
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            #full, ir, lux = self.sensor.light()
-            return 1
+            print('starting test_AQI')
+            if self.stop_fan: #Start fan
+                self.dust_sensor.wake()
+                sleep(5)
+            t = ticks_ms() # Get initial time, to compare to timeout limit
+            while True:
+                if ticks_diff(ticks_ms(), t) >= 1000*self.init_timeout:
+                    print('no response from AQI within init time limit...')
+                    if self.stop_fan: #Stop fan
+                        self.dust_sensor.sleep()
+                    #return 0
+                    print('AQI testing suspended -- enabling AQI anyways...')
+                    return 1
+                else:
+                    self.status = self.dust_sensor.read()
+                    sleep(1)
+                    if self.status:
+                        print('AQI status = OK')
+                        if self.stop_fan: #Stop fan
+                            self.dust_sensor.sleep()
+                        return 1
         except:
+            print('error in query to AQI sensor...')
             return 0
         
     # -------------------------------------------------------------------------------

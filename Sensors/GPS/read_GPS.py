@@ -17,7 +17,7 @@ except:
 
 from os import sync
 from GPS.micropyGPS import MicropyGPS
-from time import sleep_ms
+from time import sleep_ms,ticks_ms,ticks_diff
 
 global GPStime,dec_lat,dec_long
 
@@ -51,6 +51,11 @@ class read_GPS:
     # -------------------------------------------------------------------------------
     def test_GPS(self):
         try: # Try to take a measurement, return 1 if successful, 0 if not
+            print('starting test_GPS')
+            if uartGPS.any():
+                stat = self.my_gps.update(chr(uartGPS.readchar()))
+                if stat:
+                    print(stat)
             return 1
         except:
             return 0
@@ -64,7 +69,11 @@ class read_GPS:
         # Create a loop to obtain several sentences from the GPS, to make sure
         # all relevant fields in the parser are populated with recent data
         sentence_count = 0
+        t = ticks_ms() # Get initial time, to compare to timeout limit
         while True:
+            if ticks_diff(ticks_ms(), t) >= 1000*self.timeout:
+                print('GPS query breaking after time limit ',self.timeout,' s expired with ',sentence_count,' sentences')
+                break
             if uartGPS.any():
                 stat = self.my_gps.update(chr(uartGPS.readchar()))
                 if stat:

@@ -7,6 +7,7 @@ from machine import Pin, I2C
 from esp8266_i2c_lcd import I2cLcd
 from Acoustic import hcsr04
 from time import sleep_ms
+from os import sync
 
 # -------------------------------------------------------------------------------
 # Set up pins for the DS18B20

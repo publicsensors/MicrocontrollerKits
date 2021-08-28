@@ -123,7 +123,7 @@ class Sampler:
                 sensr=self.pars['active_sensors'][i]
                 sensor_obj=self.pars['sensor_objs'][sensr]
                 cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
-                print('taking sensor reading with: ',cmd)
+                print('\ntaking sensor reading with: ',cmd)
                 exec(cmd)
                                   
     def sample_loop(self):

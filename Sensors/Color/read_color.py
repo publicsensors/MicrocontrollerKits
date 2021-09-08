@@ -1,15 +1,15 @@
-# This script prints light readings from TSL2561 and Tsl2591 sensors
+# This script prints color readings from a TCS34725 sensor
 
-from Light.tsl25x1 import tsl25x1_sensor 
+from Color.tcs34725 import TCS34725
 from time import sleep_ms
 from os import sync
 
-global full, ir, lux
+global R, G, B, full
 
 # -------------------------------------------------------------------------------
-# Set up pins for the light sensors; power from either Vbat or p_pwr1 pin (defined in platform_defs)
+# Set up pins for the color sensor; power from either Vbat or p_pwr1 pin (defined in platform_defs)
 # -------------------------------------------------------------------------------
-class read_light:
+class read_color:
 
     def __init__(self,lcd=False,i2c=None,rtc=None):
         self.i2c=i2c
@@ -22,32 +22,32 @@ class read_light:
         self.fmt_keys=None
         self.sample_num=0
 
-        # Wrapper function to synonymize calls to TSL2561 and TSL2591 light sensors
-        self.sensor = tsl25x1_sensor(i2c=self.i2c)
-
+        # Wrapper function to call tcs34725 sensor
+        #self.sensor = tsl25x1_sensor(i2c=self.i2c)
+        self.sensor = TCS34725(self.i2c)
     # -------------------------------------------------------------------------------
-    # Test the light sensor
+    # Test the color sensor
     # -------------------------------------------------------------------------------
-    def test_light(self):
-        global full,ir,lux
+    def test_color(self):
+        global R, G, B, full
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            full, ir, lux = self.sensor.light()
+            R, G, B, full = self.sensor.read(True)
             return 1
         except:
             return 0
         
     # -------------------------------------------------------------------------------
-    # Progression for obtaining light readings from the sensor
+    # Progression for obtaining color readings from the sensor
     # -------------------------------------------------------------------------------
 
-    def print_light(self):
-        global full,ir,lux
-        full, ir, lux = self.sensor.light()
-        print('full: ',str(full),' ir: ',str(ir))
+    def print_color(self):
+        global R, G, B, full
+        R, G, B, full = self.sensor.read(True)
+        print('R, G, B, full: ',str(R),', ',str(G),', ',str(B),', ',str(full))
         if self.lcd is not False:
             try:
-                self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr(str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')')
+                self.lcd.full()      # Sleep for 1 sec
+                self.lcd.putstr('RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full))
             except:
                 pass
         if self.logging:

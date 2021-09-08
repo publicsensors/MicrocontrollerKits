@@ -46,8 +46,10 @@ class read_color:
         print('R, G, B, full: ',str(R),', ',str(G),', ',str(B),', ',str(full))
         if self.lcd is not False:
             try:
-                self.lcd.full()      # Sleep for 1 sec
+                self.lcd.clear()      # Clear and sleep for 1 sec
+                sleep_ms(1000)
                 self.lcd.putstr('RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full))
+                sleep_ms(1000)
             except:
                 pass
         if self.logging:

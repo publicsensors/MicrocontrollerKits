@@ -65,7 +65,7 @@ elif platform.find('PYBv1.1 with STM32F405RG')>-1:  # Board-specific definitions
 
     board='PBDv1.1'
     # Initalize power pins off; they are turned on by read_XXX classes if called
-    p_pwr1 = Pin('X19', Pin.OUT,value=0)  # Pin X19 is power supplied to the DS18B20, V+
+    p_pwr1 = Pin('X19', Pin.OUT,value=1)  # Pin X19 is power supplied to the DS18B20, V+
     p_pwr2 = Pin('X18', Pin.OUT,value=0)  # Pin X18 is power supplied to the GPS, V+
     p_pwr3 = Pin('X3', Pin.OUT,value=0)  # Pin X3 is power supplied to the GPS, V+
     p_pwr4 = Pin('X4', Pin.OUT,value=0)  # Pin X4 is power supplied to the GPS, V+

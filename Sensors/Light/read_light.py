@@ -3,6 +3,7 @@
 from Light.tsl25x1 import tsl25x1_sensor 
 from time import sleep_ms
 from os import sync
+from platform_defs import p_DS18B20, p_pwr1
 
 global full, ir, lux
 
@@ -12,6 +13,8 @@ global full, ir, lux
 class read_light:
 
     def __init__(self,lcd=False,i2c=None,rtc=None):
+        p_pwr1.value(1)
+        sleep_ms(250)           # Sleep for 250 ms
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc

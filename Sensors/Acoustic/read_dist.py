@@ -1,10 +1,9 @@
 # This script prints temperature readings from a DS18B20 sensor
 
 # Import platform-specific definitions
-from platform_defs import *
+from SetUp.platform_defs import *
 
 from machine import Pin, I2C
-from esp8266_i2c_lcd import I2cLcd
 from Acoustic import hcsr04
 from time import sleep_ms
 from os import sync

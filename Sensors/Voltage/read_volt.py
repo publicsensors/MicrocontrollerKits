@@ -2,7 +2,6 @@
 
 # Use driver by roberthh from https://github.com/robert-hh/ads1x15
 from Voltage.ads1x15 import ADS1115
-#from Light.tsl25x1 import tsl25x1_sensor #, TSL2561, Tsl2591, read_tsl25x1
 from time import sleep_ms
 from os import sync
 

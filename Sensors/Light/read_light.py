@@ -3,7 +3,7 @@
 from Light.tsl25x1 import tsl25x1_sensor 
 from time import sleep_ms
 from os import sync
-from platform_defs import p_DS18B20, p_pwr1
+from platform_defs import p_pwr1
 
 global full, ir, lux
 

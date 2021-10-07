@@ -12,7 +12,6 @@ params={}
 from sys import print_exception
 from machine import I2C, RTC
 from time import sleep
-from esp8266_i2c_lcd import I2cLcd
 
 from SetUp.sensor_utils import sample_params, Sampler, trigger_sample
 from SetUp.lcd_setup import lcd_init

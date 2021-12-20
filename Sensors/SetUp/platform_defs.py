@@ -28,6 +28,7 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     p_hcsr_trig = 'D12'
     p_hcsr_echo = 'D11'
     #pin definitions to automatically enable sampling loop (0=loop, 1= wait for button press)
+    # the labeling above seems to be backwards -- should be 1=loop, 0=wait for button press)
     p_smpl_loop_lbl='MISO'
     p_smpl_trigger_lbl='SCK'
 

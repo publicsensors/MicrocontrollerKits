@@ -12,7 +12,7 @@ global volt0, volt1, volt2, volt3
 # -------------------------------------------------------------------------------
 class read_volt:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None,addr=72,gain=4,rate=0):
+    def __init__(self,lcd=False,i2c=None,rtc=None,addr=72,gain=4,rate=0,smbus=None):
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc

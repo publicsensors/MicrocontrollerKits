@@ -14,7 +14,7 @@ global T
 # -------------------------------------------------------------------------------
 class read_temp:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None):
+    def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
         p_pwr1.value(1)
         sleep_ms(250)           # Sleep for 250 ms
         self.i2c=i2c

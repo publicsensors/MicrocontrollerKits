@@ -11,7 +11,7 @@ global R, G, B, full
 # -------------------------------------------------------------------------------
 class read_color:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None):
+    def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc

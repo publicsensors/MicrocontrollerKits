@@ -26,7 +26,7 @@ global GPStime,dec_lat,dec_long
 # -------------------------------------------------------------------------------
 class read_GPS:
 
-    def __init__(self,num_sentences=3,timeout=5,init_timeout=15,lcd=False,i2c=None,rtc=None):
+    def __init__(self,num_sentences=3,timeout=5,init_timeout=15,lcd=False,i2c=None,rtc=None,smbus=None):
         # Turn on GPS power pins, if defined
         for p in ['p_pwr2','p_pwr3','p_pwr4']:
             if p in list(locals().keys()):

@@ -1,19 +1,24 @@
-# This script prints temperature readings from a DS18B20 sensor
+# This script prints UV, IR and visible light reading in lux from a SI1132 sensor
+# The driver for this sensor, derived from https://github.com/ControlEverythingCommunity/SI1132,
+# uses an SMBus interface rather than I2C.
 
-# Use driver by roberthh from https://github.com/robert-hh/ads1x15
-from ExtTime.urtc import DS3231
+from UV_IR_Visible.si1132 import SI1132 
 from time import sleep_ms
 from os import sync
+from platform_defs import p_pwr1
 
-global datetime
-global year, month, day, weekday, hour, minute, second
+global uv, ir, vis
+
 # -------------------------------------------------------------------------------
-# Set up pins for the external RTC sensors; power from either Vbat or p_pwr1 pin (defined in platform_defs)
+# Set up pins for the UIV sensor; power from either Vbat or p_pwr1 pin (defined in platform_defs)
 # -------------------------------------------------------------------------------
-class read_exttime:
+class read_UIV:
 
     def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
-        self.i2c=i2c
+        p_pwr1.value(1)
+        sleep_ms(250)           # Sleep for 250 ms
+        #self.i2c=i2c
+        self.smbus=smbus
         self.lcd=lcd
         self.rtc=rtc
         self.logging=False
@@ -23,52 +28,32 @@ class read_exttime:
         self.fmt_keys=None
         self.sample_num=0
 
-        self.datetime=None
-
-        # Wrapper function to call DS3231 I2C Real Time Clock
-        self.sensor = DS3231(i2c)
+        # Initialize the SI1132 object
+        self.sensor = SI1132(smbus=self.smbus)
 
     # -------------------------------------------------------------------------------
-    # Test the light sensor
+    # Test the UIV sensor
     # -------------------------------------------------------------------------------
-    def test_exttime(self):
-        global datetime
-        global year, month, day, weekday, hour, minute, second
-
+    def test_UIV(self):
+        global uv,ir,vis
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            print('testing ds3231...')
-            datetime=self.sensor.datetime()
-            self.datetime=datetime
-            print('test: datetime = ',datetime)
+            uv, ir, vis = self.sensor.read()
             return 1
         except:
             return 0
         
     # -------------------------------------------------------------------------------
-    # Progression for obtaining voltage 0-3 readings from the sensor
+    # Progression for obtaining UIV readings from the sensor
     # -------------------------------------------------------------------------------
 
-    def print_exttime(self):
-        global datetime
-        global year, month, day, weekday, hour, minute, second
-
-        datetime=self.sensor.datetime()
-        self.datetime=datetime
-        year=datetime.year
-        month=datetime.month
-        day=datetime.day
-        weekday=datetime.day
-        hour=datetime.hour
-        minute=datetime.minute
-        second=datetime.second
-
-        print('year: ',str(year),' month: ',str(month),' day: ',str(day),' hour: ',str(hour),' minute: ',\
-              str(minute),' second: ',str(second))
+    def print_(self):
+        global uv,ir,vis
+        uv, ir, vis = self.sensor.read()
+        print('uv: ',str(uv),' ir: ',str(ir),' vis: ',str(vis))
         if self.lcd is not False:
             try:
                 self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr('time '+str(year)+'-'+str(month)+'-'+str(day)+'\n'+str(hour)+':'+\
-                                str(minute)+':'+str(second))
+                self.lcd.putstr(str(round(uv,1))+' uv\n('+str(ir)+','+str(vis)+')')
             except:
                 pass
         if self.logging:
@@ -90,5 +75,5 @@ class read_exttime:
             logfile.write(log_line)
             logfile.close()
             sync()
-            sleep_ms(250)
+            sleep_ms(500)
             

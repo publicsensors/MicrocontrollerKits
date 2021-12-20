@@ -12,7 +12,7 @@ from time import sleep_ms,sleep,ticks_ms,ticks_diff
 # -------------------------------------------------------------------------------
 class read_AQI:
 
-    def __init__(self,fan_start_sec=60,init_timeout=60,stop_fan=True,lcd=False,i2c=None,rtc=None):
+    def __init__(self,fan_start_sec=60,init_timeout=60,stop_fan=True,lcd=False,i2c=None,rtc=None,smbus=None):
         self.i2c=i2c
         self.lcd=lcd
         self.rtc=rtc

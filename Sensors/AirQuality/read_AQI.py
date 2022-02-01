@@ -81,13 +81,13 @@ class read_AQI:
         if self.stop_fan:
             self.dust_sensor.wake()
             print('running fan for ',self.fan_start_sec,' sec')
-            if self.lcd is not False:
-                try:
-                    self.lcd.clear()      # Sleep for 1 sec
-                    self.lcd.putstr('AQI: running fan for '+str(self.fan_start_sec)+' sec')
-                except:
-                    pass
-            sleep(self.fan_start_sec)
+            #if self.lcd is not False:
+            #    try:
+            #        self.lcd.clear()      # Sleep for 1 sec
+            #        self.lcd.putstr('AQI: running fan for '+str(self.fan_start_sec)+' sec')
+            #    except:
+            #        pass
+            #sleep(self.fan_start_sec)
 
         #Returns NOK if no measurement found in reasonable time
         self.status = self.dust_sensor.read()
@@ -116,12 +116,6 @@ class read_AQI:
         self.PM25=PM25
         self.PM10=PM10
 
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr(str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10')
-            except:
-                pass
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -143,4 +137,5 @@ class read_AQI:
             sync()
             sleep_ms(250)
 
-
+        display_str = str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10'
+        return display_str

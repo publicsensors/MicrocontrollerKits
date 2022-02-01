@@ -44,14 +44,7 @@ class read_color:
         global R, G, B, full
         R, G, B, full = self.sensor.read(True)
         print('R, G, B, full: ',str(R),', ',str(G),', ',str(B),', ',str(full))
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Clear and sleep for 1 sec
-                sleep_ms(1000)
-                self.lcd.putstr('RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full))
-                sleep_ms(1000)
-            except:
-                pass
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -73,3 +66,5 @@ class read_color:
             sync()
             sleep_ms(500)
             
+        display_str = 'RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)
+        return display_str

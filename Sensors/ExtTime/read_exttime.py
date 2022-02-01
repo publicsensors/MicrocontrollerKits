@@ -64,13 +64,7 @@ class read_exttime:
 
         print('year: ',str(year),' month: ',str(month),' day: ',str(day),' hour: ',str(hour),' minute: ',\
               str(minute),' second: ',str(second))
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr('time '+str(year)+'-'+str(month)+'-'+str(day)+'\n'+str(hour)+':'+\
-                                str(minute)+':'+str(second))
-            except:
-                pass
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -92,3 +86,6 @@ class read_exttime:
             sync()
             sleep_ms(250)
             
+        display_str = 'time '+str(year)+'-'+str(month)+'-'+str(day)+'\n'+str(hour)+':'+\
+                                str(minute)+':'+str(second)
+        return display_str

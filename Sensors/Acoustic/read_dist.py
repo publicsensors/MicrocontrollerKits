@@ -50,9 +50,7 @@ class read_dist:
         global dist
         dist = self.sensor.distance()
         print(str(dist)+" cm")
-        if self.lcd is not False:
-            self.lcd.clear()      # Sleep for 1 sec
-            self.lcd.putstr(str(dist)+" cm")
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -74,6 +72,9 @@ class read_dist:
             sync()
             sleep_ms(250)
 
+        display_str = str(dist)+" cm"
+        return display_str
+'''
     # -------------------------------------------------------------------------------
     # Get continuous distance measurements
     # -------------------------------------------------------------------------------
@@ -96,3 +97,4 @@ class read_dist:
             self.lcd.putstr("Done!")
             sleep_ms(2000)
             self.lcd.clear()
+'''

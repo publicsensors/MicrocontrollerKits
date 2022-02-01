@@ -157,6 +157,7 @@ class Sampler:
         print('Detecting/initializing sensor drivers...')
 
         i2c=self.pars['i2c']
+        smbus=self.pars['smbus']
         lcd=self.pars['lcd']
         rtc=self.pars['rtc']
 
@@ -180,7 +181,7 @@ class Sampler:
                 print('importing module_name = ',module_name)
                 sensor_module=__import__(module_name) # import module, defining a class to support sensor ops
                 cmd='sensor_module.read_'+self.pars['sensor_func_suffices'][sensr]+'.read_'+ \
-                    self.pars['sensor_func_suffices'][sensr]+'(lcd=lcd,i2c=i2c,rtc=rtc)'
+                    self.pars['sensor_func_suffices'][sensr]+'(lcd=lcd,i2c=i2c,rtc=rtc,smbus=smbus)'
                 sensor_obj=eval(cmd)                     # instantiate an object of that class
                 print('success: queuing sensor driver ',self.pars['sensor_func_suffices'][sensr])
                 cmd='sensor_obj.test_'+self.pars['sensor_func_suffices'][sensr]+'()'

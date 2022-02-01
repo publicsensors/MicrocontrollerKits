@@ -11,7 +11,7 @@ params={}
 
 from sys import print_exception
 from machine import I2C, RTC
-from Setup usmbus
+from Setup.usmbus import SMBus
 from time import sleep
 
 from SetUp.sensor_utils import sample_params, Sampler, trigger_sample
@@ -33,7 +33,7 @@ params.update({'rtc':rtc}) # dictionary item is a valid RTC object
 print('Initializing I2C interface...')
 try:
     i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
-    print('Success: I2C initialized')
+    print('Success: I2C initialized; scan = ',i2c.scan())
 except Exception as e:
     print_exception(e)
     print('Error: Unable to initalize I2C')
@@ -44,6 +44,7 @@ params.update({'i2c':i2c}) # dictionary item is either a valid I2C object or Fal
 print('Initializing SMBus interface...')
 try:
     smbus = SMBus(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+    #smbus = None
     print('Success: SMBus initialized')
 except Exception as e:
     print_exception(e)

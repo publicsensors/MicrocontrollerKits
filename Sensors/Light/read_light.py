@@ -12,7 +12,7 @@ global full, ir, lux
 # -------------------------------------------------------------------------------
 class read_light:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None),smbus=None:
+    def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
         p_pwr1.value(1)
         sleep_ms(250)           # Sleep for 250 ms
         self.i2c=i2c

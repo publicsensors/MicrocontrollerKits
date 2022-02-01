@@ -12,9 +12,8 @@ global temp, press, humid
 # -------------------------------------------------------------------------------
 class read_press:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
+    def __init__(self,i2c=None,rtc=None,smbus=None):
         self.i2c=i2c
-        self.lcd=lcd
         self.rtc=rtc
         self.logging=False
         self.logfilename=None
@@ -49,18 +48,9 @@ class read_press:
         global temp, press, humid
 
         (temp,press,humid)=self.sensor.read_compensated_data()
-        #(temp,press,humid)=self.sensor.values
-        #values=self.sensor.values
 
         print('temp: ',str(temp),'press: ',str(press),'humid: ',str(humid))
-        #print('values: ',str(values))
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Sleep for 1 sec
-                #self.lcd.putstr(str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')')
-                self.lcd.putstr('t/p/h: '+temp+',\n'+press+','+humid)
-            except:
-                pass
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -85,3 +75,5 @@ class read_press:
             sync()
             sleep_ms(500)
             
+        display_str = 't/p/h: '+temp+',\n'+press+','+humid
+        return display_str

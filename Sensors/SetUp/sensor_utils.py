@@ -84,6 +84,7 @@ class Sampler:
         self.rtc=self.pars['rtc']
         self.i2c=pars['i2c']
         self.lcd=pars['lcd']
+        self.display_list = []
 
         if select_sensors:
             self.sensor_select()
@@ -94,9 +95,15 @@ class Sampler:
         
         self.loop_flag=0  # flag turning loop sampling off/on
 
+        # Timer for LCD display
+        self.LCDtimer=Timer()
+        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_wait'],callback=self.sample_display)
+        
+        # Timer for sample looping
         self.timer=Timer()
         self.timer.init(mode=self.timer.PERIODIC,period=1000*pars['sample_interval'],callback=trigger_sample)
         
+        # Interrupt for sampling on button press
         self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
         self.p_smpl_trigger.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
         
@@ -124,9 +131,22 @@ class Sampler:
                 sensor_obj=self.pars['sensor_objs'][sensr]
                 cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
                 print('\ntaking sensor reading with: ',cmd)
-                exec(cmd)
-                sleep_ms(1000*self.pars['display_wait'])
+                #exec(cmd)
+                display_str = eval(cmd)
+                if len(display_str) > 0:
+                    self.display_list.append(display_str)
+                #sleep_ms(1000*self.pars['display_wait'])
                                   
+    def sample_display(self,p):
+        # A method to display output strings in sequence, callable
+        # by a timer irq
+        #print('irq ',p)
+        #print('Displaying next output string:')
+        if len(self.display_list) > 0:
+            display_str = self.display_list.pop(0)
+            self.lcd.clear()
+            self.lcd.putstr(display_str)
+                                   
     def sample_loop(self):
         global sample_trigger #sensor_obj, sensor_module
         print('Starting sample_loop')
@@ -182,7 +202,8 @@ class Sampler:
                 print('importing module_name = ',module_name)
                 sensor_module=__import__(module_name) # import module, defining a class to support sensor ops
                 cmd='sensor_module.read_'+self.pars['sensor_func_suffices'][sensr]+'.read_'+ \
-                    self.pars['sensor_func_suffices'][sensr]+'(lcd=lcd,i2c=i2c,rtc=rtc,smbus=smbus)'
+                    self.pars['sensor_func_suffices'][sensr]+'(i2c=i2c,rtc=rtc,smbus=smbus)'
+                    #self.pars['sensor_func_suffices'][sensr]+'(lcd=lcd,i2c=i2c,rtc=rtc,smbus=smbus)'
                 sensor_obj=eval(cmd)                     # instantiate an object of that class
                 print('success: queuing sensor driver ',self.pars['sensor_func_suffices'][sensr])
                 cmd='sensor_obj.test_'+self.pars['sensor_func_suffices'][sensr]+'()'

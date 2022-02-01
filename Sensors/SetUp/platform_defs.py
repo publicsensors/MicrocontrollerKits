@@ -31,8 +31,8 @@ if platform.find('Feather STM32F405 with STM32F405RG')>-1:  # Board-specific def
     #pin definitions to automatically enable sampling loop (0=loop, 1= wait for button press)
     # the labeling above seems to be backwards -- should be 1=loop, 0=wait for button press)
     p_smpl_loop_lbl='MISO'
-    #p_smpl_trigger_lbl='SCK'
-    p_smpl_trigger_lbl='D13'
+    p_smpl_trigger_lbl='SCK'
+    #p_smpl_trigger_lbl='D13'
 
 elif platform.find('ESP module with ESP8266')>-1:  # Board-specific definitions: ESP8266 Huzzah Feather/Breakout Board
     print('Loading definitions for ESP8266')

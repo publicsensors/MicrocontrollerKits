@@ -14,11 +14,10 @@ global T
 # -------------------------------------------------------------------------------
 class read_temp:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
+    def __init__(self,i2c=None,rtc=None,smbus=None):
         p_pwr1.value(1)
         sleep_ms(250)           # Sleep for 250 ms
         self.i2c=i2c
-        self.lcd=lcd
         self.rtc=rtc
         self.logging=False
         self.logfilename=None
@@ -58,12 +57,7 @@ class read_temp:
         sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
         T = self.ds.read_temp(self.roms[0])
         print("Temp: ",T, ' C')
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr("Temp: "+str(round(T,2))+" C")
-            except:
-                pass
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -85,3 +79,5 @@ class read_temp:
             sync()
             sleep_ms(250)
 
+        display_str = "Temp: "+str(round(T,2))+" C"
+        return display_str

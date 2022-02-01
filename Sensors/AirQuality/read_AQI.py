@@ -12,9 +12,8 @@ from time import sleep_ms,sleep,ticks_ms,ticks_diff
 # -------------------------------------------------------------------------------
 class read_AQI:
 
-    def __init__(self,fan_start_sec=60,init_timeout=60,stop_fan=True,lcd=False,i2c=None,rtc=None,smbus=None):
+    def __init__(self,fan_start_sec=60,init_timeout=60,stop_fan=True,i2c=None,rtc=None,smbus=None):
         self.i2c=i2c
-        self.lcd=lcd
         self.rtc=rtc
         self.logging=False
         self.logfilename=None
@@ -73,7 +72,7 @@ class read_AQI:
     # Progression for obtaining GPS readings from the sensor
     # -------------------------------------------------------------------------------
 
-    def print_AQI(self,display=True, pr=1):
+    def print_AQI(self, pr=1):
         global PM25,PM10
         # Create a loop to obtain several sentences from the GPS, to make sure
         # all relevant fields in the parser are populated with recent data
@@ -87,7 +86,7 @@ class read_AQI:
             #        self.lcd.putstr('AQI: running fan for '+str(self.fan_start_sec)+' sec')
             #    except:
             #        pass
-            #sleep(self.fan_start_sec)
+            sleep(self.fan_start_sec)
 
         #Returns NOK if no measurement found in reasonable time
         self.status = self.dust_sensor.read()

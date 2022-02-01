@@ -14,12 +14,11 @@ global uv, ir, vis
 # -------------------------------------------------------------------------------
 class read_UIV:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None,smbus=None):
+    def __init__(self,i2c=None,rtc=None,smbus=None):
         p_pwr1.value(1)
         sleep_ms(250)           # Sleep for 250 ms
         #self.i2c=i2c
         self.smbus=smbus
-        self.lcd=lcd
         self.rtc=rtc
         self.logging=False
         self.logfilename=None
@@ -50,12 +49,7 @@ class read_UIV:
         global uv,ir,vis
         uv, ir, vis = self.sensor.read()
         print('uv: ',str(uv),' ir: ',str(ir),' vis: ',str(vis))
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr(str(round(uv,1))+' uv\n('+str(ir)+','+str(vis)+')')
-            except:
-                pass
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -77,3 +71,5 @@ class read_UIV:
             sync()
             sleep_ms(500)
             
+        display_str = str(round(uv,1))+' uv\n('+str(ir)+','+str(vis)+')'
+        return display_str

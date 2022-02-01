@@ -12,9 +12,8 @@ global volt0, volt1, volt2, volt3
 # -------------------------------------------------------------------------------
 class read_volt:
 
-    def __init__(self,lcd=False,i2c=None,rtc=None,addr=72,gain=4,rate=0,smbus=None):
+    def __init__(self,i2c=None,rtc=None,addr=72,gain=4,rate=0,smbus=None):
         self.i2c=i2c
-        self.lcd=lcd
         self.rtc=rtc
         self.logging=False
         self.logfilename=None
@@ -63,13 +62,7 @@ class read_volt:
         volt3=self.sensor.raw_to_v(raw3)
 
         print('volt0: ',str(volt0),'volt1: ',str(volt1),'volt2: ',str(volt2),'volt3: ',str(volt3))
-        if self.lcd is not False:
-            try:
-                self.lcd.clear()      # Sleep for 1 sec
-                #self.lcd.putstr(str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')')
-                self.lcd.putstr('volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3)))
-            except:
-                pass
+
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -90,4 +83,7 @@ class read_volt:
             logfile.close()
             sync()
             sleep_ms(500)
+            
+        display_str = 'volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3))
+        return display_str
             

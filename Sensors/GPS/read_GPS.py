@@ -26,13 +26,12 @@ global GPStime,dec_lat,dec_long
 # -------------------------------------------------------------------------------
 class read_GPS:
 
-    def __init__(self,num_sentences=3,timeout=5,init_timeout=15,lcd=False,i2c=None,rtc=None,smbus=None):
+    def __init__(self,num_sentences=3,timeout=5,init_timeout=15,i2c=None,rtc=None,smbus=None):
         # Turn on GPS power pins, if defined
         for p in ['p_pwr2','p_pwr3','p_pwr4']:
             if p in list(locals().keys()):
                 exec(p+'.value(1)')
         self.i2c=i2c
-        self.lcd=lcd
         self.rtc=rtc
         self.logging=False
         self.logfilename=None
@@ -107,13 +106,7 @@ class read_GPS:
                                                         self.my_gps.timestamp[0],self.my_gps.timestamp[1],self.my_gps.timestamp[2], \
                                                                 dec_lat,dec_long)
                     print(GPSstr)
-                    if self.lcd is not False: #
-                        try:
-                            self.lcd.clear()      # Sleep for 1 sec
-                            GPSstr2='GPS: {},\n   {}'.format(dec_lat,dec_long)
-                            self.lcd.putstr(GPSstr2)
-                        except:
-                            pass
+
                     if self.logging:
                         timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
                         self.sample_num+=1
@@ -141,5 +134,8 @@ class read_GPS:
                         logfile.close()
                         sync()
                         sleep_ms(250)
-                    break;
-
+                    break
+                
+        display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)
+        return display_str
+            

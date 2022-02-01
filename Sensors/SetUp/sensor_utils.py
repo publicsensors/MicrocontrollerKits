@@ -125,6 +125,7 @@ class Sampler:
                 cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
                 print('\ntaking sensor reading with: ',cmd)
                 exec(cmd)
+                sleep_ms(1000*self.pars['display_wait'])
                                   
     def sample_loop(self):
         global sample_trigger #sensor_obj, sensor_module

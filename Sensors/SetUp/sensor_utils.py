@@ -133,14 +133,28 @@ class Sampler:
         """
         global sensor_obj, sensor_module
         for i in range(len(self.pars['active_sensors'])):
-                sensr=self.pars['active_sensors'][i]
-                sensor_obj=self.pars['sensor_objs'][sensr]
-                cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
-                print('\ntaking sensor reading with: ',cmd)
-                #exec(cmd)
-                display_str = eval(cmd)
-                if len(display_str) > 0:
-                    self.display_list.append(display_str)
+            sensr=self.pars['active_sensors'][i]
+            sensor_obj=self.pars['sensor_objs'][sensr]
+            cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
+            print('\ntaking sensor reading with: ',cmd)
+            #exec(cmd)
+            data_list,display_str = eval(cmd)
+            #display_str = eval(cmd)
+            if len(display_str) > 0:
+                self.display_list.append(display_str)
+            for data in data_list:
+                print('data = ',data)
+                print('self.log_format=',sensor_obj.log_format)
+                log_line=sensor_obj.log_format % tuple(data)
+                print('log_line = ',log_line)
+                print('logging to filename: ',sensor_obj.logfilename)
+                logfile=open(sensor_obj.logfilename,'a')
+                logfile.write(log_line)
+                logfile.close()
+            sync()
+            sleep_ms(250)
+                    
+                    
                 #sleep_ms(1000*self.pars['display_wait'])
                                   
     def sample_display(self,p):

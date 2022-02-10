@@ -72,7 +72,7 @@ class read_AQI:
             return 0
         
     # -------------------------------------------------------------------------------
-    # Progression for obtaining GPS readings from the sensor
+    # Progression for obtaining AQI readings from the sensor
     # -------------------------------------------------------------------------------
 
     def print_AQI(self, pr=1):
@@ -118,6 +118,7 @@ class read_AQI:
         self.PM25=PM25
         self.PM10=PM10
 
+        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -128,19 +129,7 @@ class read_AQI:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            print('data = ',data)
-            print('self.log_format=',self.log_format)
-            log_line=self.log_format % tuple(data)
-            print('log_line = ',log_line)
-            print('logging to filename: ',self.logfilename)
-            logfile=open(self.logfilename,'a')
-            logfile.write(log_line)
-            logfile.close()
-            try:
-                sync()
-            except:
-                pass
-            sleep_ms(250)
+            data_list.extend([data])
 
         display_str = str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10'
-        return display_str
+        return data_list,display_str

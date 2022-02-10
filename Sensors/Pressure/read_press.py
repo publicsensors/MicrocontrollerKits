@@ -51,6 +51,7 @@ class read_press:
 
         print('temp: ',str(temp),'press: ',str(press),'humid: ',str(humid))
 
+        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -62,18 +63,8 @@ class read_press:
             data.extend([t for t in timestamp])
             print([s for s in self.fmt_keys])
             print([eval(s) for s in self.fmt_keys])
-
             data.extend([eval(s) for s in self.fmt_keys])
-            print('data = ',data)
-            print('self.log_format=',self.log_format)
-            log_line=self.log_format % tuple(data)
-            print('log_line = ',log_line)
-            print('logging to filename: ',self.logfilename)
-            logfile=open(self.logfilename,'a')
-            logfile.write(log_line)
-            logfile.close()
-            sync()
-            sleep_ms(500)
+            data_list.extend([data])
             
         display_str = 't/p/h: '+temp+',\n'+press+','+humid
-        return display_str
+        return data_list,display_str

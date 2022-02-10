@@ -2,11 +2,11 @@
 #
 # This script sets default parameters. User-specified parameters are set (by default) in user_params.py.
 #
-params={'sensor_list':{'distance':1,
-                       'temperature':1,
+params={'sensor_list':{'distance':0,
+                       'temperature':0,
                        'light':0,
                        'color':1,
-                       'GPS':0,
+                       'GPS':1,
                        'AQI':0,
                        'voltage':1,
                        'pressure':0,

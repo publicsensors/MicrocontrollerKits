@@ -50,6 +50,7 @@ class read_light:
         full, ir, lux = self.sensor.light()
         print('full: ',str(full),' ir: ',str(ir))
 
+        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -60,19 +61,7 @@ class read_light:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            print('data = ',data)
-            print('self.log_format=',self.log_format)
-            log_line=self.log_format % tuple(data)
-            print('log_line = ',log_line)
-            print('logging to filename: ',self.logfilename)
-            logfile=open(self.logfilename,'a')
-            logfile.write(log_line)
-            logfile.close()
-            try:
-                sync()
-            except:
-                pass
-            sleep_ms(500)
+            data_list.extend([data])
         
         display_str = str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')'
-        return display_str
+        return data_list,display_str

@@ -54,10 +54,12 @@ class read_temp:
     def print_temp(self):
         global T
         self.ds.convert_temp()       # Obtain temp readings from each of those sensors
-        sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
+        sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to
+                                # report their temperature readings
         T = self.ds.read_temp(self.roms[0])
         print("Temp: ",T, ' C')
 
+        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -68,16 +70,7 @@ class read_temp:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            print('data = ',data)
-            print('self.log_format=',self.log_format)
-            log_line=self.log_format % tuple(data)
-            print('log_line = ',log_line)
-            print('logging to filename: ',self.logfilename)
-            logfile=open(self.logfilename,'a')
-            logfile.write(log_line)
-            logfile.close()
-            sync()
-            sleep_ms(250)
-
+            data_list.extend([data])
+            
         display_str = "Temp: "+str(round(T,2))+" C"
-        return display_str
+        return data_list,display_str

@@ -50,6 +50,7 @@ class read_dist:
         dist = self.sensor.distance()
         print(str(dist)+" cm")
 
+        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -60,40 +61,8 @@ class read_dist:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            print('data = ',data)
-            print('self.log_format=',self.log_format)
-            log_line=self.log_format % tuple(data)
-            print('log_line = ',log_line)
-            print('logging to filename: ',self.logfilename)
-            logfile=open(self.logfilename,'a')
-            logfile.write(log_line)
-            logfile.close()
-            sync()
-            sleep_ms(250)
-
+            data_list.extend([data])
+            
         display_str = str(dist)+" cm"
-        return display_str
-'''
-    # -------------------------------------------------------------------------------
-    # Get continuous distance measurements
-    # -------------------------------------------------------------------------------
-    def print_dist_start(self,samp_max=1000,interval=5):
-        sleep_microsec=int(1000*interval)
-        pause_microsec=1000
-        sample_num=1            # Start sample number at 0 so we can count the number of samples we take
-        while sample_num <= samp_max:            # This will repeat in a loop, until we terminate with a ctrl-c
-            dist = self.sensor.distance()   # Obtain a distance reading
-            sleep_ms(pause_microsec)      # Sleep for 1 sec
-            print("Sample: ",sample_num, ',', str(dist)+" cm") # print the sample number and distance
-            print("\n")         # Print a line of space between temp readings so it is easier to read
-            if self.lcd is not False:
-                self.lcd.clear()      # Sleep for 1 sec
-                self.lcd.putstr("Sample: "+str(sample_num)+"\nDist: "+str(dist)+" cm")
-            sleep_ms(max(sleep_microsec-pause_microsec,0))      # Wait 5 sec, before repeating the loop and taking another reading
-            sample_num+=1       # Increment the sample number for each reading
-        if self.lcd is not False:
-            self.lcd.clear()
-            self.lcd.putstr("Done!")
-            sleep_ms(2000)
-            self.lcd.clear()
-'''
+        return data_list,display_str
+

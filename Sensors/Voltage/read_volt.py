@@ -63,6 +63,7 @@ class read_volt:
 
         print('volt0: ',str(volt0),'volt1: ',str(volt1),'volt2: ',str(volt2),'volt3: ',str(volt3))
 
+        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -73,17 +74,8 @@ class read_volt:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            print('data = ',data)
-            print('self.log_format=',self.log_format)
-            log_line=self.log_format % tuple(data)
-            print('log_line = ',log_line)
-            print('logging to filename: ',self.logfilename)
-            logfile=open(self.logfilename,'a')
-            logfile.write(log_line)
-            logfile.close()
-            sync()
-            sleep_ms(500)
+            data_list.extend([data])
             
         display_str = 'volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3))
-        return display_str
+        return data_list,display_str
             

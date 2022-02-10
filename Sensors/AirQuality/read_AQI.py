@@ -1,10 +1,13 @@
 # This script prints AQI readings from a SDS011 attached to uartAQ
 
 # Import platform-specific definitions
-from Setup.platform_defs import uartAQ
+from SetUp.platform_defs import uartAQ
 from AirQuality.sds011 import SDS011
 
-from os import sync
+try:
+    from os import sync
+except:
+    pass
 from time import sleep_ms,sleep,ticks_ms,ticks_diff
 
 # -------------------------------------------------------------------------------
@@ -133,7 +136,10 @@ class read_AQI:
             logfile=open(self.logfilename,'a')
             logfile.write(log_line)
             logfile.close()
-            sync()
+            try:
+                sync()
+            except:
+                pass
             sleep_ms(250)
 
         display_str = str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10'

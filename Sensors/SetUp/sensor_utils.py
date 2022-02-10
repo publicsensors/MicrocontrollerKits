@@ -2,10 +2,14 @@
 
 from sys import print_exception
 from time import sleep, sleep_ms
-from os import sync
+try: # The ESP32 build seems to lack sync, so create an alternative if necessary
+    from os import sync
+except:
+    pass
+    
 from machine import Pin, Timer
 
-from pyb import ExtInt
+#from pyb import ExtInt
 
 import micropython
 micropython.alloc_emergency_exception_buf(100)
@@ -97,11 +101,13 @@ class Sampler:
 
         # Timer for LCD display
         self.LCDtimer=Timer()
-        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_wait'],callback=self.sample_display)
+        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_wait'],
+                           callback=self.sample_display)
         
         # Timer for sample looping
         self.timer=Timer()
-        self.timer.init(mode=self.timer.PERIODIC,period=1000*pars['sample_interval'],callback=trigger_sample)
+        self.timer.init(mode=self.timer.PERIODIC,period=1000*pars['sample_interval'],
+                        callback=trigger_sample)
         
         # Interrupt for sampling on button press
         self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
@@ -243,7 +249,10 @@ class Sampler:
             logfile.write(header)
             logfile.close()
             sleep_ms(250)
-            sync()
+            try:
+                sync()
+            except:
+                pass
 
             # update fields in sensor object
             self.pars['sensor_objs'][sensr].logging=True

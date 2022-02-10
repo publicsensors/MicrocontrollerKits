@@ -2,7 +2,10 @@
 
 from Light.tsl25x1 import tsl25x1_sensor 
 from time import sleep_ms
-from os import sync
+try:
+    from os import sync
+except:
+    pass
 from platform_defs import p_pwr1
 
 global full, ir, lux
@@ -65,7 +68,10 @@ class read_light:
             logfile=open(self.logfilename,'a')
             logfile.write(log_line)
             logfile.close()
-            sync()
+            try:
+                sync()
+            except:
+                pass
             sleep_ms(500)
         
         display_str = str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')'

@@ -3,7 +3,7 @@
 # Board-specific definitions: STM32f405 Feather
 
 print('Loading definitions for STM32F405 Feather')
-from machine import Pin, UART
+from machine import Pin, UART, I2C
 
 board='STM32feather'
 p_pwr1 = Pin('D9', Pin.OUT,value=1)  # Pin 12 is power supplied to the DS18B20, V+
@@ -16,6 +16,7 @@ button = Pin('D13', Pin.IN, Pin.PULL_UP)
 # Define default I2C pins
 p_I2Cscl_lbl='SCL'
 p_I2Csda_lbl='SDA'
+i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 #pin definitions for hcsr04/jsn sensors
 p_hcsr_trig = 'D12'
 p_hcsr_echo = 'D11'

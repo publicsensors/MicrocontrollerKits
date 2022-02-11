@@ -57,5 +57,5 @@ class read_color:
             data.extend([eval(s) for s in self.fmt_keys])
             data_list.extend([data])
             
-        display_str = 'RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)
-        return data_list,display_str
+        display_str_list = ['RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)]
+        return data_list,display_str_list

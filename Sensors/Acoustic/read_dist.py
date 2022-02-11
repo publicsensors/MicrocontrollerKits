@@ -63,6 +63,7 @@ class read_dist:
             data.extend([eval(s) for s in self.fmt_keys])
             data_list.extend([data])
             
-        display_str = str(dist)+" cm"
-        return data_list,display_str
+        display_str = 'distance =\n '+str(dist)+" cm"
+        display_str_list = [display_str]
+        return data_list,display_str_list
 

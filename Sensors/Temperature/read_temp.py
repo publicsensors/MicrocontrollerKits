@@ -73,4 +73,5 @@ class read_temp:
             data_list.extend([data])
             
         display_str = "Temp: "+str(round(T,2))+" C"
-        return data_list,display_str
+        display_str_list = [display_str]
+        return data_list,display_str_list

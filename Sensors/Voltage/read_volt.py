@@ -76,6 +76,6 @@ class read_volt:
             data.extend([eval(s) for s in self.fmt_keys])
             data_list.extend([data])
             
-        display_str = 'volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3))
-        return data_list,display_str
+        display_str_list = ['volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3))]
+        return data_list,display_str_list
             

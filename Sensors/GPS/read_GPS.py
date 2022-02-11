@@ -129,5 +129,6 @@ class read_GPS:
                     break
                 
         display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)
-        return data_list,display_str
+        display_str_list = [display_str]
+        return data_list,display_str_list
             

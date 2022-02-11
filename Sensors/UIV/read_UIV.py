@@ -64,4 +64,5 @@ class read_UIV:
             data_list.extend([data])
             
         display_str = str(round(uv,1))+' uv\n('+str(ir)+','+str(vis)+')'
-        return data_list,display_str
+        display_str_list = [display_str]
+        return data_list,display_str_list

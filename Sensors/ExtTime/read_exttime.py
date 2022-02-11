@@ -78,7 +78,7 @@ class read_exttime:
             data_list.extend([data])
 
         
-        display_str = 'time '+str(year)+'-'+str(month)+'-'+str(day)+'\n'+str(hour)+':'+\
-                                str(minute)+':'+str(second)
-        return data_list,display_str
+        display_str = 'time '+str(year)+'-'+str(month)+'-'+str(day)+',\n'+str(hour)+':'+str(minute)+':'+str(second)
+        display_str_list = [display_str]
+        return data_list,display_str_list
 

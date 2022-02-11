@@ -132,4 +132,5 @@ class read_AQI:
             data_list.extend([data])
 
         display_str = str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10'
-        return data_list,display_str
+        display_str_list = [display_str]
+        return data_list,display_str_list

@@ -67,4 +67,5 @@ class read_press:
             data_list.extend([data])
             
         display_str = 't/p/h: '+temp+',\n'+press+','+humid
-        return data_list,display_str
+        display_str_list = [display_str]
+        return data_list,display_str_list

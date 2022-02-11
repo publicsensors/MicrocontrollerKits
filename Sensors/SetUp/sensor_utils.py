@@ -2,7 +2,7 @@
 
 from sys import print_exception
 from time import sleep, sleep_ms
-try: # The ESP32 build seems to lack sync, so create an alternative if necessary
+try: # The ESP32 build seems to lack sync, so skip if unavailable
     from os import sync
 except:
     pass
@@ -138,10 +138,13 @@ class Sampler:
             cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
             print('\ntaking sensor reading with: ',cmd)
             #exec(cmd)
-            data_list,display_str = eval(cmd)
+            data_list,display_str_list = eval(cmd)
             #display_str = eval(cmd)
-            if len(display_str) > 0:
-                self.display_list.append(display_str)
+            #if len(display_str) > 0:
+            self.display_list.extend(display_str_list)
+            #for display_str in display_str_list:
+            #    print("display_str = ",display_str)
+            #    self.display_list.append(display_str)
             for data in data_list:
                 print('data = ',data)
                 print('self.log_format=',sensor_obj.log_format)
@@ -151,7 +154,10 @@ class Sampler:
                 logfile=open(sensor_obj.logfilename,'a')
                 logfile.write(log_line)
                 logfile.close()
-            sync()
+            try:
+                sync()
+            except:
+                pass
             sleep_ms(250)
                     
                     
@@ -164,6 +170,7 @@ class Sampler:
         #print('Displaying next output string:')
         if len(self.display_list) > 0:
             display_str = self.display_list.pop(0)
+            print("display_str = ",display_str)
             self.lcd.clear()
             self.lcd.putstr(display_str)
                                    

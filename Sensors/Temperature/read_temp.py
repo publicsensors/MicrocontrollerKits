@@ -6,8 +6,9 @@ from onewire import OneWire
 from Temperature.ds18x20 import DS18X20
 from time import sleep_ms
 from os import sync
+from ubinascii import hexlify
 
-global T
+global T, sensor_id
 
 # -------------------------------------------------------------------------------
 # Set up pins for the DS18B20
@@ -52,26 +53,28 @@ class read_temp:
     # Progression for obtaining temperature readings from the sensor
     # -------------------------------------------------------------------------------
     def print_temp(self):
-        global T
+        global T, sensor_id
+        self.roms = self.ds.scan()   # Rescan to find currently alive DS18B20 sensors
         self.ds.convert_temp()       # Obtain temp readings from each of those sensors
         sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to
                                 # report their temperature readings
-        T = self.ds.read_temp(self.roms[0])
-        print("Temp: ",T, ' C')
-
+        display_str_list = []
         data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
-            for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
-            data=[self.sample_num]
-            data.extend([t for t in timestamp])
-            data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
-            
-        display_str = "Temp: "+str(round(T,2))+" C"
-        display_str_list = [display_str]
+            for rom in self.roms:
+                sensor_id=str(hexlify(rom))[2:-1]
+                T = self.ds.read_temp(rom)
+                print("Temp: ",T, ' C')
+                print(self.fmt_keys)
+                for s in self.fmt_keys:
+                    print(s)
+                    print(eval(s))
+                data=[self.sample_num]
+                data.extend([t for t in timestamp])
+                data.extend([eval(s) for s in self.fmt_keys])
+                data_list.extend([data])
+                display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
+                display_str_list.extend([display_str])
         return data_list,display_str_list

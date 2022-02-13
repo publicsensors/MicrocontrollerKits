@@ -25,6 +25,6 @@ params={'sensor_list':{'distance':0,
         'default_sample_looping':True,
         'sample_max':4,
         'sample_interval':60,
-        'display_wait':3
+        'display_interval':3
 }
 

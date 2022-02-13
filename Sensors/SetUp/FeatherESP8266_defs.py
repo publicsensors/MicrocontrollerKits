@@ -26,4 +26,8 @@ i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 #pin definitions for hcsr04/jsn sensors
 p_hcsr_trig = 12
 p_hcsr_echo = 14
+#pin definitions to automatically enable sampling loop (1=loop, = wait for button press)
+p_smpl_loop_lbl='MISO'
+#p_smpl_trigger_lbl='SCK'
+p_smpl_trigger_lbl='D14'
 

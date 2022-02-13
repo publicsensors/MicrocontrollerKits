@@ -101,12 +101,12 @@ class Sampler:
 
         # Timer for LCD display
         self.LCDtimer=Timer()
-        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_wait'],
+        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
         # Timer for sample looping
-        self.timer=Timer()
-        self.timer.init(mode=self.timer.PERIODIC,period=1000*pars['sample_interval'],
+        self.SMPLtimer=Timer()
+        self.SMPLtimer.init(mode=self.SMPLtimer.PERIODIC,period=1000*pars['sample_interval'],
                         callback=trigger_sample)
         
         # Interrupt for sampling on button press
@@ -161,7 +161,7 @@ class Sampler:
             sleep_ms(250)
                     
                     
-                #sleep_ms(1000*self.pars['display_wait'])
+                #sleep_ms(1000*self.pars['display_interval'])
                                   
     def sample_display(self,p):
         # A method to display output strings in sequence, callable

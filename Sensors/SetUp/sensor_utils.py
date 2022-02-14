@@ -99,15 +99,15 @@ class Sampler:
         
         self.loop_flag=0  # flag turning loop sampling off/on
 
-        # Timer for LCD display
+        # Virtual timer for LCD display
         self.LCDtimer=Timer()
         self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
-        # Timer for sample looping
+        # Virtual timer for sample looping
         self.SMPLtimer=Timer()
         self.SMPLtimer.init(mode=self.SMPLtimer.PERIODIC,period=1000*pars['sample_interval'],
-                        callback=trigger_sample)
+                            callback=trigger_sample)
         
         # Interrupt for sampling on button press
         self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)

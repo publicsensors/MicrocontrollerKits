@@ -31,3 +31,4 @@ p_smpl_loop_lbl='MISO'
 #p_smpl_trigger_lbl='SCK'
 p_smpl_trigger_lbl='D14'
 
+

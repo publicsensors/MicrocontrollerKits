@@ -72,10 +72,8 @@ sampler=Sampler(params,button=button)
 # Launch sampling cycle
 sampler.sample_loop()
 
-#print('Launching sampling cycle with sample_loop = ',sample_loop)
-#sampler.sample_cycle()
 
-# To halt timer, use
-#sampler.timer.deinit()
+# To halt SMPL timer, use
+#sampler.SMPLtimer.deinit()
 
 

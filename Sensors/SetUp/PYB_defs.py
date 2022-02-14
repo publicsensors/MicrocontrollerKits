@@ -3,8 +3,8 @@
 # Board-specific definitions: Pyboard v1.1
 
 print('Loading definitions for PYBv1.1')
-from machine import Pin, UART, I2C
-from pyb import Switch #, UART
+from machine import Pin, I2C
+from pyb import Switch, UART
 
 board='PBDv1.1'
 # Initalize power pins off; they are turned on by read_XXX classes if called
@@ -22,7 +22,10 @@ button = Switch()  # use onboard USR button
 # Define default I2C pins
 p_I2Cscl_lbl='X9'
 p_I2Csda_lbl='X10'
-i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+# I2C without an ID currently reverts to SoftI2C; use hardware I2C(1)
+# instead, which has the specified pinouts
+#i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+i2c = I2C(1)
 #pin definitions for hcsr04/jsn sensors
 p_hcsr_trig = 'D12'
 p_hcsr_echo = 'D11'

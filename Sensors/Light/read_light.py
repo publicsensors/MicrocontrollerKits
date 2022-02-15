@@ -6,7 +6,7 @@ try:
     from os import sync
 except:
     pass
-from platform_defs import p_pwr1
+from SetUp.platform_defs import p_pwr1
 
 global full, ir, lux
 

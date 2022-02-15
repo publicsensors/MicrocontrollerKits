@@ -11,7 +11,7 @@
 #
 #    Modified 20210225 by DG to accept an externally generated I2C object
 
-from platform_defs import p_pwr1
+from SetUp.platform_defs import p_pwr1
 #from platform_defs import p_I2Cscl_lbl,p_I2Csda_lbl,p_pwr1
 #import time
 from time import sleep, sleep_ms

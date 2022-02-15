@@ -75,60 +75,13 @@ def set_cycle_flag(p):
     print('set_cycle ',p,p.value())
     sample_cycle_flag=p.value()
 
-# A minimalist debouncing preprocessing step for set_cycle_flag
-global bnc_inprocess,bnc_query
-bnc_inprocess = False # flag to prevent multiple invocations of debounce
-bnc_query = Flase
-
-def in_process():
-    global bnc_inprocess
-    bnc_inprocess = True
-    bnc_timer = Timer(mode=Timer.ONE_SHOT,period=200,callback=out_process())
-    
-def out_process():
-    global bnc_inprocess
-    bnc_inprocess = False
-    
-def set_cycle_flag_process(p):
-    global bnc_inprocess
-    if bnc_inprocess:
-        return
-    else:
-        in_process()  # call function to set inprocess flag
-        set_cycle_flag_debounce(p)
-
-def set_cycle_flag_debounce(p):
-    global bnc_inprocess
-    global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
-    if bnc_inprocess: # a debounce is already in process
-        return
-    bnc_delay = 20 # delay between pin value samples, in ms
-    bnc_num = 16   # number of p.value samples that must agree to accept state
-    bnc_max = 64 # number of sample cycles before giving up
-    bnc_inprocess = True
-    state = p.value()
-    for i in range(bnc_max):
-        sleep_ms(bnc_delay)
-        state = (state<<1 | p.value()) & (~2**bnc_num)
-        print('i = ',i,', state = ',state)
-        if i >= bnc_num-2:
-            if state == 0:
-                sample_cycle_flag = 0
-                break
-            if state == 2**bnc_num-1:
-                sample_cycle_flag = 1
-                break
-    # condition satisfied or timed out -- reset inprocess flag 
-    print('sample_cycle_flag =', sample_cycle_flag)
-    bnc_inprocess = False
-
-
 class Sampler:
     """ A class to handle sampling from sensors, data logging and user interfaces.
     """
     def __init__(self,pars,button=None,select_sensors=True):
         global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
         global sample_trigger # flag to trigger one sample in sample_loop
+        global check_loop_state, state, p_smpl_loop
 
         self.pars=pars
         self.button=button
@@ -164,13 +117,23 @@ class Sampler:
         # If True, the pin is pulled up and looping occurs unless there is a connection to GND.
         # If False, the pin is pulled down and looping occurs only when the pin is connected to V+.
         if pars['default_sample_looping']:
-            self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
+            try:
+                self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
+            except:
+                print('unable to set pull-up for p_smpl_loop')
+                self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)
         else:
-            self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
-        #self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag_debounce)
+            try:
+                self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
+            except:
+                print('unable to set pull-down for p_smpl_loop')
+                self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)                
         self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
-        
+
         # Set up initial sampling if looping is turned on
+        # The two options below use the either the setting or the
+        # initial position of the loop flag switch.
+        #if pars['default_sample_looping']:
         if self.p_smpl_loop.value()==1:
             sample_cycle_flag=1  # flag to trigger loop sampling
             sample_trigger=1     # flag to trigger first sample

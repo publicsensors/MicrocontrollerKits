@@ -1,5 +1,4 @@
 # Initialize microcontroller for PublicSensors/SensoresPublicos sensor activities
-
 from SetUp.platform_defs import *
 global params
 global sensor_func  # attempt to fix global/local issues with eval of functions
@@ -7,7 +6,6 @@ global sensor_obj, sensor_module
 global sample_trigger, sample_cycle_flag
 
 params={}
-
 
 from sys import print_exception
 from machine import RTC
@@ -41,6 +39,7 @@ except Exception as e:
     i2c=False
 params.update({'i2c':i2c}) # dictionary item is either a valid I2C object or False
 
+## SMBus initialization is disabled until the 5V vs 3.3V issue is solved
 ## Initialize SMBus interface
 #print('Initializing SMBus interface...')
 try:

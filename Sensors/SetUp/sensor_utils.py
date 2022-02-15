@@ -133,10 +133,15 @@ class Sampler:
         # Set up initial sampling if looping is turned on
         # The two options below use the either the setting or the
         # initial position of the loop flag switch.
-        #if pars['default_sample_looping']:
-        if self.p_smpl_loop.value()==1:
+        if pars['default_sample_looping']:
+        #if self.p_smpl_loop.value()==1:
             sample_cycle_flag=1  # flag to trigger loop sampling
             sample_trigger=1     # flag to trigger first sample
+        else:
+            sample_cycle_flag=0  # flag to trigger loop sampling
+            sample_trigger=0     # flag to trigger first sample
+
+            
                 
     def sample(self):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 

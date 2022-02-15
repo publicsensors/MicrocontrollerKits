@@ -76,14 +76,33 @@ def set_cycle_flag(p):
     sample_cycle_flag=p.value()
 
 # A minimalist debouncing preprocessing step for set_cycle_flag
-global bnc_inprocess
+global bnc_inprocess,bnc_query
 bnc_inprocess = False # flag to prevent multiple invocations of debounce
+bnc_query = Flase
+
+def in_process():
+    global bnc_inprocess
+    bnc_inprocess = True
+    bnc_timer = Timer(mode=Timer.ONE_SHOT,period=200,callback=out_process())
+    
+def out_process():
+    global bnc_inprocess
+    bnc_inprocess = False
+    
+def set_cycle_flag_process(p):
+    global bnc_inprocess
+    if bnc_inprocess:
+        return
+    else:
+        in_process()  # call function to set inprocess flag
+        set_cycle_flag_debounce(p)
+
 def set_cycle_flag_debounce(p):
     global bnc_inprocess
     global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
     if bnc_inprocess: # a debounce is already in process
         return
-    bnc_delay = 5 # delay between pin value samples, in ms
+    bnc_delay = 20 # delay between pin value samples, in ms
     bnc_num = 16   # number of p.value samples that must agree to accept state
     bnc_max = 64 # number of sample cycles before giving up
     bnc_inprocess = True
@@ -92,7 +111,7 @@ def set_cycle_flag_debounce(p):
         sleep_ms(bnc_delay)
         state = (state<<1 | p.value()) & (~2**bnc_num)
         print('i = ',i,', state = ',state)
-        if i >= bnc_num:
+        if i >= bnc_num-2:
             if state == 0:
                 sample_cycle_flag = 0
                 break
@@ -148,8 +167,8 @@ class Sampler:
             self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
         else:
             self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
-        self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag_debounce)
-        #self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
+        #self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag_debounce)
+        self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
         
         # Set up initial sampling if looping is turned on
         if self.p_smpl_loop.value()==1:

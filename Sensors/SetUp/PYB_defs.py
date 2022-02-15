@@ -31,5 +31,6 @@ p_hcsr_trig = 'D12'
 p_hcsr_echo = 'D11'
 #pin definitions to automatically enable sampling loop (1=loop, 0=wait for button press)
 p_smpl_loop_lbl='Y4'
-p_smpl_trigger_lbl='Y3'
+#p_smpl_trigger_lbl='Y3'
+p_smpl_trigger_lbl='X17'
 

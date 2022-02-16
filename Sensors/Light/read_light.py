@@ -61,5 +61,7 @@ class read_light:
             data.extend([eval(s) for s in self.fmt_keys])
             data_list.extend([data])
         
-        display_str_list = ['Light: '+str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')']
+        display_str = 'lux {}\n{},{}'.format(str(round(lux,1)),str(full),str(ir))
+        display_str_list = [display_str]
+        #display_str_list = ['Light: '+str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')']
         return data_list,display_str_list

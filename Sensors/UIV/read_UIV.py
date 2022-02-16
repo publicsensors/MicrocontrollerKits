@@ -10,14 +10,11 @@ from platform_defs import p_pwr1
 global uv, ir, vis
 
 # -------------------------------------------------------------------------------
-# Set up pins for the UIV sensor; power from either Vbat or p_pwr1 pin (defined in platform_defs)
-# -------------------------------------------------------------------------------
 class read_UIV:
 
     def __init__(self,i2c=None,rtc=None,smbus=None):
         p_pwr1.value(1)
         sleep_ms(250)           # Sleep for 250 ms
-        #self.i2c=i2c
         self.smbus=smbus
         self.rtc=rtc
         self.logging=False

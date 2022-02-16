@@ -11,15 +11,9 @@
 #
 #    Modified 20210225 by DG to accept an externally generated I2C object
 
-from SetUp.platform_defs import p_pwr1
-#from platform_defs import p_I2Cscl_lbl,p_I2Csda_lbl,p_pwr1
-#import time
 from time import sleep, sleep_ms
-#import ustruct
 from struct import pack, unpack
 from machine import Pin
-#from machine import I2C, Pin
-#from esp8266_i2c_lcd import I2cLcd
 from gc import collect
 collect()
 
@@ -90,25 +84,7 @@ class SMBusEmulator:
         self.i2c.writeto(addr, buf)
         data = self.i2c.readfrom(addr, 4)
         return _bytes_to_int(data)
-'''
-class origSMBusEmulator:
-    __slots__ = ('i2c',)
-    #def __init__(self, scl_pinno=5, sda_pinno=4):
-    def __init__(self, scl_pinno=p_I2Cscl_lbl, sda_pinno=p_I2Csda_lbl):
-        self.i2c = I2C(scl=Pin(scl_pinno, Pin.IN),
-                       sda=Pin(sda_pinno, Pin.IN))
-
-    def write_byte_data(self, addr, cmd, val):
-        buf = bytes([cmd, val])
-        self.i2c.writeto(addr, buf)
-
-    def read_word_data(self, addr, cmd):
-        assert cmd < 256
-        buf = bytes([cmd])
-        self.i2c.writeto(addr, buf)
-        data = self.i2c.readfrom(addr, 4)
-        return _bytes_to_int(data)
-'''
+    
 SENSOR_ADDRESS=0x29
 
 class Tsl2591:
@@ -282,9 +258,7 @@ class TSL2561:
         if value is None:
             data = self.i2c.readfrom_mem(self.address, register, 2)
             return unpack('<H', data)[0]
-            #return ustruct.unpack('<H', data)[0]
         data = pack('<H', value)
-        #data = ustruct.pack('<H', value)
         self.i2c.writeto_mem(self.address, register, data)
 
     def _register8(self, register, value=None):
@@ -292,7 +266,6 @@ class TSL2561:
         if value is None:
             return self.i2c.readfrom_mem(self.address, register, 1)[0]
         data = pack('<B', value)
-        #data = ustruct.pack('<B', value)
         self.i2c.writeto_mem(self.address, register, data)
 
     def active(self, value=None):
@@ -337,7 +310,6 @@ class TSL2561:
         if not was_active:
             # if the sensor was off, wait for measurement
             sleep_ms(_INTEGRATION_TIME[self._integration_time][1])
-            #time.sleep_ms(_INTEGRATION_TIME[self._integration_time][1])
         broadband = self._register16(_REGISTER_CHANNEL0)
         ir = self._register16(_REGISTER_CHANNEL1)
         self.active(was_active)
@@ -434,10 +406,6 @@ class TSL2561CS(TSL2561):
 class tsl25x1_sensor:
 
     def __init__(self,sensor_type=None,i2c=None):
-        p_pwr1.value(1)
-        #if i2c==None:
-        #    i2c = I2C(scl=Pin(p_I2Cscl_lbl), sda=Pin(p_I2Csda_lbl),freq=50000)            
-
         self.type=None
         if sensor_type==None or sensor_type=='tsl2591' or sensor_type=='TSL2591':
             try:

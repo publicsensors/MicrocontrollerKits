@@ -8,8 +8,7 @@ from os import sync
 global values
 global temp, press, humid
 # -------------------------------------------------------------------------------
-# Set up pins for the light sensors; power from either Vbat or p_pwr1 pin (defined in platform_defs)
-# -------------------------------------------------------------------------------
+
 class read_press:
 
     def __init__(self,i2c=None,rtc=None,smbus=None):

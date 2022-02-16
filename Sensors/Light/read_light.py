@@ -6,7 +6,6 @@ try:
     from os import sync
 except:
     pass
-from SetUp.platform_defs import p_pwr1
 
 global full, ir, lux
 
@@ -16,7 +15,6 @@ global full, ir, lux
 class read_light:
 
     def __init__(self,i2c=None,rtc=None,smbus=None):
-        p_pwr1.value(1)
         sleep_ms(250)           # Sleep for 250 ms
         self.i2c=i2c
         self.rtc=rtc
@@ -63,5 +61,5 @@ class read_light:
             data.extend([eval(s) for s in self.fmt_keys])
             data_list.extend([data])
         
-        display_str_list = [str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')']
+        display_str_list = ['Light: '+str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')']
         return data_list,display_str_list

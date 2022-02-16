@@ -72,6 +72,7 @@ def trigger_sample(p):
 # Callback to switch flag turning cyclic sampling on/off
 def set_cycle_flag(p):
     global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
+    #global sample_trigger # flag to trigger one sample in sample_loop
     print('set_cycle ',p,p.value())
     sample_cycle_flag=p.value()
 
@@ -89,6 +90,17 @@ class Sampler:
         self.i2c=pars['i2c']
         self.lcd=pars['lcd']
         self.display_list = []
+
+        # Set up initial sampling if looping is turned on
+        # The two options below use the either the setting or the
+        # initial position of the loop flag switch.
+        if pars['default_sample_looping']:
+        #if self.p_smpl_loop.value()==1:
+            sample_cycle_flag=1  # flag to trigger loop sampling
+            sample_trigger=1     # flag to trigger first sample
+        else:
+            sample_cycle_flag=0  # flag to trigger loop sampling
+            sample_trigger=0     # flag to trigger first sample
 
         if select_sensors:
             self.sensor_select()
@@ -119,27 +131,18 @@ class Sampler:
         if pars['default_sample_looping']:
             try:
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
+                print('set pull-up for p_smpl_loop: enable auto-looping')
             except:
                 print('unable to set pull-up for p_smpl_loop')
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)
         else:
             try:
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
+                print('set pull-down for p_smpl_loop: disable auto-looping')
             except:
                 print('unable to set pull-down for p_smpl_loop')
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)                
         self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
-
-        # Set up initial sampling if looping is turned on
-        # The two options below use the either the setting or the
-        # initial position of the loop flag switch.
-        if pars['default_sample_looping']:
-        #if self.p_smpl_loop.value()==1:
-            sample_cycle_flag=1  # flag to trigger loop sampling
-            sample_trigger=1     # flag to trigger first sample
-        else:
-            sample_cycle_flag=0  # flag to trigger loop sampling
-            sample_trigger=0     # flag to trigger first sample
 
             
                 
@@ -148,6 +151,9 @@ class Sampler:
             controlled sampling
         """
         global sensor_obj, sensor_module
+        global sample_trigger,sample_cycle_flag
+        print('A; sample_trigger,sample_cycle_flag =',sample_trigger,sample_cycle_flag)
+        sample_trigger=0
         for i in range(len(self.pars['active_sensors'])):
             sensr=self.pars['active_sensors'][i]
             sensor_obj=self.pars['sensor_objs'][sensr]

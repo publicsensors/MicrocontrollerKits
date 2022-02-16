@@ -60,14 +60,14 @@ class read_temp:
                                 # report their temperature readings
         display_str_list = []
         data_list = []
-        if self.logging:
-            timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
-            self.sample_num+=1
-            for rom in self.roms:
-                sensor_id=str(hexlify(rom))[2:-1]
-                T = self.ds.read_temp(rom)
-                print("Temp: ",T, ' C')
-                print(self.fmt_keys)
+        timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+        self.sample_num+=1
+        for rom in self.roms:
+            sensor_id=str(hexlify(rom))[2:-1]
+            T = self.ds.read_temp(rom)
+            print("Temp: ",T, ' C')
+            print(self.fmt_keys)
+            if self.logging:
                 for s in self.fmt_keys:
                     print(s)
                     print(eval(s))
@@ -75,6 +75,6 @@ class read_temp:
                 data.extend([t for t in timestamp])
                 data.extend([eval(s) for s in self.fmt_keys])
                 data_list.extend([data])
-                display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
-                display_str_list.extend([display_str])
+            display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
+            display_str_list.extend([display_str])
         return data_list,display_str_list

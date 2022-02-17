@@ -185,10 +185,10 @@ class Sampler:
                     
                 #sleep_ms(1000*self.pars['display_interval'])
                                   
-    def sample_display(self,p):
+    def sample_display(self,t):
         # A method to display output strings in sequence, callable
-        # by a timer irq
-        #print('irq ',p)
+        # by a timer irq (t)
+        #print('irq ',t)
         #print('Displaying next output string:')
         if len(self.display_list) > 0:
             display_str = self.display_list.pop(0)
@@ -196,8 +196,25 @@ class Sampler:
             self.lcd.clear()
             self.lcd.putstr(display_str)
                                    
+    def sample_check(self,t):
+        # Performs one check whether a sample has been requested,
+        # intended to be called by a timer (t)
+        global sample_trigger 
+        #print('sample_check...')
+        if sample_trigger==1:
+            print('sample triggered...')
+            sample_trigger=0
+            self.sample()
+                                   
+    def sample_loop_timer(self):
+        # Method to initiate a timer that calls sample_check (a non-blocking
+        # alternative to sampler_loop.
+        self.check_timer = Timer()
+        self.check_timer.init(mode=Timer.PERIODIC,period=50,callback=self.sample_check)
+
+                                   
     def sample_loop(self):
-        global sample_trigger #sensor_obj, sensor_module
+        global sample_trigger 
         print('Starting sample_loop')
         while True:
             if sample_trigger==1:
@@ -206,7 +223,7 @@ class Sampler:
                 self.sample()
                                    
     def sample_cycle(self):
-        global sample_trigger #sensor_obj, sensor_module
+        global sample_trigger 
         print('Starting cycle with ',self.pars['sample_max'],' samples')
         for sample_count in range(self.pars['sample_max']):
             print('sample_count = ',sample_count)

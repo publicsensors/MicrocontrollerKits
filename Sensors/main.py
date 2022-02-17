@@ -70,6 +70,8 @@ sampler=Sampler(params,button=button)
           
 # Launch sampling cycle
 sampler.sample_loop()
+# A non-blocking alternative
+#sampler.sample_loop_timer()
 
 
 # To halt SMPL timer, use

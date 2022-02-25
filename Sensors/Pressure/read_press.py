@@ -22,6 +22,7 @@ class read_press:
         self.sample_num=0
 
         self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be logged        
 
         # Wrapper function to call BME280 or BMP280 I2C pressure/temperature[/humidity] sensor
         self.sensor = BME280(i2c=i2c)
@@ -52,7 +53,6 @@ class read_press:
 
         print('temp: ',str(temp),'press: ',str(press),'humid: ',str(humid))
 
-        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -69,5 +69,4 @@ class read_press:
             #data_list.extend([data])
             
         display_str = 't/p/h: '+temp+',\n'+press+','+humid
-        display_str_list = [display_str]
-        return data_list,display_str_list
+        self.display_str_list = [display_str]

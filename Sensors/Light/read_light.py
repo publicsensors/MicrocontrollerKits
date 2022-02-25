@@ -26,6 +26,7 @@ class read_light:
         self.sample_num=0
 
         self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be displayed        
 
         # Wrapper function to synonymize calls to TSL2561 and TSL2591 light sensors
         self.sensor = tsl25x1_sensor(i2c=self.i2c)
@@ -50,7 +51,6 @@ class read_light:
         full, ir, lux = self.sensor.light()
         print('full: ',str(full),' ir: ',str(ir))
 
-        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -65,6 +65,5 @@ class read_light:
             #data_list.extend([data])
         
         display_str = 'lux {}\n{},{}'.format(str(round(lux,1)),str(full),str(ir))
-        display_str_list = [display_str]
-        #display_str_list = ['Light: '+str(round(lux,1))+' lux\n('+str(full)+','+str(ir)+')']
-        return data_list,display_str_list
+        self.display_str_list = [display_str]
+

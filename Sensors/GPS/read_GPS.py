@@ -41,6 +41,7 @@ class read_GPS:
         self.sample_num=0
         
         self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be logged        
 
         self.uartGPS=uartGPS
         self.num_sentences=num_sentences
@@ -109,7 +110,6 @@ class read_GPS:
                                                                 dec_lat,dec_long)
                     print(GPSstr)
 
-                    data_list = []
                     if self.logging:
                         timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
                         self.sample_num+=1
@@ -132,6 +132,5 @@ class read_GPS:
                     break
                 
         display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)
-        display_str_list = [display_str]
-        return data_list,display_str_list
+        self.display_str_list = [display_str]
             

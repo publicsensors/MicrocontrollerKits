@@ -160,27 +160,27 @@ class Sampler:
             sensor_obj=self.pars['sensor_objs'][sensr]
             cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
             print('\ntaking sensor reading with: ',cmd)
-            #exec(cmd)
-            data_list,display_str_list = eval(cmd)
+            exec(cmd)
+            #data_list,display_str_list = eval(cmd)
             #display_str = eval(cmd)
             #if len(display_str) > 0:
-            self.display_list.extend(display_str_list)
+            #self.display_list.extend(sensor_obj.display_str_list)
             # This mechanism for logging is now depreciated, but left
             # intact until all read_X drivers are updated.
-            for data in data_list:
-                print('data = ',data)
-                print('self.log_format=',sensor_obj.log_format)
-                log_line=sensor_obj.log_format % tuple(data)
-                print('log_line = ',log_line)
-                print('logging to filename: ',sensor_obj.logfilename)
-                logfile=open(sensor_obj.logfilename,'a')
-                logfile.write(log_line)
-                logfile.close()
-            try:
-                sync()
-            except:
-                pass
-            sleep_ms(250)
+            #for data in data_list:
+            #    print('data = ',data)
+            #    print('self.log_format=',sensor_obj.log_format)
+            #    log_line=sensor_obj.log_format % tuple(data)
+            #    print('log_line = ',log_line)
+            #    print('logging to filename: ',sensor_obj.logfilename)
+            #    logfile=open(sensor_obj.logfilename,'a')
+            #    logfile.write(log_line)
+            #    logfile.close()
+            #try:
+            #    sync()
+            #except:
+            #    pass
+            #sleep_ms(250)
                     
                     
                 #sleep_ms(1000*self.pars['display_interval'])
@@ -188,7 +188,7 @@ class Sampler:
     def sample_log(self,t):
         # A method write to logs in sequence, callable
         # by a timer irq (t). Log strings come from the 
-        # the data_list filed of the sensor object,
+        # the data_list field of the sensor object,
         # with the corresponding output format.
         #print('Entering sample_log...')
         for i in range(len(self.pars['active_sensors'])):
@@ -213,12 +213,28 @@ class Sampler:
                                    
     def sample_display(self,t):
         # A method to display output strings in sequence, callable
-        # by a timer irq (t)
+        # by a timer irq (t). Display strings come from the
+        # display_str_list field of each read_X sensor driver.
         #print('irq ',t)
-        #print('Displaying next output string:')
+        #print('Entering sample_display...')
+        for i in range(len(self.pars['active_sensors'])):
+            sensr=self.pars['active_sensors'][i]
+            sensor_obj=self.pars['sensor_objs'][sensr]
+            for i in range(len(sensor_obj.display_str_list)):
+                print('sensor_obj.display_str_list[i] = ',sensor_obj.display_str_list[i])
+                print('3) sample_display: self.display_list = ',self.display_list)
+                self.display_list.extend([sensor_obj.display_str_list[i]])
+                print('4) sample_display: self.display_list = ',self.display_list)
+            sensor_obj.display_str_list=[]
+            #while len(sensor_obj.display_str_list)>0:
+            #    self.display_list.extend(sensor_obj.display_str_list.pop(0))
+            # This worked in sample:
+            #self.display_list.extend(sensor_obj.display_str_list)
         if len(self.display_list) > 0:
+            print('1) sample_display: self.display_list = ',self.display_list)
             display_str = self.display_list.pop(0)
             print("display_str = ",display_str)
+            print('2) sample_display: self.display_list = ',self.display_list)
             self.lcd.clear()
             self.lcd.putstr(display_str)
                                    
@@ -242,7 +258,6 @@ class Sampler:
         self.log_timer = Timer()
         self.log_timer.init(mode=Timer.PERIODIC,period=tmr_period,callback=self.sample_log)
 
-                                   
     def sample_loop(self):
         global sample_trigger 
         print('Starting sample_loop')
@@ -284,12 +299,8 @@ class Sampler:
 
         # Create a list of sensors flagged for use
         requestedSensors = [s for s in list(self.pars['sensor_list'].keys()) if self.pars['sensor_list'][s]>0]
-        #
-        #  NOTE: A bug causes onewire to crash if initialized before the GPS and AQI uarts.
-        #        Reversing the order avoids this bug.
-        #
-        requestedSensors.reverse()
-        print('requestedSensors = ',requestedSensors)
+        #requestedSensors.reverse()
+        #print('requestedSensors = ',requestedSensors)
 
         # Import driver functions and test requested sensors
         for sensr in requestedSensors:

@@ -33,6 +33,7 @@ class read_AQI:
         self.PM10=-1
         
         self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be displayed        
 
         self.dust_sensor = SDS011(uartAQ) # create SDS11 parser object
         #self.dust_sensor.set_reporting_mode_query()
@@ -101,9 +102,6 @@ class read_AQI:
         self.AQtimer = Timer()
         self.AQtimer.init(mode=Timer.ONE_SHOT,period=1000*self.fan_start_sec,callback=self.print_AQI_read)
         # Return empty lists -- these will be filled when reading is taken
-        display_str_list = []
-        data_list = []
-        return data_list,display_str_list
         print('exiting print_AQI')
 
     def print_AQI_read(self,t):
@@ -138,7 +136,6 @@ class read_AQI:
         self.PM25=PM25
         self.PM10=PM10
 
-        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -150,8 +147,7 @@ class read_AQI:
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
             self.data_list.extend([data])
-            #data_list.extend([data])
 
         display_str = str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10'
-        display_str_list = [display_str]
-        return data_list,display_str_list
+        self.display_str_list = [display_str]
+

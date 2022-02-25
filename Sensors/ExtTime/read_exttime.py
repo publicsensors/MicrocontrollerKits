@@ -25,6 +25,7 @@ class read_exttime:
         self.datetime=None
 
         self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be displayed
 
         # Wrapper function to call DS3231 I2C Real Time Clock
         self.sensor = DS3231(i2c)
@@ -66,7 +67,6 @@ class read_exttime:
         print('year: ',str(year),' month: ',str(month),' day: ',str(day),' hour: ',str(hour),' minute: ',\
               str(minute),' second: ',str(second))
 
-        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -82,6 +82,6 @@ class read_exttime:
 
         
         display_str = 'time '+str(year)+'-'+str(month)+'-'+str(day)+',\n'+str(hour)+':'+str(minute)+':'+str(second)
-        display_str_list = [display_str]
-        return data_list,display_str_list
-
+        self.display_str_list = [display_str]
+        print('exttime: display_str = ',display_str)
+        print('exttime: self.display_str_list = ',self.display_str_list)

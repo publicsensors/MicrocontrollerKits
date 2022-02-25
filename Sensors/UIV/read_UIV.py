@@ -24,6 +24,9 @@ class read_UIV:
         self.fmt_keys=None
         self.sample_num=0
 
+        self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be logged        
+
         # Initialize the SI1132 object
         self.sensor = SI1132(smbus=self.smbus)
 
@@ -47,7 +50,6 @@ class read_UIV:
         uv, ir, vis = self.sensor.read()
         print('uv: ',str(uv),' ir: ',str(ir),' vis: ',str(vis))
 
-        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -58,8 +60,7 @@ class read_UIV:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
+            self.data_list.extend([data])
             
         display_str = str(round(uv,1))+' uv\n('+str(ir)+','+str(vis)+')'
-        display_str_list = [display_str]
-        return data_list,display_str_list
+        self.display_str_list = [display_str]

@@ -2,15 +2,15 @@
 #
 # This script sets default parameters. User-specified parameters are set (by default) in user_params.py.
 #
-params={'sensor_list':{'distance':0,
+params={'sensor_list':{'distance':1,
                        'temperature':0,
                        'light':0,
-                       'color':1,
+                       'color':0,
                        'GPS':0,
                        'AQI':0,
                        'voltage':0,
                        'pressure':0,
-                       'exttime':0},
+                       'exttime':1},
         'sensor_log_directory':'Data',
         'sensor_log_flags':{ 'distance':1,
                        'temperature':1,
@@ -22,7 +22,7 @@ params={'sensor_list':{'distance':0,
                              'pressure':1,
                              'exttime':1},
         'auto_logging':True,
-        'default_sample_looping':True,
+        'default_sample_looping':False,
         'sample_max':4,
         'sample_interval':60,
         'display_interval':3

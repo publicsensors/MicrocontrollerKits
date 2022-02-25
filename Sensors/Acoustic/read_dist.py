@@ -27,6 +27,7 @@ class read_dist:
         self.sample_num=0
 
         self.data_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be logged        
 
         self.sensor = hcsr04.HCSR04(trigger_pin = p_hcsr_trig, echo_pin = p_hcsr_echo, c = hcsr_c)
 
@@ -52,7 +53,6 @@ class read_dist:
         dist = self.sensor.distance()
         print(str(dist)+" cm")
 
-        data_list = []
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
@@ -67,6 +67,6 @@ class read_dist:
             #data_list.extend([data])
             
         display_str = 'distance =\n '+str(dist)+" cm"
-        display_str_list = [display_str]
-        return data_list,display_str_list
+        self.display_str_list = [display_str]
+
 

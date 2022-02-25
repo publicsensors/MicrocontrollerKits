@@ -21,6 +21,8 @@ class read_press:
         self.fmt_keys=None
         self.sample_num=0
 
+        self.data_list = [] # bucket for data to be logged        
+
         # Wrapper function to call BME280 or BMP280 I2C pressure/temperature[/humidity] sensor
         self.sensor = BME280(i2c=i2c)
 
@@ -63,7 +65,8 @@ class read_press:
             print([s for s in self.fmt_keys])
             print([eval(s) for s in self.fmt_keys])
             data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
+            self.data_list.extend([data])
+            #data_list.extend([data])
             
         display_str = 't/p/h: '+temp+',\n'+press+','+humid
         display_str_list = [display_str]

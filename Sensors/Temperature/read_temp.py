@@ -27,6 +27,8 @@ class read_temp:
         self.fmt_keys=None
         self.sample_num=0
 
+        self.data_list = [] # bucket for data to be logged        
+
         ow = OneWire(p_DS18B20)   # Pin 13 is the data pin for the DS18B20
         self.ds = DS18X20(ow)        # Initialize a ds18b20 object
         self.roms = self.ds.scan()   # Find all the DS18B20 sensors that are attached (we only have one)
@@ -74,7 +76,8 @@ class read_temp:
                 data=[self.sample_num]
                 data.extend([t for t in timestamp])
                 data.extend([eval(s) for s in self.fmt_keys])
-                data_list.extend([data])
+                self.data_list.extend([data])
+                #data_list.extend([data])
             display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
             display_str_list.extend([display_str])
         return data_list,display_str_list

@@ -40,6 +40,8 @@ class read_GPS:
         self.fmt_keys=None
         self.sample_num=0
         
+        self.data_list = [] # bucket for data to be logged        
+
         self.uartGPS=uartGPS
         self.num_sentences=num_sentences
         self.timeout=timeout
@@ -125,7 +127,8 @@ class read_GPS:
                                     flat_data.append(dd)
                             else:
                                 flat_data.append(d)
-                        data_list.extend([flat_data])
+                        self.data_list.extend([flat_data])
+                        #data_list.extend([flat_data])
                     break
                 
         display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)

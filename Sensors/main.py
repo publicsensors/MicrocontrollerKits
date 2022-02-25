@@ -3,7 +3,6 @@ from SetUp.platform_defs import *
 global params
 global sensor_func  # attempt to fix global/local issues with eval of functions
 global sensor_obj, sensor_module
-global sample_trigger, sample_cycle_flag
 
 params={}
 
@@ -69,9 +68,9 @@ sampler=Sampler(params,button=button)
 #sampler.sample()
           
 # Launch sampling cycle
-sampler.sample_loop()
+#sampler.sample_loop()
 # A non-blocking alternative
-#sampler.sample_loop_timer()
+sampler.sample_loop_timer()
 
 
 # To halt SMPL timer, use

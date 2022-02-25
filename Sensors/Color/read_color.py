@@ -21,6 +21,8 @@ class read_color:
         self.fmt_keys=None
         self.sample_num=0
 
+        self.data_list = [] # bucket for data to be logged
+        
         # Wrapper function to call tcs34725 sensor
         #self.sensor = tsl25x1_sensor(i2c=self.i2c)
         self.sensor = TCS34725(self.i2c)
@@ -55,7 +57,8 @@ class read_color:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
+            self.data_list.extend([data])
+            #data_list.extend([data])
             
         display_str_list = ['RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)]
         return data_list,display_str_list

@@ -19,6 +19,7 @@ sample_trigger=0
 global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
 sample_cycle_flag=0
 
+
 def sample_params(user_param_file=None,default_param_file='SetUp.default_params.py',pars={}):
     """ A function to load default and user-specified parameters for the sample cycle.
         pars is a dictionary containing settings to be entered into the global params dictionary.
@@ -164,9 +165,8 @@ class Sampler:
             #display_str = eval(cmd)
             #if len(display_str) > 0:
             self.display_list.extend(display_str_list)
-            #for display_str in display_str_list:
-            #    print("display_str = ",display_str)
-            #    self.display_list.append(display_str)
+            # This mechanism for logging is now depreciated, but left
+            # intact until all read_X drivers are updated.
             for data in data_list:
                 print('data = ',data)
                 print('self.log_format=',sensor_obj.log_format)
@@ -185,6 +185,32 @@ class Sampler:
                     
                 #sleep_ms(1000*self.pars['display_interval'])
                                   
+    def sample_log(self,t):
+        # A method write to logs in sequence, callable
+        # by a timer irq (t). Log strings come from the 
+        # the data_list filed of the sensor object,
+        # with the corresponding output format.
+        #print('Entering sample_log...')
+        for i in range(len(self.pars['active_sensors'])):
+            sensr=self.pars['active_sensors'][i]
+            sensor_obj=self.pars['sensor_objs'][sensr]
+            if len(sensor_obj.data_list)>0: # check if data waits to be logged
+                logfile=open(sensor_obj.logfilename,'a')
+                while len(sensor_obj.data_list)>0: # cycle through data lines
+                    data=sensor_obj.data_list.pop()
+                    print('data = ',data)
+                    print('self.log_format=',sensor_obj.log_format)
+                    log_line=sensor_obj.log_format % tuple(data)
+                    print('log_line = ',log_line)
+                    print('logging to filename: ',sensor_obj.logfilename)
+                    logfile.write(log_line)
+                logfile.close()
+                try:
+                    sync()
+                except:
+                    pass
+        #print('Leaving sample_log...')
+                                   
     def sample_display(self,t):
         # A method to display output strings in sequence, callable
         # by a timer irq (t)
@@ -209,8 +235,12 @@ class Sampler:
     def sample_loop_timer(self):
         # Method to initiate a timer that calls sample_check (a non-blocking
         # alternative to sampler_loop.
+        tmr_period = 50
         self.check_timer = Timer()
-        self.check_timer.init(mode=Timer.PERIODIC,period=50,callback=self.sample_check)
+        self.check_timer.init(mode=Timer.PERIODIC,period=tmr_period,callback=self.sample_check)
+        # Timer for calls to a non-blocking logger
+        self.log_timer = Timer()
+        self.log_timer.init(mode=Timer.PERIODIC,period=tmr_period,callback=self.sample_log)
 
                                    
     def sample_loop(self):

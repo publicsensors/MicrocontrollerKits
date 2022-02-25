@@ -25,6 +25,8 @@ class read_light:
         self.fmt_keys=None
         self.sample_num=0
 
+        self.data_list = [] # bucket for data to be logged        
+
         # Wrapper function to synonymize calls to TSL2561 and TSL2591 light sensors
         self.sensor = tsl25x1_sensor(i2c=self.i2c)
 
@@ -59,7 +61,8 @@ class read_light:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
+            self.data_list.extend([data])
+            #data_list.extend([data])
         
         display_str = 'lux {}\n{},{}'.format(str(round(lux,1)),str(full),str(ir))
         display_str_list = [display_str]

@@ -26,6 +26,7 @@ class read_volt:
         self.gain=gain   # previous value gain=2
         self.rate=rate   # previous value rate=4
 
+        self.data_list = [] # bucket for data to be logged
 
         # Wrapper function to call ADS1115 I2C voltage sensor
         self.sensor = ADS1115(i2c, self.addr, self.gain)
@@ -74,7 +75,8 @@ class read_volt:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
+            self.data_list.extend([data])
+            #data_list.extend([data])
             
         display_str_list = ['volts: '+str(round(volt0,3))+',\n'+str(round(volt1,3))+','+str(round(volt2,3))+','+str(round(volt3,3))]
         return data_list,display_str_list

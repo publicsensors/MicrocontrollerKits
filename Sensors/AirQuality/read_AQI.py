@@ -3,11 +3,8 @@
 # Import platform-specific definitions
 from SetUp.platform_defs import uartAQ
 from AirQuality.sds011 import SDS011
+from machine import Timer
 
-try:
-    from os import sync
-except:
-    pass
 from time import sleep_ms,sleep,ticks_ms,ticks_diff
 
 # -------------------------------------------------------------------------------
@@ -15,7 +12,7 @@ from time import sleep_ms,sleep,ticks_ms,ticks_diff
 # -------------------------------------------------------------------------------
 class read_AQI:
 
-    def __init__(self,fan_start_sec=60,init_timeout=60,stop_fan=True,i2c=None,rtc=None,smbus=None):
+    def __init__(self,fan_start_sec=30,init_timeout=30,stop_fan=True,i2c=None,rtc=None,smbus=None):
         self.i2c=i2c
         self.rtc=rtc
         self.logging=False
@@ -34,12 +31,18 @@ class read_AQI:
         self.pkt_status=None
         self.PM25=-1
         self.PM10=-1
+        
+        self.data_list = [] # bucket for data to be logged        
 
         self.dust_sensor = SDS011(uartAQ) # create SDS11 parser object
-        self.dust_sensor.set_reporting_mode_query()
+        #self.dust_sensor.set_reporting_mode_query()
+        sleep(5)
+        self.dust_sensor.wake()
+        print('running fan for ',2,' sec')
+        sleep(2)
         if self.stop_fan:
             self.dust_sensor.sleep() # stop fan
-            
+        sleep(1)
     
     # -------------------------------------------------------------------------------
     # Test the AQI sensor
@@ -49,8 +52,10 @@ class read_AQI:
             print('starting test_AQI')
             if self.stop_fan: #Start fan
                 self.dust_sensor.wake()
-                sleep(5)
+                #print('running fan for ',self.fan_start_sec,' sec')
+                #sleep(self.fan_start_sec)
             t = ticks_ms() # Get initial time, to compare to timeout limit
+            count = 0
             while True:
                 if ticks_diff(ticks_ms(), t) >= 1000*self.init_timeout:
                     print('no response from AQI within init time limit...')
@@ -60,13 +65,24 @@ class read_AQI:
                     print('AQI testing suspended -- enabling AQI anyways...')
                     return 1
                 else:
-                    self.status = self.dust_sensor.read()
+                    # Initiate a reading
+                    count += 1
+                    #self.status = self.dust_sensor.read()
+                    #print(count,self.status)
+                    #sleep(5)
+                    #if self.status:
+                    #    print('AQI status = OK')
+                    #    if self.stop_fan: #Stop fan
+                    #        self.dust_sensor.sleep()
+                    #    return 1
+                    self.dust_sensor.query()
                     sleep(1)
-                    if self.status:
-                        print('AQI status = OK')
+                    if self.uartAQ.any():
+                        print('got characters from uartAQ -- enabling AQI sensor')
                         if self.stop_fan: #Stop fan
                             self.dust_sensor.sleep()
                         return 1
+                    sleep(4)
         except:
             print('error in query to AQI sensor...')
             return 0
@@ -75,22 +91,26 @@ class read_AQI:
     # Progression for obtaining AQI readings from the sensor
     # -------------------------------------------------------------------------------
 
-    def print_AQI(self, pr=1):
+    def print_AQI(self):
         global PM25,PM10
-        # Create a loop to obtain several sentences from the GPS, to make sure
-        # all relevant fields in the parser are populated with recent data
-
+        # Turn on fan, and initiate a non-blocking process
+        # to take a reading after the specified interval
         if self.stop_fan:
             self.dust_sensor.wake()
-            print('running fan for ',self.fan_start_sec,' sec')
-            #if self.lcd is not False:
-            #    try:
-            #        self.lcd.clear()      # Sleep for 1 sec
-            #        self.lcd.putstr('AQI: running fan for '+str(self.fan_start_sec)+' sec')
-            #    except:
-            #        pass
-            sleep(self.fan_start_sec)
+        print('running fan for ',self.fan_start_sec,' sec')
+        self.AQtimer = Timer()
+        self.AQtimer.init(mode=Timer.ONE_SHOT,period=1000*self.fan_start_sec,callback=self.print_AQI_read)
+        # Return empty lists -- these will be filled when reading is taken
+        display_str_list = []
+        data_list = []
+        return data_list,display_str_list
+        print('exiting print_AQI')
 
+    def print_AQI_read(self,t):
+        global PM25,PM10
+        # Complete the sampling by reading from the SDS011, and
+        # displaying/logging the results. t is the timer.
+        print('entering print_AQI_read')
         #Returns NOK if no measurement found in reasonable time
         self.status = self.dust_sensor.read()
         #Returns NOK if checksum failed
@@ -129,7 +149,8 @@ class read_AQI:
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
-            data_list.extend([data])
+            self.data_list.extend([data])
+            #data_list.extend([data])
 
         display_str = str(round(PM25,1))+' PM25\n'+str(round(PM10,1))+' PM10'
         display_str_list = [display_str]

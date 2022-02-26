@@ -114,7 +114,8 @@ class Sampler:
 
         # Virtual timer for LCD display
         self.LCDtimer=Timer()
-        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
+        if self.lcd:
+            self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
         # Virtual timer for sample looping
@@ -144,6 +145,10 @@ class Sampler:
                 print('unable to set pull-down for p_smpl_loop')
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)                
         self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
+        
+        if self.lcd:
+            self.lcd.clear()
+            self.lcd.putstr('Ready to sample!')
 
             
                 

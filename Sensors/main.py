@@ -55,7 +55,6 @@ params.update({'smbus':smbus}) # dictionary item is either a valid I2C object or
 print('Detecting/initializing LCD interface...')
 try:
     lcd = lcd_init(i2c)
-    assert(lcd != False)
 except Exception as e:
     print_exception(e)
 params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or False

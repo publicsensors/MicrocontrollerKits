@@ -15,7 +15,6 @@ try:
 except:
     pass
 
-from os import sync
 from GPS.micropyGPS import MicropyGPS
 from time import sleep_ms,ticks_ms,ticks_diff
 

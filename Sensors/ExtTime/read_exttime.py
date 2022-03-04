@@ -3,7 +3,6 @@
 # Use driver by roberthh from https://github.com/robert-hh/ads1x15
 from ExtTime.urtc import DS3231
 from time import sleep_ms
-from os import sync
 
 global datetime
 global year, month, day, weekday, hour, minute, second

@@ -5,7 +5,6 @@ from SetUp.platform_defs import p_DS18B20, p_pwr1
 from onewire import OneWire
 from Temperature.ds18x20 import DS18X20
 from time import sleep_ms
-from os import sync
 from ubinascii import hexlify
 
 global T, sensor_id

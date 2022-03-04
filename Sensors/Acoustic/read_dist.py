@@ -6,7 +6,6 @@ from SetUp.platform_defs import *
 from machine import Pin, I2C
 from Acoustic import hcsr04
 from time import sleep_ms
-from os import sync
 
 # -------------------------------------------------------------------------------
 # Set up pins for the DS18B20

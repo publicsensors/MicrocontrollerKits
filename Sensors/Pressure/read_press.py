@@ -3,7 +3,6 @@
 # Use driver by roberthh from https://github.com/robert-hh/BME280
 from Pressure.bme280_float import BME280
 from time import sleep_ms
-from os import sync
 
 global values
 global temp, press, humid

@@ -2,7 +2,6 @@
 
 from Color.tcs34725 import TCS34725
 from time import sleep_ms
-from os import sync
 
 global R, G, B, full
 

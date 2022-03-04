@@ -3,7 +3,6 @@
 # Use driver by roberthh from https://github.com/robert-hh/ads1x15
 from Voltage.ads1x15 import ADS1115
 from time import sleep_ms
-from os import sync
 
 global raw0, raw1, raw2, raw3
 global volt0, volt1, volt2, volt3

@@ -4,7 +4,6 @@
 
 from UV_IR_Visible.si1132 import SI1132 
 from time import sleep_ms
-from os import sync
 from platform_defs import p_pwr1
 
 global uv, ir, vis

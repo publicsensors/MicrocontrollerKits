@@ -1,7 +1,7 @@
 # This script prints AQI readings from a SDS011 attached to uartAQ
 
 # Import platform-specific definitions
-from SetUp.platform_defs import uartAQ
+from SetUp.platform_defs import uartAQ, AQtimer
 from AirQuality.sds011 import SDS011
 from machine import Timer
 
@@ -25,6 +25,8 @@ class read_AQI:
         self.fan_start_sec=fan_start_sec
         self.stop_fan=stop_fan
         self.init_timeout=init_timeout
+        
+        self.AQtimer=AQtimer
         
         self.uartAQ=uartAQ
         self.status=None
@@ -99,7 +101,7 @@ class read_AQI:
         if self.stop_fan:
             self.dust_sensor.wake()
         print('running fan for ',self.fan_start_sec,' sec')
-        self.AQtimer = Timer()
+        #self.AQtimer = Timer()
         self.AQtimer.init(mode=Timer.ONE_SHOT,period=1000*self.fan_start_sec,callback=self.print_AQI_read)
         # Return empty lists -- these will be filled when reading is taken
         print('exiting print_AQI')

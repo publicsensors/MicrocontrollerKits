@@ -27,6 +27,13 @@ params.update({'p_smpl_trigger_lbl':p_smpl_trigger_lbl,'p_smpl_loop_lbl':p_smpl_
 rtc=RTC()
 params.update({'rtc':rtc}) # dictionary item is a valid RTC object
 
+# Link timers to params
+params.update({'check_timer':check_timer}) # dictionary item is either a valid I2C object or False
+params.update({'LCDtimer':LCDtimer}) # dictionary item is either a valid I2C object or False
+params.update({'SMPLtimer':SMPLtimer}) # dictionary item is either a valid I2C object or False
+params.update({'AQtimer':AQtimer}) # dictionary item is either a valid I2C object or False
+
+
 # Initialize I2C interface
 print('Initializing I2C interface...')
 try:
@@ -61,7 +68,8 @@ params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or Fal
 
 
 # Instantiate a Sampler object
-sampler=Sampler(params,button=button)
+sampler=Sampler(params)
+#sampler=Sampler(params,button=button)
 
 #print('Launching single sample')
 #sampler.sample()

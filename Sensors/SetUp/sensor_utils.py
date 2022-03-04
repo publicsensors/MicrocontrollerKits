@@ -113,13 +113,13 @@ class Sampler:
         self.loop_flag=0  # flag turning loop sampling off/on
 
         # Virtual timer for LCD display
-        self.LCDtimer=Timer()
+        self.LCDtimer=self.pars['LCDtimer']
         if self.lcd:
             self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
         # Virtual timer for sample looping
-        self.SMPLtimer=Timer()
+        self.SMPLtimer=self.pars['SMPLtimer']
         self.SMPLtimer.init(mode=self.SMPLtimer.PERIODIC,period=1000*pars['sample_interval'],
                             callback=trigger_sample)
         
@@ -231,7 +231,7 @@ class Sampler:
         # alternative to sampler_loop. samplle_check also executes a non-
         # blocking logger.
         tmr_period = 50
-        self.check_timer = Timer()
+        self.check_timer=self.pars['check_timer']
         self.check_timer.init(mode=Timer.PERIODIC,period=tmr_period,callback=self.sample_check)
 
     def sample_loop(self):

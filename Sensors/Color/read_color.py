@@ -49,16 +49,14 @@ class read_color:
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
-            for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
             self.data_list.extend([data])
             
         display_str = 'RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)
-        print('exttime: display_str = ',display_str)
+        print('color: display_str = ',display_str)
         self.display_str_list = [display_str]
-        
+        print('color: self.display_str_list = ',self.display_str_list)
+
+

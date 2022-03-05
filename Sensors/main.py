@@ -49,8 +49,8 @@ params.update({'i2c':i2c}) # dictionary item is either a valid I2C object or Fal
 ## Initialize SMBus interface
 #print('Initializing SMBus interface...')
 try:
-    #smbus = SMBus(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
-    smbus = None
+    smbus = SMBus(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+    #smbus = None
     print('Success: SMBus initialized')
 except Exception as e:
     print_exception(e)

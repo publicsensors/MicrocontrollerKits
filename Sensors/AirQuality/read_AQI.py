@@ -38,7 +38,7 @@ class read_AQI:
         self.display_str_list = [] # bucket for data to be displayed        
 
         self.dust_sensor = SDS011(uartAQ) # create SDS11 parser object
-        #self.dust_sensor.set_reporting_mode_query()
+        self.dust_sensor.set_reporting_mode_query()
         sleep(5)
         self.dust_sensor.wake()
         print('running fan for ',2,' sec')

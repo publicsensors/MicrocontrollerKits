@@ -8,6 +8,10 @@ from machine import Pin, UART, SoftI2C, Timer
 board='esp32'
 p_pwr1 = Pin(15, Pin.OUT)  # Pin 12 is power supplied to the DS18B20, V+
 p_DS18B20 = Pin(33, Pin.IN)  # Pin D10 is the data pin for DS18B20 temperature sensors
+uartGPS = UART(1, 9600, bits=8, parity=None, stop=1,rx=14,tx=32)
+#uartAQ= UART(3, 9600)
+#uartAQ.init(9600, bits=8, parity=None, stop=1)
+uartAQ= UART(2, 9600, bits=8, parity=None, stop=1,rx=16,tx=17)
 #button = Pin(13, Pin.IN, Pin.PULL_UP)
 # Define default I2C pins
 p_I2Cscl_lbl=22

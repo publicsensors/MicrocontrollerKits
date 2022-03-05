@@ -118,11 +118,14 @@ class Sampler:
             self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
-        # Virtual timer for sample looping
+        # Timer for sample looping
         self.SMPLtimer=self.pars['SMPLtimer']
         self.SMPLtimer.init(mode=self.SMPLtimer.PERIODIC,period=1000*pars['sample_interval'],
                             callback=trigger_sample)
         
+        # Timer for AQI is added here, so it can be deinited when requested
+        self.AQtimer=self.pars['AQtimer']
+
         # Interrupt for sampling on button press
         self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
         self.p_smpl_trigger.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
@@ -150,7 +153,15 @@ class Sampler:
             self.lcd.clear()
             self.lcd.putstr('Ready to sample!')
 
-            
+    def stop(self):
+        """A method to stop sampling and IRQ calls by deinitializing the
+           timers activating non-blocking sampling, display and logging.
+        """
+        print('>>> User requested stop: Deinitializing timers...')
+        self.check_timer.deinit()
+        self.LCDtimer.deinit()
+        self.SMPLtimer.deinit()
+        self.AQtimer.deinit()
                 
     def sample(self):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 

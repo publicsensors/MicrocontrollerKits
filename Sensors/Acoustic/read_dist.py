@@ -1,4 +1,5 @@
 # This script prints temperature readings from a DS18B20 sensor
+from SetUp.verbosity import vrb_print
 
 # Import platform-specific definitions
 from SetUp.platform_defs import *
@@ -50,15 +51,15 @@ class read_dist:
     def print_dist(self):
         global dist
         dist = self.sensor.distance()
-        print(str(dist)+" cm")
+        vrb_print(str(dist)+" cm")
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
+            vrb_print(self.fmt_keys)
             for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
+                vrb_print(s)
+                vrb_print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])

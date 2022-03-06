@@ -1,4 +1,5 @@
 # This script prints temperature readings from a DS18B20 sensor
+from SetUp.verbosity import vrb_print
 
 # Import platform-specific definitions
 from SetUp.platform_defs import p_DS18B20, p_pwr1
@@ -38,15 +39,15 @@ class read_temp:
     # -------------------------------------------------------------------------------
     def test_temp(self):
         if not self.roms: # Check to see if there is a DS18B20 attached/found
-            print('Error: No temperature sensor address found')#
+            vrb_print('Error: No temperature sensor address found')#
             return 0
         else:
-            print('DS18B20 address: ',str(self.roms))
+            vrb_print('DS18B20 address: ',str(self.roms))
             try: # Try to take a measurement, return 1 if successful, 0 if not
                 self.ds.convert_temp()       # Obtain temp readings from each of those sensors
                 sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
-                print('test temp = ')
-                print(self.ds.read_temp(self.roms[0]))
+                vrb_print('test temp = ')
+                vrb_print(self.ds.read_temp(self.roms[0]))
                 return 1
             except:
                 return 0
@@ -65,12 +66,12 @@ class read_temp:
         for rom in self.roms:
             sensor_id=str(hexlify(rom))[2:-1]
             T = self.ds.read_temp(rom)
-            print("Temp: ",T, ' C')
-            print(self.fmt_keys)
+            vrb_print("Temp: ",T, ' C')
+            vrb_print(self.fmt_keys)
             if self.logging:
                 for s in self.fmt_keys:
-                    print(s)
-                    print(eval(s))
+                    vrb_print(s)
+                    vrb_print(eval(s))
                 data=[self.sample_num]
                 data.extend([t for t in timestamp])
                 data.extend([eval(s) for s in self.fmt_keys])

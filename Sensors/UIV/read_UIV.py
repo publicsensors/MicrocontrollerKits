@@ -1,6 +1,7 @@
 # This script prints UV, IR and visible light reading in lux from a SI1132 sensor
 # The driver for this sensor, derived from https://github.com/ControlEverythingCommunity/SI1132,
 # uses an SMBus interface rather than I2C.
+from SetUp.verbosity import vrb_print
 
 from UIV.si1132 import SI1132 
 from time import sleep_ms
@@ -36,7 +37,7 @@ class read_UIV:
         global uv,ir,vis
         try: # Try to take a measurement, return 1 if successful, 0 if not
             uv, ir, vis = self.sensor.read()
-            print('UIV test: ',uv, ir, vis)
+            vrb_print('UIV test: ',uv, ir, vis)
             return 1
         except:
             return 0
@@ -48,7 +49,7 @@ class read_UIV:
     def print_UIV(self):
         global uv,ir,vis
         uv, ir, vis = self.sensor.read()
-        print('uv: ',str(uv),' ir: ',str(ir),' vis: ',str(vis))
+        vrb_print('uv: ',str(uv),' ir: ',str(ir),' vis: ',str(vis))
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
@@ -59,6 +60,6 @@ class read_UIV:
             self.data_list.extend([data])
             
         display_str = str(round(uv,1))+' uv\n('+str(ir)+','+str(vis)+')'
-        print('UIV: display_str = ',display_str)
+        vrb_print('UIV: display_str = ',display_str)
         self.display_str_list = [display_str]
-        print('UIV: self.display_str_list = ',self.display_str_list)
+        vrb_print('UIV: self.display_str_list = ',self.display_str_list)

@@ -1,4 +1,5 @@
 # This script prints GSP readings from a unit attached to uartGPS
+from SetUp.verbosity import vrb_print
 
 # Import platform-specific definitions
 from SetUp.platform_defs import uartGPS
@@ -58,11 +59,11 @@ class read_GPS:
     # -------------------------------------------------------------------------------
     def test_GPS(self):
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            print('starting test_GPS')
+            vrb_print('starting test_GPS')
             t = ticks_ms() # Get initial time, to compare to timeout limit
             while True:
                 if ticks_diff(ticks_ms(), t) >= 1000*self.init_timeout:
-                    print('no response from GPS...')
+                    vrb_print('no response from GPS...')
                     return 0
                 else:
                     if uartGPS.any():
@@ -73,12 +74,12 @@ class read_GPS:
                             pass
                         if self.parser.valid_sentence is True:
                                 self.parser.data.append(data)
-                                print('received from GPS: ')
-                                print(self.parser.date,self.parser.timestamp,self.parser.longitude,":",
+                                vrb_print('received from GPS: ')
+                                vrb_print(self.parser.date,self.parser.timestamp,self.parser.longitude,":",
                                       self.parser.latitude,self.parser.altitude,self.parser.speed,self.parser.course)
                                 return 1                          
         except Exception as e:
-            print('error in query to GPS...')
+            vrb_print('error in query to GPS...')
             print_exception(e)
             return 0
         
@@ -94,19 +95,19 @@ class read_GPS:
         t = ticks_ms() # Get initial time, to compare to timeout limit
         while True:
             if ticks_diff(ticks_ms(), t) >= 1000*self.timeout:
-                print('GPS query breaking after time limit ',self.timeout,' s expired with ',sentence_count,' sentences')
+                vrb_print('GPS query breaking after time limit ',self.timeout,' s expired with ',sentence_count,' sentences')
                 break
             if uartGPS.any():
                 data = self.uartGPS.readline()
                 self.parser.update(data)
                 if self.parser.valid_sentence is True:
                     self.parser.data.append(data)
-                    print('received from GPS: ')
-                    print(self.parser.date,self.parser.timestamp,self.parser.longitude,":",
+                    vrb_print('received from GPS: ')
+                    vrb_print(self.parser.date,self.parser.timestamp,self.parser.longitude,":",
                           self.parser.latitude,self.parser.altitude,self.parser.speed,self.parser.course)
                 #stat = self.my_gps.update(chr(uartGPS.readchar()))
                 #if stat:
-                #    print(stat)
+                #    vrb_print(stat)
                 #    stat = None
                 #    sentence_count += 1
 
@@ -118,7 +119,7 @@ class read_GPS:
                     dec_long = self.parser.longitude #self.my_gps.longitude[0]+self.my_gps.longitude[1]/60
                     #if self.my_gps.longitude[2]=="W": # correction for western hemisphere
                     #    dec_long=-dec_long
-                    print(self.parser.altitude,self.parser.speed)
+                    vrb_print(self.parser.altitude,self.parser.speed)
                     altitude = self.parser.altitude
                     if len(self.parser.speed)==3:
                         kph = self.parser.speed[2]
@@ -138,15 +139,15 @@ class read_GPS:
                     #              self.my_gps.timestamp[0],self.my_gps.timestamp[1],self.my_gps.timestamp[2]]
                     #GPSstr='GPS: {}-{}-{} {}:{}:{} {},{}'.format(self.my_gps.date[0],self.my_gps.date[1],self.my_gps.date[2], \
                         #                                    self.my_gps.timestamp[0],self.my_gps.timestamp[1],self.my_gps.timestamp[2],#\                                                                dec_lat,dec_long)
-                    print(GPSstr)
+                    vrb_print(GPSstr)
 
                     if self.logging:
                         timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
                         self.sample_num+=1
-                        print(self.fmt_keys)
+                        vrb_print(self.fmt_keys)
                         for s in self.fmt_keys:
-                            print(s)
-                            print(eval(s))
+                            vrb_print(s)
+                            vrb_print(eval(s))
                         data=[self.sample_num]
                         data.extend([t for t in timestamp])
                         data.extend([eval(s) for s in self.fmt_keys])

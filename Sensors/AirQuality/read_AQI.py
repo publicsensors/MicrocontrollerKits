@@ -1,4 +1,5 @@
 # This script prints AQI readings from a SDS011 attached to uartAQ
+from SetUp.verbosity import vrb_print
 
 # Import platform-specific definitions
 from SetUp.platform_defs import uartAQ, AQtimer
@@ -41,7 +42,7 @@ class read_AQI:
         self.dust_sensor.set_reporting_mode_query()
         sleep(5)
         self.dust_sensor.wake()
-        print('running fan for ',2,' sec')
+        vrb_print('running fan for ',2,' sec')
         sleep(2)
         if self.stop_fan:
             self.dust_sensor.sleep() # stop fan
@@ -52,42 +53,42 @@ class read_AQI:
     # -------------------------------------------------------------------------------
     def test_AQI(self):
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            print('starting test_AQI')
+            vrb_print('starting test_AQI')
             if self.stop_fan: #Start fan
                 self.dust_sensor.wake()
-                #print('running fan for ',self.fan_start_sec,' sec')
+                #vrb_print('running fan for ',self.fan_start_sec,' sec')
                 #sleep(self.fan_start_sec)
             t = ticks_ms() # Get initial time, to compare to timeout limit
             count = 0
             while True:
                 if ticks_diff(ticks_ms(), t) >= 1000*self.init_timeout:
-                    print('no response from AQI within init time limit...')
+                    vrb_print('no response from AQI within init time limit...')
                     if self.stop_fan: #Stop fan
                         self.dust_sensor.sleep()
                     #return 0
-                    print('AQI testing suspended -- enabling AQI anyways...')
+                    vrb_print('AQI testing suspended -- enabling AQI anyways...')
                     return 1
                 else:
                     # Initiate a reading
                     count += 1
                     #self.status = self.dust_sensor.read()
-                    #print(count,self.status)
+                    #vrb_print(count,self.status)
                     #sleep(5)
                     #if self.status:
-                    #    print('AQI status = OK')
+                    #    vrb_print('AQI status = OK')
                     #    if self.stop_fan: #Stop fan
                     #        self.dust_sensor.sleep()
                     #    return 1
                     self.dust_sensor.query()
                     sleep(1)
                     if self.uartAQ.any():
-                        print('got characters from uartAQ -- enabling AQI sensor')
+                        vrb_print('got characters from uartAQ -- enabling AQI sensor')
                         if self.stop_fan: #Stop fan
                             self.dust_sensor.sleep()
                         return 1
                     sleep(4)
         except:
-            print('error in query to AQI sensor...')
+            vrb_print('error in query to AQI sensor...')
             return 0
         
     # -------------------------------------------------------------------------------
@@ -100,17 +101,17 @@ class read_AQI:
         # to take a reading after the specified interval
         if self.stop_fan:
             self.dust_sensor.wake()
-        print('running fan for ',self.fan_start_sec,' sec')
+        vrb_print('running fan for ',self.fan_start_sec,' sec')
         #self.AQtimer = Timer()
         self.AQtimer.init(mode=Timer.ONE_SHOT,period=1000*self.fan_start_sec,callback=self.print_AQI_read)
         # Return empty lists -- these will be filled when reading is taken
-        print('exiting print_AQI')
+        vrb_print('exiting print_AQI')
 
     def print_AQI_read(self,t):
         global PM25,PM10
         # Complete the sampling by reading from the SDS011, and
         # displaying/logging the results. t is the timer.
-        print('entering print_AQI_read')
+        vrb_print('entering print_AQI_read')
         #Returns NOK if no measurement found in reasonable time
         self.status = self.dust_sensor.read()
         #Returns NOK if checksum failed
@@ -125,14 +126,14 @@ class read_AQI:
         PM10=-1
         
         if(self.status == False):
-            print('Measurement failed.')
+            vrb_print('Measurement failed.')
         elif(self.pkt_status == False):
-            print('Received corrupted data.')
+            vrb_print('Received corrupted data.')
         else:
             PM25= self.dust_sensor.pm25
             PM10= self.dust_sensor.pm10
-            print('PM25: ', PM25)
-            print('PM10: ', PM10)
+            vrb_print('PM25: ', PM25)
+            vrb_print('PM10: ', PM10)
 
         # record last measurement in object
         self.PM25=PM25
@@ -141,10 +142,10 @@ class read_AQI:
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
+            vrb_print(self.fmt_keys)
             for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
+                vrb_print(s)
+                vrb_print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])

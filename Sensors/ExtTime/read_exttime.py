@@ -1,4 +1,5 @@
 # This script prints temperature readings from a DS18B20 sensor
+from SetUp.verbosity import vrb_print
 
 # Use driver by roberthh from https://github.com/robert-hh/ads1x15
 from ExtTime.urtc import DS3231
@@ -37,10 +38,10 @@ class read_exttime:
         global year, month, day, weekday, hour, minute, second
 
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            print('testing ds3231...')
+            vrb_print('testing ds3231...')
             datetime=self.sensor.datetime()
             self.datetime=datetime
-            print('test: datetime = ',datetime)
+            vrb_print('test: datetime = ',datetime)
             return 1
         except:
             return 0
@@ -63,7 +64,7 @@ class read_exttime:
         minute=datetime.minute
         second=datetime.second
 
-        print('year: ',str(year),' month: ',str(month),' day: ',str(day),' hour: ',str(hour),' minute: ',\
+        vrb_print('year: ',str(year),' month: ',str(month),' day: ',str(day),' hour: ',str(hour),' minute: ',\
               str(minute),' second: ',str(second))
 
         if self.logging:
@@ -78,5 +79,5 @@ class read_exttime:
         
         display_str = 'time '+str(year)+'-'+str(month)+'-'+str(day)+',\n'+str(hour)+':'+str(minute)+':'+str(second)
         self.display_str_list = [display_str]
-        print('exttime: display_str = ',display_str)
-        print('exttime: self.display_str_list = ',self.display_str_list)
+        vrb_print('exttime: display_str = ',display_str)
+        vrb_print('exttime: self.display_str_list = ',self.display_str_list)

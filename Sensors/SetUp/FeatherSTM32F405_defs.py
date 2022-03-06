@@ -13,7 +13,7 @@ uartGPS = UART(6, 9600)
 #uartAQ= UART(3, 9600)
 #uartAQ.init(9600, bits=8, parity=None, stop=1)
 uartAQ= UART(3, 9600, bits=8, parity=None, stop=1)
-button = Pin('D13', Pin.IN, Pin.PULL_UP)
+#button = Pin('D13', Pin.IN, Pin.PULL_UP)
 # Define default I2C pins
 p_I2Cscl_lbl='SCL'
 p_I2Csda_lbl='SDA'

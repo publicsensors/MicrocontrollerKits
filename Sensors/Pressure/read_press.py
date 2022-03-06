@@ -1,4 +1,5 @@
 # This script prints pressure, temperature, and (if available) humidity readings from a BMe280 or BMP280 sensor
+from SetUp.verbosity import vrb_print
 
 # Use driver by roberthh from https://github.com/robert-hh/BME280
 from Pressure.bme280_float import BME280
@@ -36,7 +37,7 @@ class read_press:
         try: # Try to take a measurement, return 1 if successful, 0 if not
             #values=self.sensor.read_compensated_data()
             values=self.sensor.values
-            print('test: values = ',values)
+            vrb_print('test: values = ',values)
             return 1
         except:
             return 0
@@ -50,19 +51,19 @@ class read_press:
 
         (temp,press,humid)=self.sensor.read_compensated_data()
 
-        print('temp: ',str(temp),'press: ',str(press),'humid: ',str(humid))
+        vrb_print('temp: ',str(temp),'press: ',str(press),'humid: ',str(humid))
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
+            vrb_print(self.fmt_keys)
             for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
+                vrb_print(s)
+                vrb_print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
-            print([s for s in self.fmt_keys])
-            print([eval(s) for s in self.fmt_keys])
+            vrb_print([s for s in self.fmt_keys])
+            vrb_print([eval(s) for s in self.fmt_keys])
             data.extend([eval(s) for s in self.fmt_keys])
             self.data_list.extend([data])
             #data_list.extend([data])

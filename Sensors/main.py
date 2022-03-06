@@ -4,8 +4,11 @@ global params
 global sensor_func  # attempt to fix global/local issues with eval of functions
 global sensor_obj, sensor_module
 
-from SetUp.verbosity import vrb_setlevel
+# Set initial verbosity. Settings in default_params and
+# user_params replace this value when imported.
+from SetUp.verbosity import vrb_print,vrb_setlevel
 vrb_level = 13
+#vrb_level = 4
 vrb_setlevel(vrb_level)
 
 params={}
@@ -25,7 +28,7 @@ params.update(new_pars)
 
 params.update({'p_smpl_trigger_lbl':p_smpl_trigger_lbl,'p_smpl_loop_lbl':p_smpl_loop_lbl})
 
-#print('main: params = ',params)
+#vrb_print('main: params = ',params)
 
 # Initialize Real Time Clock
 rtc=RTC()
@@ -39,31 +42,31 @@ params.update({'AQtimer':AQtimer}) # dictionary item is either a valid I2C objec
 
 
 # Initialize I2C interface
-print('Initializing I2C interface...')
+vrb_print('Initializing I2C interface...')
 try:
     #i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
-    print('Success: I2C initialized; scan = ',i2c.scan())
+    vrb_print('Success: I2C initialized; scan = ',i2c.scan())
 except Exception as e:
     print_exception(e)
-    print('Error: Unable to initalize I2C')
+    vrb_print('Error: Unable to initalize I2C')
     i2c=False
 params.update({'i2c':i2c}) # dictionary item is either a valid I2C object or False
 
 ## SMBus initialization is disabled until the 5V vs 3.3V issue is solved
 ## Initialize SMBus interface
-#print('Initializing SMBus interface...')
+#vrb_print('Initializing SMBus interface...')
 try:
     smbus = SMBus(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
     #smbus = None
-    print('Success: SMBus initialized')
+    vrb_print('Success: SMBus initialized')
 except Exception as e:
     print_exception(e)
-    print('Error: Unable to initalize SMBus')
+    vrb_print('Error: Unable to initalize SMBus')
     smbus=False
 params.update({'smbus':smbus}) # dictionary item is either a valid I2C object or False
 
 # Test for presence of LCD, and initialize if present 
-print('Detecting/initializing LCD interface...')
+vrb_print('Detecting/initializing LCD interface...')
 try:
     lcd = lcd_init(i2c)
 except Exception as e:
@@ -75,7 +78,7 @@ params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or Fal
 sampler=Sampler(params)
 #sampler=Sampler(params,button=button)
 
-#print('Launching single sample')
+#vrb_print('Launching single sample')
 #sampler.sample()
           
 # Launch sampling cycle

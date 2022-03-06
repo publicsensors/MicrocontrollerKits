@@ -9,14 +9,10 @@ except:
     
 from machine import Pin, Timer
 
-# Set verbosity level
-#global vrb_level
-#vrb_level = 11
-from SetUp.verbosity import vrb_print
+from SetUp.verbosity import vrb_print,vrb_setlevel
 
-
-import micropython
-micropython.alloc_emergency_exception_buf(100)
+from micropython import alloc_emergency_exception_buf
+alloc_emergency_exception_buf(100)
 
 global sample_trigger # flag to trigger one sample in sample_loop
 sample_trigger=0
@@ -37,6 +33,7 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
         def_pars=__import__(module_name)
         vrb_print(dir(def_pars.default_params),5)
         pars.update(def_pars.default_params.params)
+    vrb_setlevel(pars['verbosity'])
     vrb_print('Default parameters:',level=20)
     vrb_print(pars,level=20)
     if user_param_file is None:
@@ -49,6 +46,7 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
         vrb_print(dir(user_pars.user_params))
         vrb_print('user_pars.user_params.params = ',user_pars.user_params.params)
         pars.update(user_pars.user_params.params)
+        vrb_setlevel(pars['verbosity'])
     except Exception as e:
         vrb_print_exception(e)
         vrb_print('Unable to import user-specified parameter file')

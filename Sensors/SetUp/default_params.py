@@ -88,6 +88,7 @@ params={'setup_dir':'SetUp',
         'timestamp_format':'%4d-%02d-%02dT%02d-%02d-%02d',
         'sample_max':10,
         'sample_interval':10,
-        'display_interval':0
+        'display_interval':0,
+        'verbosity':15
 }
 

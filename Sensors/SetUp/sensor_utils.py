@@ -163,6 +163,22 @@ class Sampler:
         self.SMPLtimer.deinit()
         self.AQtimer.deinit()
                 
+    def pause(self):
+        """An EXPERIMENTAL method to pause sampling (both loop and button-
+           driven) in a recoverable way
+        """
+        print('>>> User requested pause: Disabling IRQs...')
+        from machine import disable_irq
+        self.irq_state=disable_irq()
+
+    def resume(self):
+        """A, EXPERIMENTAL method to resume sampling disabled by the
+           pause() method.
+        """
+        print('>>> User requested resume: Enabling IRQs...')
+        from machine import enable_irq
+        self.irq_state=enable_irq(self.irq_state)
+
     def sample(self):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 
             controlled sampling

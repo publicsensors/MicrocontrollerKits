@@ -73,7 +73,7 @@ class read_GPS:
                             pass
                         if self.parser.valid_sentence is True:
                                 self.parser.data.append(data)
-                                print('recieved from GPS: ')
+                                print('received from GPS: ')
                                 print(self.parser.date,self.parser.timestamp,self.parser.longitude,":",
                                       self.parser.latitude,self.parser.altitude,self.parser.speed,self.parser.course)
                                 return 1                          
@@ -101,7 +101,7 @@ class read_GPS:
                 self.parser.update(data)
                 if self.parser.valid_sentence is True:
                     self.parser.data.append(data)
-                    print('recieved from GPS: ')
+                    print('received from GPS: ')
                     print(self.parser.date,self.parser.timestamp,self.parser.longitude,":",
                           self.parser.latitude,self.parser.altitude,self.parser.speed,self.parser.course)
                 #stat = self.my_gps.update(chr(uartGPS.readchar()))

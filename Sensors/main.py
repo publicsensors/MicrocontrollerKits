@@ -4,6 +4,10 @@ global params
 global sensor_func  # attempt to fix global/local issues with eval of functions
 global sensor_obj, sensor_module
 
+from SetUp.verbosity import vrb_setlevel
+vrb_level = 13
+vrb_setlevel(vrb_level)
+
 params={}
 
 from sys import print_exception

@@ -66,6 +66,7 @@ class NmeaParser(object):
         
         #Parse GPGGA
         if (self.nmea_segments[0] == "b'$GPGGA"):
+            print('****got GPGGA****')
             self.valid_sentence = True
             try:
                 # UTC Timestamp
@@ -144,7 +145,6 @@ class NmeaParser(object):
             print('****got GPRMC****')
             self.valid_sentence = True
             try:
-                 print('flag1a')
                 # UTC Timestamp
                  utc_string = self.nmea_segments[1]
                  
@@ -166,15 +166,12 @@ class NmeaParser(object):
 
                  # Get Fix Status
                  #fix_stat = int(self.nmea_segments[6])
-                 print('flag1b')
             except ValueError:
                 return False
 
         # Date stamp
             try:
-                print('flag2a')
                 date_string = self.nmea_segments[9]
-
                 # Date string printer function assumes to be year >=2000,
                 # date_string() must be supplied with the correct century argument to display correctly
                 if date_string:  # Possible date stamp found
@@ -184,32 +181,25 @@ class NmeaParser(object):
                     self.date = (day, month, year)
                 else:  # No Date stamp yet
                     self.date = (0, 0, 0)
-                print('flag2b: ',self.date)
 
             except ValueError:  # Bad Date stamp value present
                 return False
 
             # Check Receiver Data Valid Flag
             if self.nmea_segments[2] == 'A':  # Data from Receiver is Valid/Has Fix
-                print('flag3a')
                 # Longitude / Latitude
                 try:
                     # Latitude
                     l_string = self.nmea_segments[3]
                     lat_degs = int(l_string[0:2])
                     lat_mins = float(l_string[2:])
-                    print('flag3b1: ',l_string)
                     lat_hemi = self.nmea_segments[4]
 
-                    print('flag3b2: ',lat_hemi)
                     # Longitude
                     l_string = self.nmea_segments[5]
-                    print('flag3b3',l_string)
                     lon_degs = int(l_string[0:3])
                     lon_mins = float(l_string[3:])
-                    print('flag3b4')
                     lon_hemi = self.nmea_segments[6]
-                    print('flag3b5: ',lon_hemi)
                 except ValueError:
                     return False
 
@@ -218,24 +208,19 @@ class NmeaParser(object):
 
                 #if lon_hemi not in self.__HEMISPHERES:
                 #    return False
-                print('flag3c')
 
                 # Speed
                 try:
-                    print('flag4a')
                     spd_knt = float(self.nmea_segments[7])
-                    print('flag4b')
                 except ValueError:
                     return False
 
                 # Course
                 try:
-                    print('flag5a')
                     if self.nmea_segments[8]:
                         course = float(self.nmea_segments[8])
                     else:
                         course = 0.0
-                    print('flag5b')
                 except ValueError:
                     return False
 
@@ -261,9 +246,7 @@ class NmeaParser(object):
 
             return True
         
-        
- 
-#com=GPS_UART_start()
+
 
 
 

@@ -1,4 +1,5 @@
 # This script prints temperature readings from a DS18B20 sensor
+from SetUp.verbosity import vrb_print
 
 # Use driver by roberthh from https://github.com/robert-hh/ads1x15
 from Voltage.ads1x15 import ADS1115
@@ -41,7 +42,7 @@ class read_volt:
         try: # Try to take a measurement, return 1 if successful, 0 if not
             raw0=self.sensor.read(self.rate,0)
             volt0=self.sensor.raw_to_v(raw0)
-            print('test: volt0 = ',volt0)
+            vrb_print('test: volt0 = ',volt0)
             return 1
         except:
             return 0
@@ -62,15 +63,11 @@ class read_volt:
         raw3=self.sensor.read(self.rate,3)
         volt3=self.sensor.raw_to_v(raw3)
 
-        print('volt0: ',str(volt0),'volt1: ',str(volt1),'volt2: ',str(volt2),'volt3: ',str(volt3))
+        vrb_print('volt0: ',str(volt0),'volt1: ',str(volt1),'volt2: ',str(volt2),'volt3: ',str(volt3))
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
-            for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])

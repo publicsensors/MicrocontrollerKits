@@ -16,7 +16,6 @@ p_DS18B20 = Pin('X20', Pin.IN)  # Pin X20 is the data pin for DS18B20 temperatur
 uartGPS= UART(4, 9600)
 uartAQ= UART(3, 9600)
 uartAQ.init(9600, bits=8, parity=None, stop=1)
-button = Switch()  # use onboard USR button
 #p_batt=14
 #p_sens=4
 # Define default I2C pins
@@ -33,4 +32,10 @@ p_hcsr_echo = 'D11'
 p_smpl_loop_lbl='Y4'
 #p_smpl_trigger_lbl='Y3'
 p_smpl_trigger_lbl='X17'
+#button = Switch()  # use onboard USR button
 
+# Define timers for non-blocking sampling, logging and display
+check_timer = Timer()
+LCDtimer=Timer()
+SMPLtimer=Timer()
+AQtimer = Timer()

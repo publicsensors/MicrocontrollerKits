@@ -18,7 +18,7 @@ gc.collect()
 board='esp8266'
 p_pwr1 = Pin(13, Pin.OUT)  # Pin 12 is power supplied to the DS18B20, V+
 p_DS18B20 = Pin(12, Pin.IN)  # Pin D10 is the data pin for DS18B20 temperature sensors
-button = Pin(14, Pin.IN, Pin.PULL_UP)
+#button = Pin(14, Pin.IN, Pin.PULL_UP)
 # Define default I2C pins
 p_I2Cscl_lbl=5
 p_I2Csda_lbl=4
@@ -31,4 +31,9 @@ p_smpl_loop_lbl='MISO'
 #p_smpl_trigger_lbl='SCK'
 p_smpl_trigger_lbl='D14'
 
+# Define timers for non-blocking sampling, logging and display
+check_timer = Timer()
+LCDtimer=Timer()
+SMPLtimer=Timer()
+AQtimer = Timer()
 

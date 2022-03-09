@@ -1,4 +1,5 @@
 # This script prints light readings from TSL2561 and Tsl2591 sensors
+from SetUp.verbosity import vrb_print
 
 from Light.tsl25x1 import tsl25x1_sensor 
 from time import sleep_ms
@@ -49,15 +50,15 @@ class read_light:
     def print_light(self):
         global full,ir,lux
         full, ir, lux = self.sensor.light()
-        print('full: ',str(full),' ir: ',str(ir))
+        vrb_print('full: ',str(full),' ir: ',str(ir))
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
+            vrb_print(self.fmt_keys)
             for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
+                vrb_print(s)
+                vrb_print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])

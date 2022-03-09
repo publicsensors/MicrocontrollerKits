@@ -1,4 +1,5 @@
 # This script prints color readings from a TCS34725 sensor
+from SetUp.verbosity import vrb_print
 
 from Color.tcs34725 import TCS34725
 from time import sleep_ms
@@ -44,18 +45,19 @@ class read_color:
     def print_color(self):
         global R, G, B, full
         R, G, B, full = self.sensor.read(True)
-        print('R, G, B, full: ',str(R),', ',str(G),', ',str(B),', ',str(full))
+        vrb_print('R, G, B, full: ',str(R),', ',str(G),', ',str(B),', ',str(full))
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            print(self.fmt_keys)
-            for s in self.fmt_keys:
-                print(s)
-                print(eval(s))
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])
             self.data_list.extend([data])
             
-        self.display_str_list = ['RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)]
+        display_str = 'RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)
+        vrb_print('color: display_str = ',display_str)
+        self.display_str_list = [display_str]
+        vrb_print('color: self.display_str_list = ',self.display_str_list)
+
+

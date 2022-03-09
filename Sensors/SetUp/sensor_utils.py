@@ -76,7 +76,7 @@ def trigger_sample(p):
 def set_cycle_flag(p):
     global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
     #global sample_trigger # flag to trigger one sample in sample_loop
-    vrb_print('set_cycle ',p,p.value())
+    vrb_print('Looping flag (set_cycle: {}) set to {}'.format(p,p.value()),level=4)
     sample_cycle_flag=p.value()
 
 class Sampler:
@@ -129,8 +129,10 @@ class Sampler:
         self.AQtimer=self.pars['AQtimer']
 
         # Interrupt for sampling on button press
-        self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
-        self.p_smpl_trigger.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
+        self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
+        self.p_smpl_trigger.irq(trigger=Pin.IRQ_RISING,handler=trigger_sample)
+        #self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_UP)
+        #self.p_smpl_trigger.irq(trigger=Pin.IRQ_FALLING,handler=trigger_sample)
         
         # The parameter pars['default_sample_looping'] determines the default sample looping behavior.
         # If True, the pin is pulled up and looping occurs unless there is a connection to GND.

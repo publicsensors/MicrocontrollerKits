@@ -22,10 +22,12 @@ i2c = SoftI2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 p_hcsr_trig = 12
 p_hcsr_echo = 27
 #pin definitions to automatically enable sampling loop (1=loop, 0=wait for button press)
-p_smpl_loop_lbl=19
+p_smpl_loop_lbl=4
+#p_smpl_loop_lbl=19
 #p_smpl_trigger_lbl='SCK'
 #p_smpl_trigger_lbl=13
-p_smpl_trigger_lbl=5
+p_smpl_trigger_lbl=36
+#p_smpl_trigger_lbl=5
 
 # Define timers for non-blocking sampling, logging and display
 check_timer = Timer(0)

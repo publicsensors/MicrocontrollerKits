@@ -6,7 +6,7 @@ try: # The ESP32 build seems to lack sync, so skip if unavailable
     from os import sync
 except:
     pass
-    
+from os import listdir
 from machine import Pin, Timer
 
 from SetUp.verbosity import vrb_print,vrb_setlevel
@@ -337,11 +337,24 @@ class Sampler:
             
 
     def start_log_files(self):
+        # A method to initialize data log files
+        # Log file names begin with a timestamp, followed by the name
+        # of the sensor.
+        #
+        # If the RTC has been initialized, no data files can be overwritten with
+        # this convention. However, if the RTC has its uninitialized value, log
+        # files names would have the same names. To prevent that, an additional suffix
+        # is added with the number of existing files with a .csv suffix.
+        nfile=len([f for f in listdir(self.pars['sensor_log_directory']) if f.endswith('.csv')])
 
+        # Open requested log files
         for sensr in self.pars['active_sensors']:
+            nfile+=1
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             timestamp_str=self.pars['timestamp_format'] % timestamp
-            logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+self.pars['sensor_log_prefixes'][sensr]+'.csv'
+            logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
+                str(nfile) + '_' + self.pars['sensor_log_prefixes'][sensr]+'.csv'
+            #logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+self.pars['sensor_log_prefixes'][sensr]+'.csv'
             vrb_print('creating log file: ',logfilename)
             logfile=open(logfilename,'w')
             sensor_log_format=self.pars['sensor_log_formats'][sensr]

@@ -45,7 +45,8 @@ class read_temp:
             vrb_print('DS18B20 address: ',str(self.roms))
             try: # Try to take a measurement, return 1 if successful, 0 if not
                 self.ds.convert_temp()       # Obtain temp readings from each of those sensors
-                sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to report their temperature readings
+                sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to
+                                        # report their temperature readings
                 vrb_print('test temp = ')
                 vrb_print(self.ds.read_temp(self.roms[0]))
                 return 1

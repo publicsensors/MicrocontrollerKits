@@ -329,7 +329,7 @@ class Sampler:
                     new_pars['sensor_objs'].update({sensr:sensor_obj})
                     vrb_print('success: queuing sensor object for ',sensr)
             except Exception as e:
-                vrb_print_exception(e)
+                print_exception(e)
                 vrb_print('Error: sensor driver for ',sensr,' was requested but failed import or test')
         vrb_print('Final list of active sensors is: ',new_pars['active_sensors'])
         vrb_print('Updating pars with: ',new_pars)

@@ -4,7 +4,7 @@
 
 print('Loading definitions for STM32F405 Feather')
 from pyb import UART # Use pyb UART bc machine.UART clashes with DS18B20s
-from machine import Pin, I2C
+from machine import Pin, I2C, Timer
 
 board='STM32feather'
 p_pwr1 = Pin('D9', Pin.OUT,value=1)  # Pin 9 is power supplied to the DS18B20, V+
@@ -25,11 +25,11 @@ i2c = I2C(1)
 p_hcsr_trig = 'D12'
 p_hcsr_echo = 'D11'
 #pin definitions to automatically enable sampling loop (1=loop, 0=wait for button press)
-p_smpl_loop_lbl='D21'
+p_smpl_loop_lbl='A5'
 #p_smpl_loop_lbl='MISO'
 #p_smpl_trigger_lbl='SCK'
 #p_smpl_trigger_lbl='D13'
-p_smpl_trigger_lbl='D20'
+p_smpl_trigger_lbl='A4'
 
 # Define timers for non-blocking sampling, logging and display
 check_timer = Timer()

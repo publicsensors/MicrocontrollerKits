@@ -4,7 +4,7 @@
 
 print('Loading definitions for STM32F405 Feather')
 from pyb import UART # Use pyb UART bc machine.UART clashes with DS18B20s
-from machine import Pin, I2C, Timer
+from machine import Pin, I2C, SoftI2C, Timer
 
 board='STM32feather'
 p_pwr1 = Pin('D9', Pin.OUT,value=1)  # Pin 9 is power supplied to the DS18B20, V+
@@ -15,12 +15,17 @@ uartGPS = UART(6, 9600)
 uartAQ= UART(3, 9600, bits=8, parity=None, stop=1)
 #button = Pin('D13', Pin.IN, Pin.PULL_UP)
 # Define default I2C pins
-p_I2Cscl_lbl='SCL'
-p_I2Csda_lbl='SDA'
+p_I2Cscl_lbl=None #'SCL' # a.k.a. PB6
+p_I2Csda_lbl=None #'SDA' # a.k.a. PB7
+i2c_num=1
 # I2C without an ID currently reverts to SoftI2C; use hardware I2C(1)
 # instead, which has the specified pinouts
+
 #i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 i2c = I2C(1)
+
+#i2c = I2C(i2c_num,scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+#i2c = SoftI2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 #pin definitions for hcsr04/jsn sensors
 p_hcsr_trig = 'D12'
 p_hcsr_echo = 'D11'

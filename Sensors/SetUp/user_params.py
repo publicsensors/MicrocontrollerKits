@@ -4,9 +4,9 @@
 #
 params={'sensor_list':{'distance':1,
                        'temperature':1,
-                       'light':1,
+                       'light':0,
                        'UIV':1,
-                       'color':0,
+                       'color':1,
                        'GPS':0,
                        'AQI':0,
                        'voltage':1,

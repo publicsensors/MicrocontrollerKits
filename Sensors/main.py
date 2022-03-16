@@ -54,9 +54,12 @@ params.update({'i2c':i2c}) # dictionary item is either a valid I2C object or Fal
 
 ## SMBus initialization is disabled until the 5V vs 3.3V issue is solved
 ## Initialize SMBus interface
-#vrb_print('Initializing SMBus interface...')
+vrb_print('Initializing SMBus interface...')
 try:
-    smbus = SMBus(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+    if p_I2Csda_lbl is None or p_I2Cscl_lbl is None:
+        smbus = SMBus(i2c_num)
+    else:
+        smbus = SMBus(i2c_num,scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
     #smbus = None
     vrb_print('Success: SMBus initialized')
 except Exception as e:

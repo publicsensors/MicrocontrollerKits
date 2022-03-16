@@ -1,6 +1,6 @@
 # Initialize LCD for PublicSensors/SensoresPublicos sensor activities
 
-from SetUp.platform_defs import *
+from SetUp.platform_defs import i2c #*
 
 from machine import Pin, I2C
 from SetUp.esp8266_i2c_lcd import I2cLcd

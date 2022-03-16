@@ -3,7 +3,8 @@
 # Board-specific definitions: ESP32 Feather
 
 print('Loading definitions for ESP32 Feather')
-from machine import Pin, UART, SoftI2C, Timer
+from machine import Pin, UART, I2C, Timer
+#from machine import Pin, UART, SoftI2C, Timer
 
 board='esp32'
 p_pwr1 = Pin(15, Pin.OUT)  # Pin 12 is power supplied to the DS18B20, V+
@@ -16,8 +17,10 @@ uartAQ= UART(2, 9600, bits=8, parity=None, stop=1,rx=16,tx=17)
 # Define default I2C pins
 p_I2Cscl_lbl=22
 p_I2Csda_lbl=23
-i2c = SoftI2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+i2c_num=1
+#i2c = SoftI2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 #i2c = I2C(0,scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
+i2c = I2C(i2c_num,scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 #pin definitions for hcsr04/jsn sensors
 p_hcsr_trig = 12
 p_hcsr_echo = 27

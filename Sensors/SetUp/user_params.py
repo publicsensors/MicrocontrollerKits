@@ -1,6 +1,6 @@
 # Default parameters for PublicSensors/SensoresPublicos kit and instrument activities
 #
-# This script sets default parameters. User-specified parameters are set (by default) in user_params.py.
+# This script sets user-specified parameters. Default parameters are set in default_params.py.
 #
 params={'sensor_list':{'distance':1,
                        'temperature':1,

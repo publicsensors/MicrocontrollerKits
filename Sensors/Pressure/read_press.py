@@ -1,4 +1,4 @@
-# This script prints pressure, temperature, and (if available) humidity readings from a BMe280 or BMP280 sensor
+# This script prints pressure, temperature, and (if available) humidity readings from a BME280 or BMP280 sensor
 from SetUp.verbosity import vrb_print
 
 # Use driver by roberthh from https://github.com/robert-hh/BME280

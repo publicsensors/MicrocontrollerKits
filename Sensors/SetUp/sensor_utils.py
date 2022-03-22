@@ -259,7 +259,7 @@ class Sampler:
                                    
     def sample_loop_timer(self):
         # Method to initiate a timer that calls sample_check (a non-blocking
-        # alternative to sampler_loop. samplle_check also executes a non-
+        # alternative to sampler_loop. sample_check also executes a non-
         # blocking logger.
         tmr_period = 50
         self.check_timer=self.pars['check_timer']

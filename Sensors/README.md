@@ -281,4 +281,4 @@ In this example, the distance (rightmost column) is specified in the driver to b
 
 **Data file formats are designed such that data can be plotted simply by opening the `.csv` file in a spreadsheet, selecting the data series columns corresponding to timestamps and measurements, and creating an XY chart.**
 
-Data file formats are designed to make it straightforward to isolate specific sensors or exclude invalid data using basic spreadsheet functions (e.g. the temperature and distance timeseries examples above).
+Data file formats are designed to make it straightforward to isolate specific sensors or exclude invalid data using basic spreadsheet sorting functions (e.g. the temperature and distance timeseries examples above).

@@ -224,6 +224,11 @@ class Sampler:
             vrb_print('2) sample_display: self.display_list = ',self.display_list)
             self.lcd.clear()
             self.lcd.putstr(display_str)
+        else:
+            self.lcd.clear()
+            wait_str = 'Waiting for data...'
+            self.lcd.putstr(wait_str)
+            
                                    
     def sample_check(self,t):
         # Performs one check whether a sample has been requested,

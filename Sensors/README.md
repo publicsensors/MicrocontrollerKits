@@ -6,10 +6,10 @@ Activities and circuit layouts for microcontrollers and sensors using these code
 The code in this directory will operate for the following types of microcontrollers running Micropython:
 - [**Adafruit Feather STM32F405**](https://www.adafruit.com/product/4382), which is used for all sensor kit activites on [PublicSensors](https://www.publicsensors.org)
 - **ESP32-based microcontrollers** (with some limitations, but with WiFi -- see below)
-  - [Feather HUZZAH](https://www.adafruit.com/product/2821)
+  - [ESP32 Feather HUZZAH](https://www.adafruit.com/product/5400)
 - **ESP8266-based microcontrollers** (with substantial limitations -- see below)
 <!--   - [HUZZAH Breakout](https://www.adafruit.com/product/2471) -->
-  - [Feather HUZZAH](https://www.adafruit.com/product/2821)
+  - [ESP8266 Feather HUZZAH](https://www.adafruit.com/product/2821)
 - [**MicroPython pyboard v1.1**](https://www.adafruit.com/product/2390)
 
 The software and circuit layouts are designed to accommodate "drop-in" swapping between listed microcontroller types with Adafruit's Feather form factor, without changing the circuit layout.
@@ -85,7 +85,7 @@ If a looping static switch is present, sampling can be **paused** by moving that
 Pressing the sampling button, or moving the looping static switch to the `on` position, will **resume** sampling (using the already-existing data files if they are being recorded).
 
 ## Setting up sampling parameters
-The settings that users most frequently want to modify are specified in the form of a dictionary, called `params`, in `user_params.py` in the `SetUp` directory:
+The [parameter](https://en.wikipedia.org/wiki/Parameter) settings that users most frequently want to modify are specified in the form of a dictionary, called `params`, in `user_params.py` in the `SetUp` directory:
 ```python
 # Default parameters for PublicSensors/SensoresPublicos kit and instrument activities
 #

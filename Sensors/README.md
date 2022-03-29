@@ -41,6 +41,26 @@ The **essential** files and directories to run [PublicSensors](https://www.publi
 All data files produced when logging output from environmental sensors are placed into the **Data** subdirectory or folder.
 For notes on accessing these files, see below.
 
+#### Using microSD cards with the ESP32 Feather
+The [ESP32 Feather HUZZAH](https://www.adafruit.com/product/5400) is not provided with a microSD card reader, but one can be added using an `SPI` interface.
+A replacement for the ESP32 `boot.py` file that is automatically launched at boot-up is provided in the [ESP32](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup/Platforms/ESP32) subdirectory of [MicrocontrollerSetup](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup).
+Copy this file into the `/` directory of the `ESP32` with the filename `boot.py`.
+Thereafter, the boot-up process will proceed just like for boards with built-in microSD card readers (pyboards, STM32F405 Feathers, etc.), booting preferentially off the microSD card when it is present (and recording data log files to it).
+
+#### Limitations to ESP32 and ESP8266 Microcontrollers
+The primary limitation of ESP32 microcontrollers for use with PublicSensors kits and activities is that they are not 5V tolerant.
+This is an issue only for a subset of sensors, such as Air Quality Index sensors, that typically operate at 5V.
+More importantly, most LCD displays also operate at 5V.
+For operation with an ESP32, the options are to find an LCD operating at 3.3V, or to use it without an LCD display.
+Against this inconvenience, the ESP32 offers built-in WiFi, which enables data display (and a lot of other important functions, such as real-time data file downloads, remote monitoring \& reboots of enclosed instruments, etc.).
+
+ESP8266 microcontrollers' chief limitation is the small number of General Purpose Input/Output (GPIO) pins available.
+While the [ESP8266 Feather HUZZAH](https://www.adafruit.com/product/2821) nominally has the "Feather" layout, many pin locations are not connected.
+Furthermore, of the pins that are connected, three (GPIOs 12, 13 and 14 are duplicates connected on both sides of the board.
+
+This means that the overall PublicSensors approach of interchangeable microcontroller types within the Feather form factor, along with independent functions for I2C, SPI, OneWire, serial and other sensors, cannot work for the ESP8266.
+However, ESP8266 Feathers can work (with modified layouts) for instruments using only one or two sensors at a time.  
+
 ## Basic operation of PublicSensors MicrocontrollerKits instruments
 [PublicSensors](https://www.publicsensors.org) environmental sensor instruments can run either with or without being attached to a computer:
 - In operation without a computer, instruments display sensor data and other output through an attached LCD screen.

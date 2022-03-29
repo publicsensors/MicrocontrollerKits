@@ -59,7 +59,11 @@ While the [ESP8266 Feather HUZZAH](https://www.adafruit.com/product/2821) nomina
 Furthermore, of the pins that are connected, three (GPIOs 12, 13 and 14 are duplicates connected on both sides of the board.
 
 This means that the overall PublicSensors approach of interchangeable microcontroller types within the Feather form factor, along with independent functions for I2C, SPI, OneWire, serial and other sensors, cannot work for the ESP8266.
-However, ESP8266 Feathers can work (with modified layouts) for instruments using only one or two sensors at a time.  
+However, ESP8266 Feathers can work (with modified layouts) for instruments using only one or two sensors at a time.
+
+A further significant limitation of ESP8266 microcontrollers is that they lack an independently useable UART, other than the one dedicated to serial communications with the microcontroller (for REPL, file transfer, etc.). 
+Though it is theoretically possible to repurpose this UART and communicate exclusively via WiFi, in practice this is difficult and unworkable. 
+This means that UART-based sensors, including most GPS and Air Quality Index sensors and many other potentially useful sensors, cannot be used for PublicSensors activities with ESP8266 microcontrollers.
 
 ## Basic operation of PublicSensors MicrocontrollerKits instruments
 [PublicSensors](https://www.publicsensors.org) environmental sensor instruments can run either with or without being attached to a computer:

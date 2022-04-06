@@ -22,6 +22,9 @@ from time import sleep
 from SetUp.sensor_utils import sample_params, Sampler, trigger_sample
 from SetUp.lcd_setup import lcd_init
 
+from gc import collect
+collect()
+
 # Load default and user-specified parameters
 new_pars=sample_params()
 params.update(new_pars)

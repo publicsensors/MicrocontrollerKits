@@ -42,6 +42,10 @@ class read_exttime:
             datetime=self.sensor.datetime()
             self.datetime=datetime
             vrb_print('test: datetime = ',datetime)
+            vrb_print('Setting onboard RTC...')
+            self.rtc.datetime((self.datetime.year,self.datetime.month,self.datetime.day,0,
+                               self.datetime.hour,self.datetime.minute,self.datetime.second,0))
+            print('Onboard RTC set to: ',self.rtc.datetime())
             return 1
         except:
             return 0

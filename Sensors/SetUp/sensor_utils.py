@@ -14,6 +14,9 @@ from SetUp.verbosity import vrb_print,vrb_setlevel
 from micropython import alloc_emergency_exception_buf
 alloc_emergency_exception_buf(100)
 
+from gc import collect
+collect()
+
 global sample_trigger # flag to trigger one sample in sample_loop
 sample_trigger=0
 global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
@@ -396,5 +399,6 @@ class Sampler:
             self.pars['sensor_objs'][sensr].log_format=log_format
         
 
+collect()
 
             

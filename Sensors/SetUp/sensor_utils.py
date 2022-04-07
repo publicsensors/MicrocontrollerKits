@@ -96,6 +96,7 @@ class Sampler:
         self.i2c=pars['i2c']
         self.lcd=pars['lcd']
         self.display_list = []
+        self.display_count = 0
 
         # Set up initial sampling if looping is turned on
         # The two options below use the either the setting or the
@@ -229,9 +230,10 @@ class Sampler:
             self.lcd.putstr(display_str)
         else:
             self.lcd.clear()
-            wait_str = 'Waiting for data...'
+            wait_str = 'Waiting for data' + self.display_count * '.'
+            #wait_str = 'Waiting for data...'
             self.lcd.putstr(wait_str)
-            
+            self.display_count = (self.display_count+1) % 4
                                    
     def sample_check(self,t):
         # Performs one check whether a sample has been requested,

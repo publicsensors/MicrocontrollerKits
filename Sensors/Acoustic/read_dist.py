@@ -66,7 +66,7 @@ class read_dist:
             self.data_list.extend([data])
             #data_list.extend([data])
             
-        display_str = 'distance =\n '+str(dist)+" cm"
+        display_str = 'distance =\n '+str(round(dist,2))+" cm"
         self.display_str_list = [display_str]
 
 

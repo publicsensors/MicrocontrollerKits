@@ -55,7 +55,7 @@ class read_color:
             data.extend([eval(s) for s in self.fmt_keys])
             self.data_list.extend([data])
             
-        display_str = 'RGB = ('+str(R)+','+str(G)+','+str(B)+')'+'\nfull='+str(full)
+        display_str = 'RGB = '+str(R)+','+str(G)+','+str(B)+'\n'+'full='+str(full)
         vrb_print('color: display_str = ',display_str)
         self.display_str_list = [display_str]
         vrb_print('color: self.display_str_list = ',self.display_str_list)

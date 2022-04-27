@@ -78,5 +78,6 @@ class read_temp:
                 data.extend([eval(s) for s in self.fmt_keys])
                 self.data_list.extend([data])
                 #data_list.extend([data])
-            display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
+            #display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
+            display_str = "Temp: "+str(round(T,2))+" C\nID: "+sensor_id[2:7]
             self.display_str_list.extend([display_str])

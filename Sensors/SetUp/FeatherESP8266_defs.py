@@ -1,8 +1,8 @@
 #  Definitions of platform-specific pins and commands.
 #
 # Board-specific definitions: ESP8266 Huzzah Feather/Breakout Board
-
-print('Loading definitions for ESP8266')
+from SetUp.verbosity import vrb_print
+vrb_print('Loading definitions for ESP8266',level=3)
 
 from machine import Pin, UART, I2C
 from esp import osdebug # stop annoying WiFi messages

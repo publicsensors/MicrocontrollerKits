@@ -1,8 +1,9 @@
 #  Definitions of platform-specific pins and commands.
 #
 # Board-specific definitions: Pyboard v1.1
+from SetUp.verbosity import vrb_print
+vrb_print('Loading definitions for PYBv1.1',level=3)
 
-print('Loading definitions for PYBv1.1')
 from machine import Pin, I2C, Timer
 from pyb import Switch, UART
 

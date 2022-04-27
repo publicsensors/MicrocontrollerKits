@@ -96,7 +96,7 @@ params={'setup_dir':'SetUp',
         'sample_max':10,
         'sample_interval':10,
         'display_interval':0,
-        'verbosity':15,
+        'verbosity':1,
         'bt_flag':0
 }
 

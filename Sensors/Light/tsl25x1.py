@@ -426,12 +426,12 @@ class tsl25x1_sensor:
         if self.type=='tsl2591':
             full, ir = self.sensor.get_full_luminosity()  # read raw values (full spectrum and ir spectrum)
             lux = self.sensor.calculate_lux(full, ir)  # convert raw values to lux
-            print('tsl2591 full, ir, lux:', full, ir, lux)
+            #print('tsl2591 full, ir, lux:', full, ir, lux)
             return full, ir, lux
         elif self.type=='tsl2561':
             full, ir = self.sensor.read(raw=True)
             lux=self.sensor._lux((full,ir))
-            print('tsl2561 full, ir, lux:', full, ir, lux)
+            #print('tsl2561 full, ir, lux:', full, ir, lux)
             return full, ir, lux
 
     

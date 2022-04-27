@@ -5,7 +5,7 @@
 # Detect platform via uos command
 from uos import uname
 sys_info = uname()
-print(sys_info)
+vrb_print(sys_info,level=3)
 platform=sys_info[4]
 
 # Default values (may be altered for specific platforms)

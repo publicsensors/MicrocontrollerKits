@@ -3,7 +3,7 @@
 # Board-specific definitions: Pyboard v1.1
 
 print('Loading definitions for PYBv1.1')
-from machine import Pin, I2C
+from machine import Pin, I2C, Timer
 from pyb import Switch, UART
 
 board='PBDv1.1'
@@ -14,13 +14,17 @@ p_pwr3 = Pin('X3', Pin.OUT,value=0)  # Pin X3 is power supplied to the GPS, V+
 p_pwr4 = Pin('X4', Pin.OUT,value=0)  # Pin X4 is power supplied to the GPS, V+
 p_DS18B20 = Pin('X20', Pin.IN)  # Pin X20 is the data pin for DS18B20 temperature sensors
 uartGPS= UART(4, 9600)
+uartGPS.init(9600, bits=8, parity=None, stop=1,timeout_char=5)
 uartAQ= UART(3, 9600)
 uartAQ.init(9600, bits=8, parity=None, stop=1)
+uartBT= UART(6, 9600)
+uartBT.init(9600, bits=8, parity=None, stop=1)
 #p_batt=14
 #p_sens=4
 # Define default I2C pins
 p_I2Cscl_lbl='X9'
 p_I2Csda_lbl='X10'
+i2c_num=1
 # I2C without an ID currently reverts to SoftI2C; use hardware I2C(1)
 # instead, which has the specified pinouts
 #i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))

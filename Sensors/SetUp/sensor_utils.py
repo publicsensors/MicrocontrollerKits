@@ -14,6 +14,8 @@ from SetUp.verbosity import vrb_print,vrb_setlevel
 from micropython import alloc_emergency_exception_buf
 alloc_emergency_exception_buf(100)
 
+from SetUp.platform_defs import uartBT  # uart for optional HC05 bluetooth transmitter
+
 from gc import collect
 collect()
 
@@ -97,6 +99,9 @@ class Sampler:
         self.lcd=pars['lcd']
         self.display_list = []
         self.display_count = 0
+        self.bt_flag=pars['bt_flag']
+
+        self.uartBT=uartBT
 
         # Set up initial sampling if looping is turned on
         # The two options below use the either the setting or the
@@ -120,7 +125,9 @@ class Sampler:
 
         # Virtual timer for LCD display
         self.LCDtimer=self.pars['LCDtimer']
-        if self.lcd:
+        #if self.lcd:
+        # Move tests for lcd to sample_display (to prevent accumulation of msgs & enable hc05)
+        if True:
             self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
@@ -226,14 +233,18 @@ class Sampler:
             display_str = self.display_list.pop(0)
             vrb_print("display_str = ",display_str)
             vrb_print('2) sample_display: self.display_list = ',self.display_list)
-            self.lcd.clear()
-            self.lcd.putstr(display_str)
+            if self.bt_flag:
+                self.uartBT.write(display_str)
+            if self.lcd:
+                self.lcd.clear()
+                self.lcd.putstr(display_str)
         else:
-            self.lcd.clear()
-            wait_str = 'Waiting for data' + self.display_count * '.'
-            #wait_str = 'Waiting for data...'
-            self.lcd.putstr(wait_str)
-            self.display_count = (self.display_count+1) % 4
+            if self.lcd:
+                self.lcd.clear()
+                wait_str = 'Waiting for data' + self.display_count * '.'
+                #wait_str = 'Waiting for data...'
+                self.lcd.putstr(wait_str)
+                self.display_count = (self.display_count+1) % 4
                                    
     def sample_check(self,t):
         # Performs one check whether a sample has been requested,

@@ -53,7 +53,7 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
         pars.update(user_pars.user_params.params)
         vrb_setlevel(pars['verbosity'])
     except Exception as e:
-        vrb_print_exception(e)
+        print_exception(e)
         vrb_print('Unable to import user-specified parameter file')
     vrb_print('Final parameters:')
     vrb_print(pars)

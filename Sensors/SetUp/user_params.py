@@ -32,7 +32,7 @@ params={'sensor_list':{'distance':1,
         'sample_max':4,
         'sample_interval':120,
         'display_interval':3,
-        'verbosity':11,
+        'verbosity':'base', # Output options: 'base', 'low','med', 'high', or number 1-15
         'bt_flag':0
 }
 

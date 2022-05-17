@@ -38,7 +38,7 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
         def_pars=__import__(module_name)
         vrb_print(dir(def_pars.default_params),5)
         pars.update(def_pars.default_params.params)
-    vrb_setlevel(pars['verbosity'])
+    vrb_setlevel(pars['output_level'])
     vrb_print('Default parameters:',level=20)
     vrb_print(pars,level=20)
     if user_param_file is None:
@@ -51,7 +51,7 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
         vrb_print(dir(user_pars.user_params))
         vrb_print('user_pars.user_params.params = ',user_pars.user_params.params)
         pars.update(user_pars.user_params.params)
-        vrb_setlevel(pars['verbosity'])
+        vrb_setlevel(pars['output_level'])
     except Exception as e:
         print_exception(e)
         vrb_print('Unable to import user-specified parameter file')

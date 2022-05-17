@@ -103,7 +103,7 @@ params={'setup_dir':'SetUp',
         'sample_max':10,
         'sample_interval':10,
         'display_interval':0,
-        'verbosity':'base', # Output options: 'base', 'low','med', 'high', or number 1-15
+        'output_level':'base', # Output options: 'base', 'low','med', 'high', or number 1-15
         'bt_flag':0
 }
 

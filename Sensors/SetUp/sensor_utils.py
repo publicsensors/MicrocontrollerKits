@@ -32,31 +32,31 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
         It is then modified by settings in the user_param_file, then returned
     """
     if len(pars)==0:
-        vrb_print('loading default parameters from the default_param_file',level=5)
+        vrb_print('loading default parameters from the default_param_file',level='low')
         module_name = default_param_file[:-3]
-        vrb_print('importing ',module_name,level=5)
+        vrb_print('importing ',module_name,level='low')
         def_pars=__import__(module_name)
-        vrb_print(dir(def_pars.default_params),5)
+        vrb_print(dir(def_pars.default_params),'med')
         pars.update(def_pars.default_params.params)
     vrb_setlevel(pars['output_level'])
-    vrb_print('Default parameters:',level=20)
-    vrb_print(pars,level=20)
+    vrb_print('Default parameters:',level='high')
+    vrb_print(pars,level='high')
     if user_param_file is None:
         user_param_file=pars['user_param_file']
-        vrb_print('loading user-specfied parameters from '+user_param_file+' in subdirectory ',pars['setup_dir'])
+        vrb_print('loading user-specfied parameters from '+user_param_file+' in subdirectory ',pars['setup_dir'],level='low')
     try:
         module_name = '%s.%s' % (pars['setup_dir'],user_param_file[:-3])
-        vrb_print('importing ',module_name)
+        vrb_print('importing ',module_name,level='low')
         user_pars=__import__(module_name)
-        vrb_print(dir(user_pars.user_params))
-        vrb_print('user_pars.user_params.params = ',user_pars.user_params.params)
+        vrb_print(dir(user_pars.user_params),level='high')
+        vrb_print('user_pars.user_params.params = ',user_pars.user_params.params,level='high')
         pars.update(user_pars.user_params.params)
         vrb_setlevel(pars['output_level'])
     except Exception as e:
         print_exception(e)
-        vrb_print('Unable to import user-specified parameter file')
-    vrb_print('Final parameters:')
-    vrb_print(pars)
+        vrb_print('Unable to import user-specified parameter file',level='base')
+    vrb_print('Final parameters:',level='low')
+    vrb_print(pars,level='low')
     # return a local copy of the parameters, to be assigned to the global params if appropriate
     return pars
 
@@ -65,15 +65,15 @@ def sample_params(user_param_file=None,default_param_file='SetUp.default_params.
 def trigger_sample(p):
     global sample_trigger # flag to trigger one sample in sample_loop
     global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
-    vrb_print('irq ',p)
+    vrb_print('irq ',p,level='low')
     # Check the source of the irq:
     # change this to use the __name__ field...
     if str(type(p)).find('Timer')>-1:
-        vrb_print('Timer irq')
+        vrb_print('Timer irq',level='med')
         if sample_cycle_flag>0:
             sample_trigger=1
     elif str(type(p)).find('Pin')>-1:
-        vrb_print('Pin irq')
+        vrb_print('Pin irq',level='med')
         sample_trigger=1    
 
         
@@ -81,7 +81,7 @@ def trigger_sample(p):
 def set_cycle_flag(p):
     global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
     #global sample_trigger # flag to trigger one sample in sample_loop
-    vrb_print('Looping flag (set_cycle: {}) set to {}'.format(p,p.value()),level=4)
+    vrb_print('Looping flag (set_cycle: {}) set to {}'.format(p,p.value()),level='low')
     sample_cycle_flag=p.value()
 
 class Sampler:
@@ -118,7 +118,7 @@ class Sampler:
             self.sensor_select()
 
         if self.pars['auto_logging']:
-            vrb_print('opening files for autologging...')
+            vrb_print('opening files for autologging...',level='low')
             self.start_log_files()
         
         self.loop_flag=0  # flag turning loop sampling off/on
@@ -151,16 +151,16 @@ class Sampler:
         if pars['default_sample_looping']:
             try:
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_UP)
-                vrb_print('set pull-up for p_smpl_loop: enable auto-looping')
+                vrb_print('set pull-up for p_smpl_loop: enable auto-looping',level='high')
             except:
-                vrb_print('unable to set pull-up for p_smpl_loop')
+                vrb_print('unable to set pull-up for p_smpl_loop',level='high')
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)
         else:
             try:
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
-                vrb_print('set pull-down for p_smpl_loop: disable auto-looping')
+                vrb_print('set pull-down for p_smpl_loop: disable auto-looping',level='high')
             except:
-                vrb_print('unable to set pull-down for p_smpl_loop')
+                vrb_print('unable to set pull-down for p_smpl_loop',level='high')
                 self.p_smpl_loop=Pin(self.pars['p_smpl_loop_lbl'], Pin.IN)                
         self.p_smpl_loop.irq(trigger=Pin.IRQ_FALLING|Pin.IRQ_RISING,handler=set_cycle_flag)
         
@@ -172,67 +172,45 @@ class Sampler:
         """A method to stop sampling and IRQ calls by deinitializing the
            timers activating non-blocking sampling, display and logging.
         """
-        vrb_print('>>> User requested stop: Deinitializing timers...')
+        vrb_print('>>> User requested stop: Deinitializing timers...',level='base')
         self.check_timer.deinit()
         self.LCDtimer.deinit()
         self.SMPLtimer.deinit()
         self.AQtimer.deinit()
                 
-    def pause(self):
-        """An EXPERIMENTAL method to pause sampling (both loop and button-
-           driven) in a recoverable way
-        """
-        vrb_print('>>> User requested pause: Disabling IRQs...')
-        from machine import disable_irq
-        self.irq_state=disable_irq()
-
-    def resume(self):
-        """A, EXPERIMENTAL method to resume sampling disabled by the
-           pause() method.
-        """
-        vrb_print('>>> User requested resume: Enabling IRQs...')
-        from machine import enable_irq
-        self.irq_state=enable_irq(self.irq_state)
-
     def sample(self):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 
             controlled sampling
         """
         global sensor_obj, sensor_module
         global sample_trigger,sample_cycle_flag
-        vrb_print('A; sample_trigger,sample_cycle_flag =',sample_trigger,sample_cycle_flag)
+        vrb_print('sample_trigger,sample_cycle_flag =',sample_trigger,sample_cycle_flag,level='med')
         sample_trigger=0
         for i in range(len(self.pars['active_sensors'])):
             sensr=self.pars['active_sensors'][i]
             sensor_obj=self.pars['sensor_objs'][sensr]
             cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
-            vrb_print('\ntaking sensor reading with: ',cmd)
+            vrb_print('\ntaking sensor reading with: ',cmd,level='med')
             exec(cmd)
                                                                      
     def sample_display(self,t):
         # A method to display output strings in sequence, callable
         # by a timer irq (t). Display strings come from the
         # display_str_list field of each read_X sensor driver.
-        #vrb_print('irq ',t)
-        #vrb_print('Entering sample_display...')
         for i in range(len(self.pars['active_sensors'])):
             sensr=self.pars['active_sensors'][i]
             sensor_obj=self.pars['sensor_objs'][sensr]
             for i in range(len(sensor_obj.display_str_list)):
-                vrb_print('sensor_obj.display_str_list[i] = ',sensor_obj.display_str_list[i])
-                vrb_print('3) sample_display: self.display_list = ',self.display_list)
+                vrb_print('sensor_obj.display_str_list[i] = ',sensor_obj.display_str_list[i],level='base')
+                vrb_print('3) sample_display: self.display_list = ',self.display_list,level='high')
                 self.display_list.extend([sensor_obj.display_str_list[i]])
-                vrb_print('4) sample_display: self.display_list = ',self.display_list)
+                vrb_print('4) sample_display: self.display_list = ',self.display_list,level='high')
             sensor_obj.display_str_list=[]
-            #while len(sensor_obj.display_str_list)>0:
-            #    self.display_list.extend(sensor_obj.display_str_list.pop(0))
-            # This worked in sample:
-            #self.display_list.extend(sensor_obj.display_str_list)
         if len(self.display_list) > 0:
-            vrb_print('1) sample_display: self.display_list = ',self.display_list)
+            vrb_print('1) sample_display: self.display_list = ',self.display_list,level='high')
             display_str = self.display_list.pop(0)
-            vrb_print("display_str = ",display_str)
-            vrb_print('2) sample_display: self.display_list = ',self.display_list)
+            vrb_print("display_str = ",display_str,level='base')
+            vrb_print('2) sample_display: self.display_list = ',self.display_list,level='high')
             if self.bt_flag:
                 self.uartBT.write(display_str)
             if self.lcd:
@@ -242,7 +220,6 @@ class Sampler:
             if self.lcd:
                 self.lcd.clear()
                 wait_str = 'Waiting for data' + self.display_count * '.'
-                #wait_str = 'Waiting for data...'
                 self.lcd.putstr(wait_str)
                 self.display_count = (self.display_count+1) % 4
                                    
@@ -250,15 +227,13 @@ class Sampler:
         # Performs one check whether a sample has been requested,
         # intended to be called by a timer (t)
         global sample_trigger 
-        #vrb_print('sample_check...')
         if sample_trigger==1:
-            vrb_print('sample triggered...')
+            vrb_print('sample triggered...',level='med')
             sample_trigger=0
             self.sample()
         # Write to logs in sequence. Log strings come from the 
         # the data_list field of the sensor object,
         # with the corresponding output format.
-        #vrb_print('Entering sample_log...')
         for i in range(len(self.pars['active_sensors'])):
             sensr=self.pars['active_sensors'][i]
             sensor_obj=self.pars['sensor_objs'][sensr]
@@ -266,11 +241,11 @@ class Sampler:
                 logfile=open(sensor_obj.logfilename,'a')
                 while len(sensor_obj.data_list)>0: # cycle through data lines
                     data=sensor_obj.data_list.pop()
-                    vrb_print('data = ',data)
-                    vrb_print('self.log_format=',sensor_obj.log_format)
+                    vrb_print('data = ',data,level='med')
+                    vrb_print('self.log_format=',sensor_obj.log_format,level='high')
                     log_line=sensor_obj.log_format % tuple(data)
-                    vrb_print('log_line = ',log_line)
-                    vrb_print('logging to filename: ',sensor_obj.logfilename)
+                    vrb_print('log_line = ',log_line,level='med')
+                    vrb_print('logging to filename: ',sensor_obj.logfilename,level='med')
                     logfile.write(log_line)
                 logfile.close()
                 try:
@@ -288,18 +263,18 @@ class Sampler:
 
     def sample_loop(self):
         global sample_trigger 
-        vrb_print('Starting sample_loop')
+        vrb_print('Starting sample_loop',level='high')
         while True:
             if sample_trigger==1:
-                vrb_print('sample triggered...')
+                vrb_print('sample triggered...',level='high')
                 sample_trigger=0
                 self.sample()
                                    
     def sample_cycle(self):
         global sample_trigger 
-        vrb_print('Starting cycle with ',self.pars['sample_max'],' samples')
+        vrb_print('Starting cycle with ',self.pars['sample_max'],' samples',level='med')
         for sample_count in range(self.pars['sample_max']):
-            vrb_print('sample_count = ',sample_count)
+            vrb_print('sample_count = ',sample_count,level='med')
             self.sample()
             sleep(self.pars['sample_interval'])
 
@@ -314,7 +289,7 @@ class Sampler:
         global sensor_func
         global sensor_obj, sensor_module
 
-        vrb_print('Detecting/initializing sensor drivers...')
+        vrb_print('Detecting/initializing sensor drivers...',level='med')
 
         i2c=self.pars['i2c']
         smbus=self.pars['smbus']
@@ -327,33 +302,31 @@ class Sampler:
 
         # Create a list of sensors flagged for use
         requestedSensors = [s for s in list(self.pars['sensor_list'].keys()) if self.pars['sensor_list'][s]>0]
-        #requestedSensors.reverse()
-        #vrb_print('requestedSensors = ',requestedSensors)
+        vrb_print('requestedSensors = ',requestedSensors,level='high')
 
         # Import driver functions and test requested sensors
         for sensr in requestedSensors:
             try:
                 module_name=self.pars['sensor_dirs'][sensr]+'.read_'+self.pars['sensor_func_suffices'][sensr]
-                vrb_print('importing module_name = ',module_name)
+                vrb_print('importing module_name = ',module_name,level='med')
                 sensor_module=__import__(module_name) # import module, defining a class to support sensor ops
                 cmd='sensor_module.read_'+self.pars['sensor_func_suffices'][sensr]+'.read_'+ \
                     self.pars['sensor_func_suffices'][sensr]+'(i2c=i2c,rtc=rtc,smbus=smbus)'
-                    #self.pars['sensor_func_suffices'][sensr]+'(lcd=lcd,i2c=i2c,rtc=rtc,smbus=smbus)'
                 sensor_obj=eval(cmd)                     # instantiate an object of that class
-                vrb_print('success: queuing sensor driver ',self.pars['sensor_func_suffices'][sensr])
+                vrb_print('success: queuing sensor driver ',self.pars['sensor_func_suffices'][sensr],level='med')
                 cmd='sensor_obj.test_'+self.pars['sensor_func_suffices'][sensr]+'()'
-                vrb_print('testing sensor driver with: ',cmd)
+                vrb_print('testing sensor driver with: ',cmd,level='med')
                 sensor_test = eval(cmd)
                 sleep(1)
                 if sensor_test>0:
                     new_pars['active_sensors'].append(sensr)
                     new_pars['sensor_objs'].update({sensr:sensor_obj})
-                    vrb_print('success: queuing sensor object for ',sensr)
+                    vrb_print('success: queuing sensor object for ',sensr,level='low')
             except Exception as e:
                 print_exception(e)
-                vrb_print('Error: sensor driver for ',sensr,' was requested but failed import or test')
-        vrb_print('Final list of active sensors is: ',new_pars['active_sensors'])
-        vrb_print('Updating pars with: ',new_pars)
+                vrb_print('Error: sensor driver for ',sensr,' was requested but failed import or test',level='med')
+        vrb_print('Final list of active sensors is: ',new_pars['active_sensors'],level='base')
+        vrb_print('Updating pars with: ',new_pars,level='high')
         self.pars.update(new_pars)
     
 
@@ -377,8 +350,7 @@ class Sampler:
             timestamp_str=self.pars['timestamp_format'] % timestamp
             logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
                 str(nfile) + '_' + self.pars['sensor_log_prefixes'][sensr]+'.csv'
-            #logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+self.pars['sensor_log_prefixes'][sensr]+'.csv'
-            vrb_print('creating log file: ',logfilename)
+            vrb_print('creating log file: ',logfilename,level='low')
             logfile=open(logfilename,'w')
             sensor_log_format=self.pars['sensor_log_formats'][sensr]
             fmt_keys=list(sensor_log_format.keys())

@@ -5,13 +5,15 @@ global sensor_func  # attempt to fix global/local issues with eval of functions
 global sensor_obj, sensor_module
 
 # Set initial verbosity. Examples:
-# 1 --> minimal output
-# 4 --> moderate ouput
-# 13 --> verbose output
+# 2 or 'base'--> minimal output
+# 4 or 'med'--> moderate ouput
+# 13 or 'high' --> verbose output
 # Settings in default_params and user_params replace this value when imported.
 from SetUp.verbosity import vrb_print,vrb_setlevel
 vrb_level = 1
 vrb_setlevel(vrb_level)
+# Use e.g. "vrb_setlevel(2)" or "vrb_setlevel('med') in the terminal to 
+# change output level during sampling
 
 params={}
 
@@ -45,35 +47,37 @@ params.update({'AQtimer':AQtimer}) # dictionary item is either a valid I2C objec
 
 
 # Initialize I2C interface
-vrb_print('Initializing I2C interface...')
+vrb_print('Initializing I2C interface...',level='high')
 try:
-    vrb_print('Success: I2C initialized; scan = ',i2c.scan())
+    vrb_print('Success: I2C initialized; scan = ',i2c.scan(),level='high')
 except Exception as e:
     print_exception(e)
-    vrb_print('Error: Unable to initalize I2C')
+    vrb_print('Error: Unable to initalize I2C',level='low')
     i2c=False
 params.update({'i2c':i2c}) # dictionary item is either a valid I2C object or False
 
 ## Initialize SMBus interface
-vrb_print('Initializing SMBus interface...')
+vrb_print('Initializing SMBus interface...',level='high')
 try:
     if p_I2Csda_lbl is None or p_I2Cscl_lbl is None:
         smbus = SMBus(i2c_num)
     else:
         smbus = SMBus(i2c_num,scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
-    vrb_print('Success: SMBus initialized')
+    vrb_print('Success: SMBus initialized',level='high')
 except Exception as e:
     print_exception(e)
-    vrb_print('Error: Unable to initalize SMBus')
+    vrb_print('Error: Unable to initalize SMBus',level='low')
     smbus=False
 params.update({'smbus':smbus}) # dictionary item is either a valid I2C object or False
 
 # Test for presence of LCD, and initialize if present 
-vrb_print('Detecting/initializing LCD interface...')
+vrb_print('Detecting/initializing LCD interface...',level='low')
 try:
     lcd = lcd_init(i2c)
+    vrb_print('Success initializing LCD interface...',level='low')
 except Exception as e:
     print_exception(e)
+    vrb_print('Error: failed to initialize LCD interface...',level='low')
 params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or False
 
 

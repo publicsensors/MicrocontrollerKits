@@ -2,7 +2,7 @@
 #
 # Board-specific definitions: Pyboard v1.1
 from SetUp.verbosity import vrb_print
-vrb_print('Loading definitions for PYBv1.1',level=3)
+vrb_print('Loading definitions for PYBv1.1',level='low')
 
 from machine import Pin, I2C, Timer
 from pyb import Switch, UART

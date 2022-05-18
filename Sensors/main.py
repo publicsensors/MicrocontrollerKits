@@ -9,11 +9,13 @@ global sensor_obj, sensor_module
 # 4 or 'med'--> moderate ouput
 # 13 or 'high' --> verbose output
 # Settings in default_params and user_params replace this value when imported.
-from SetUp.verbosity import vrb_print,vrb_setlevel
-vrb_level = 1
-vrb_setlevel(vrb_level)
-# Use e.g. "vrb_setlevel(2)" or "vrb_setlevel('med') in the terminal to 
+from SetUp.verbosity import vrb_print,vrb_setlevel as output_setlevel
+output_level = 1
+output_setlevel(output_level)
+# Use e.g. "output_setlevel(2)" or "output_setlevel('med') in the terminal to 
 # change output level during sampling
+
+vrb_print('\n\nLaunching PublicSensors environmenal sensors...\n\n',level='base')
 
 params={}
 

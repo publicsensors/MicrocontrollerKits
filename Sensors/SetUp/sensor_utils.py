@@ -201,7 +201,7 @@ class Sampler:
             sensr=self.pars['active_sensors'][i]
             sensor_obj=self.pars['sensor_objs'][sensr]
             for i in range(len(sensor_obj.display_str_list)):
-                vrb_print('sensor_obj.display_str_list[i] = ',sensor_obj.display_str_list[i],level='base')
+                vrb_print('sensor_obj.display_str_list[i] = ',sensor_obj.display_str_list[i],level='low')
                 vrb_print('3) sample_display: self.display_list = ',self.display_list,level='high')
                 self.display_list.extend([sensor_obj.display_str_list[i]])
                 vrb_print('4) sample_display: self.display_list = ',self.display_list,level='high')

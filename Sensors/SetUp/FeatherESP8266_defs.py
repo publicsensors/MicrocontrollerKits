@@ -2,7 +2,7 @@
 #
 # Board-specific definitions: ESP8266 Huzzah Feather/Breakout Board
 from SetUp.verbosity import vrb_print
-vrb_print('Loading definitions for ESP8266',level=3)
+vrb_print('Loading definitions for ESP8266',level='low')
 
 from machine import Pin, UART, I2C
 from esp import osdebug # stop annoying WiFi messages

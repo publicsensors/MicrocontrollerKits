@@ -50,15 +50,15 @@ class read_light:
     def print_light(self):
         global full,ir,lux
         full, ir, lux = self.sensor.light()
-        vrb_print('full: ',str(full),' ir: ',str(ir))
+        vrb_print('full: ',str(full),' ir: ',str(ir),level='low')
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            vrb_print(self.fmt_keys)
+            vrb_print(self.fmt_keys,level='high')
             for s in self.fmt_keys:
-                vrb_print(s)
-                vrb_print(eval(s))
+                vrb_print(s,level='high')
+                vrb_print(eval(s),level='high')
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])

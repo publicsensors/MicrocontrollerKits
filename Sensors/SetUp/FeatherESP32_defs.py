@@ -2,7 +2,7 @@
 #
 # Board-specific definitions: ESP32 Feather
 from SetUp.verbosity import vrb_print
-vrb_print('Loading definitions for ESP32 Feather',level=3)
+vrb_print('Loading definitions for ESP32 Feather',level='low')
 
 from machine import Pin, UART, I2C, Timer
 #from machine import Pin, UART, SoftI2C, Timer

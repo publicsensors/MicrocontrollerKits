@@ -2,7 +2,7 @@
 #
 # Board-specific definitions: STM32f405 Feather
 from SetUp.verbosity import vrb_print
-vrb_print('Loading definitions for STM32F405 Feather',level=3)
+vrb_print('Loading definitions for STM32F405 Feather',level='low')
 
 from pyb import UART # Use pyb UART bc machine.UART clashes with DS18B20s
 from machine import Pin, I2C, SoftI2C, Timer

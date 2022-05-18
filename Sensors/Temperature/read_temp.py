@@ -39,16 +39,16 @@ class read_temp:
     # -------------------------------------------------------------------------------
     def test_temp(self):
         if not self.roms: # Check to see if there is a DS18B20 attached/found
-            vrb_print('Error: No temperature sensor address found')#
+            vrb_print('Error: No temperature sensor address found',level='low')#
             return 0
         else:
-            vrb_print('DS18B20 address: ',str(self.roms))
+            vrb_print('DS18B20 address: ',str(self.roms),level='med')
             try: # Try to take a measurement, return 1 if successful, 0 if not
                 self.ds.convert_temp()       # Obtain temp readings from each of those sensors
                 sleep_ms(750)           # Sleep for 750 ms, to give the sensors enough time to
                                         # report their temperature readings
-                vrb_print('test temp = ')
-                vrb_print(self.ds.read_temp(self.roms[0]))
+                vrb_print('test temp = ',level='low')
+                vrb_print(self.ds.read_temp(self.roms[0]),level='low')
                 return 1
             except:
                 return 0
@@ -67,17 +67,15 @@ class read_temp:
         for rom in self.roms:
             sensor_id=str(hexlify(rom))[2:-1]
             T = self.ds.read_temp(rom)
-            vrb_print("Temp: ",T, ' C')
-            vrb_print(self.fmt_keys)
+            vrb_print("Temp: ",T, ' C',level='med')
+            vrb_print(self.fmt_keys,level='high')
             if self.logging:
                 for s in self.fmt_keys:
-                    vrb_print(s)
-                    vrb_print(eval(s))
+                    vrb_print(s,level='high')
+                    vrb_print(eval(s),level='high')
                 data=[self.sample_num]
                 data.extend([t for t in timestamp])
                 data.extend([eval(s) for s in self.fmt_keys])
                 self.data_list.extend([data])
-                #data_list.extend([data])
-            #display_str = "Temp: "+str(round(T,2))+" C\n"+sensor_id
             display_str = "Temp: "+str(round(T,2))+" C\nID: "+sensor_id[2:7]
             self.display_str_list.extend([display_str])

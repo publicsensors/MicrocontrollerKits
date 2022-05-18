@@ -51,15 +51,15 @@ class read_dist:
     def print_dist(self):
         global dist
         dist = self.sensor.distance()
-        vrb_print(str(dist)+" cm")
+        vrb_print(str(dist)+" cm",level='low')
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             self.sample_num+=1
-            vrb_print(self.fmt_keys)
+            vrb_print(self.fmt_keys,level='high')
             for s in self.fmt_keys:
-                vrb_print(s)
-                vrb_print(eval(s))
+                vrb_print(s,level='high')
+                vrb_print(eval(s),level='high')
             data=[self.sample_num]
             data.extend([t for t in timestamp])
             data.extend([eval(s) for s in self.fmt_keys])

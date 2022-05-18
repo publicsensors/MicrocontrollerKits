@@ -15,6 +15,8 @@ from time import sleep, sleep_ms
 from struct import pack, unpack
 from machine import Pin
 from gc import collect
+from SetUp.verbosity import vrb_print
+
 collect()
 
 
@@ -411,14 +413,14 @@ class tsl25x1_sensor:
             try:
                 self.sensor = Tsl2591(i2c=i2c)  # initialize tsl2591 sensor
                 self.type='tsl2591'
-                print('tsl2591 sensor initialized')
+                vrb_print('tsl2591 sensor initialized',level='med')
             except:
                 pass
         if self.type==None or sensor_type=='tsl2561' or sensor_type=='TSL2561':
             try:
                 self.sensor = TSL2561(i2c)
                 self.type='tsl2561'
-                print('tsl2561 sensor initialized')
+                vrb_print('tsl2561 sensor initialized',level='med')
             except:
                 pass
 
@@ -426,12 +428,10 @@ class tsl25x1_sensor:
         if self.type=='tsl2591':
             full, ir = self.sensor.get_full_luminosity()  # read raw values (full spectrum and ir spectrum)
             lux = self.sensor.calculate_lux(full, ir)  # convert raw values to lux
-            #print('tsl2591 full, ir, lux:', full, ir, lux)
             return full, ir, lux
         elif self.type=='tsl2561':
             full, ir = self.sensor.read(raw=True)
             lux=self.sensor._lux((full,ir))
-            #print('tsl2561 full, ir, lux:', full, ir, lux)
             return full, ir, lux
 
     

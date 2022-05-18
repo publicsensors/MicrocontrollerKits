@@ -38,14 +38,14 @@ class read_exttime:
         global year, month, day, weekday, hour, minute, second
 
         try: # Try to take a measurement, return 1 if successful, 0 if not
-            vrb_print('testing ds3231...')
+            vrb_print('testing ds3231...',level='med')
             datetime=self.sensor.datetime()
             self.datetime=datetime
-            vrb_print('test: datetime = ',datetime)
-            vrb_print('Setting onboard RTC...')
+            vrb_print('test: datetime = ',datetime,level='low')
+            vrb_print('Setting onboard RTC...',level='med')
             self.rtc.datetime((self.datetime.year,self.datetime.month,self.datetime.day,0,
                                self.datetime.hour,self.datetime.minute,self.datetime.second,0))
-            print('Onboard RTC set to: ',self.rtc.datetime())
+            print('Onboard RTC set to: ',self.rtc.datetime(),level='med')
             return 1
         except:
             return 0
@@ -69,7 +69,7 @@ class read_exttime:
         second=datetime.second
 
         vrb_print('year: ',str(year),' month: ',str(month),' day: ',str(day),' hour: ',str(hour),' minute: ',\
-              str(minute),' second: ',str(second))
+                  str(minute),' second: ',str(second),level='med')
 
         if self.logging:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
@@ -83,5 +83,5 @@ class read_exttime:
         
         display_str = 'time '+str(year)+'-'+str(month)+'-'+str(day)+',\n'+str(hour)+':'+str(minute)+':'+str(second)
         self.display_str_list = [display_str]
-        vrb_print('exttime: display_str = ',display_str)
-        vrb_print('exttime: self.display_str_list = ',self.display_str_list)
+        vrb_print('exttime: display_str = ',display_str,level='low')
+        vrb_print('exttime: self.display_str_list = ',self.display_str_list,level='med')

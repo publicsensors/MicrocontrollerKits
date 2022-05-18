@@ -6,6 +6,7 @@ try:
     import ustruct as struct
 except:
     import struct
+from SetUp.verbosity import vrb_print
 
 # (date(2000, 1, 1) - date(1900, 1, 1)).days * 24*60*60
 NTP_DELTA = 3155673600
@@ -33,7 +34,7 @@ def settime():
     tm = utime.localtime(t)
     tm = tm[0:3] + (0,) + tm[3:6] + (0,)
     machine.RTC().datetime(tm)
-    print(utime.localtime())
+    vrb_print(utime.localtime(),level='med')
 
 
 def settimeDS3231(sclPin=5, sdaPin=4):
@@ -47,12 +48,8 @@ def settimeDS3231(sclPin=5, sdaPin=4):
     rtc = urtc.DS1307(i2c)
     #machine.RTC().datetime(tm)
     datetime = urtc.datetime_tuple(year=tm[0], month=tm[1], day=tm[2],hour=tm[3],minute=tm[4],second=tm[5])
-    print('setting urtc datetime to: ',datetime)
+    vrb_print('setting urtc datetime to: ',datetime,level='low')
     rtc.datetime(datetime)
     #rtc.datetime(tm)
     datetime = rtc.datetime()
-#    print(datetime.year)
-#    print(datetime.month)
-#    print(datetime.day)
-#    print(datetime.weekday)
-    #print(utime.localtime())
+    vrb_print('Verifying datetime: ',datetime,level='high')

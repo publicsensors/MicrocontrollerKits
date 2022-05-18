@@ -1,9 +1,4 @@
 # Initialize microcontroller for PublicSensors/SensoresPublicos sensor activities
-from SetUp.platform_defs import *
-global params
-global sensor_func  # attempt to fix global/local issues with eval of functions
-global sensor_obj, sensor_module
-
 # Set initial verbosity. Examples:
 # 2 or 'base'--> minimal output
 # 4 or 'med'--> moderate ouput
@@ -15,7 +10,13 @@ output_setlevel(output_level)
 # Use e.g. "output_setlevel(2)" or "output_setlevel('med') in the terminal to 
 # change output level during sampling
 
-vrb_print('\n\nLaunching PublicSensors environmenal sensors...\n\n',level='base')
+print('\n\nLaunching PublicSensors environmenal sensors...\n\n')
+
+from SetUp.platform_defs import *
+global params
+global sensor_func  # attempt to fix global/local issues with eval of functions
+global sensor_obj, sensor_module
+
 
 params={}
 

@@ -99,8 +99,10 @@ class Sampler:
         self.lcd=pars['lcd']
         self.display_list = []
         self.display_count = 0
+        
         self.bt_flag=pars['bt_flag']
-
+        self.bt_start_str=pars['bt_start_str']
+        self.bt_end_str=pars['bt_end_str']
         self.uartBT=uartBT
 
         # Set up initial sampling if looping is turned on
@@ -212,7 +214,9 @@ class Sampler:
             vrb_print("display_str = ",display_str,level='base')
             vrb_print('2) sample_display: self.display_list = ',self.display_list,level='high')
             if self.bt_flag:
+                self.uartBT.write(self.bt_start_str)
                 self.uartBT.write(display_str)
+                self.uartBT.write(self.bt_end_str)
             if self.lcd:
                 self.lcd.clear()
                 self.lcd.putstr(display_str)

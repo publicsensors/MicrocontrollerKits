@@ -23,8 +23,8 @@ uartBT.init(9600, bits=8, parity=None, stop=1)
 #p_batt=14
 #p_sens=4
 # Define default I2C pins
-p_I2Cscl_lbl='X9'
-p_I2Csda_lbl='X10'
+p_I2Cscl_lbl = None #'X9'
+p_I2Csda_lbl = None #'X10'
 i2c_num=1
 # I2C without an ID currently reverts to SoftI2C; use hardware I2C(1)
 # instead, which has the specified pinouts

@@ -214,7 +214,7 @@ class Sampler:
             bt_rec_str = str(self.uartBT.readline())[2:-1].replace('\\n','\n') 
             if self.bt_start_str in bt_rec_str: # Found string start tag
                 self.bt_display_str=''          # clear string
-                bt_rec_str = bt_rec_str.split(self.bt_start_str)[1] # remove start tag
+                #bt_rec_str = bt_rec_str.split(self.bt_start_str)[1] # remove start tag
             if self.bt_end_str in bt_rec_str: # Found string end tag
                 end_tag = True
                 bt_rec_str = bt_rec_str.split(self.bt_end_str)[0] # remove end tag
@@ -244,10 +244,14 @@ class Sampler:
             display_str = self.display_list.pop(0)
             vrb_print("display_str = ",display_str,level='base')
             vrb_print('2) sample_display: self.display_list = ',self.display_list,level='high')
-            if self.bt_send:
-                self.uartBT.write(self.bt_start_str)
-                self.uartBT.write(display_str)
-                self.uartBT.write(self.bt_end_str)
+            # If BT start string is is string, do not resend back through BT
+            if self.bt_start_str in display_str: # Found string start tag
+                display_str = display_str.split(self.bt_start_str)[1] # remove start tag
+            else: # string not received from BT
+                if self.bt_send: # send lcal display string over BT, adding start/end tags
+                    self.uartBT.write(self.bt_start_str)
+                    self.uartBT.write(display_str)
+                    self.uartBT.write(self.bt_end_str)
             if self.lcd:
                 self.lcd.clear()
                 self.lcd.putstr(display_str)

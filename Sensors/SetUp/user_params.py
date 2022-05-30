@@ -33,6 +33,7 @@ params={'sensor_list':{'distance':0,
         'sample_interval':120,
         'display_interval':3,
         'output_level':'base', # Output options: 'base', 'low','med', 'high', or number 1-15
-        'bt_flag':1
+        'bt_send':1,
+        'bt_rec':1
 }
 

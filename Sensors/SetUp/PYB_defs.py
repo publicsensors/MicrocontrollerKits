@@ -31,12 +31,12 @@ i2c_num=1
 #i2c = I2C(scl=Pin(p_I2Cscl_lbl),sda=Pin(p_I2Csda_lbl))
 i2c = I2C(1)
 #pin definitions for hcsr04/jsn sensors
-p_hcsr_trig = 'D12'
-p_hcsr_echo = 'D11'
+p_hcsr_trig = 'Y12' #'D12'
+p_hcsr_echo = 'Y11'# 'D11'
 #pin definitions to automatically enable sampling loop (1=loop, 0=wait for button press)
 p_smpl_loop_lbl='Y4'
 #p_smpl_trigger_lbl='Y3'
-p_smpl_trigger_lbl='X17'
+p_smpl_trigger_lbl='X17' # 
 #button = Switch()  # use onboard USR button
 
 # Define timers for non-blocking sampling, logging and display

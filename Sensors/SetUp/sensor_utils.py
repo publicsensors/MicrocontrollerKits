@@ -102,6 +102,8 @@ class Sampler:
         
         self.bt_send=pars['bt_send']
         self.bt_rec=pars['bt_rec']
+        self.bt_log=pars['bt_log']
+        self.bt_log_prefix=pars['bt_log_prefix']
         self.bt_start_str=pars['bt_start_str']
         self.bt_end_str=pars['bt_end_str']
         self.uartBT=uartBT
@@ -225,6 +227,11 @@ class Sampler:
             if end_tag:
                 vrb_print('BT received: ',self.bt_display_str,level='low')
                 self.display_list.extend([self.bt_display_str])
+                if self.bt_log: # If requested, write telemetered data to a logfile
+                    timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+                    logfile=open(self.bt_logfilename,'a')
+                    logfile.write(str(timestamp)[1:-1]+' '+self.bt_display_str.replace('\n',' ')+'\n')
+                    logfile.close()
         
     def sample_display(self,t):
         # A method to display output strings in sequence, callable
@@ -247,6 +254,11 @@ class Sampler:
             # If BT start string is is string, do not resend back through BT
             if self.bt_start_str in display_str: # Found string start tag
                 display_str = display_str.split(self.bt_start_str)[1] # remove start tag
+                #if self.bt_log: # If requested, write telemetered data to a logfile
+                #    timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+                #    logfile=open(self.bt_logfilename,'a')
+                #    logfile.write(str(timestamp)[1:-1]+' '+display_str.replace('\n',' ')+'\n')
+                #    logfile.close()
             else: # string not received from BT
                 if self.bt_send: # send lcal display string over BT, adding start/end tags
                     self.uartBT.write(self.bt_start_str)
@@ -421,7 +433,20 @@ class Sampler:
                 log_format+=self.pars['sensor_log_formats'][sensr][s]+','
             log_format=log_format[:-1]+'\n' # drop the trailing comma, add a <cr>
             self.pars['sensor_objs'][sensr].log_format=log_format
-        
+
+        # If requested, initiate a log file for BT telemetered data
+        if self.bt_rec and self.bt_log:
+            nfile+=1
+            timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+            timestamp_str=self.pars['timestamp_format'] % timestamp
+            logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
+                str(nfile) + '_' + self.pars['bt_log_prefix']+'.csv'
+            vrb_print('creating log file: ',logfilename,level='low')
+            logfile=open(logfilename,'w')
+            logfile.write('HC-05 bluetooth-telemetered display data\n')
+            logfile.close()
+            self.bt_logfilename = logfilename
+            
 
 collect()
 

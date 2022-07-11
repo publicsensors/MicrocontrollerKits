@@ -7,7 +7,7 @@ try: # The ESP32 build seems to lack sync, so skip if unavailable
 except:
     pass
 from os import listdir
-from machine import Pin, Timer
+from machine import Pin, Timer, idle
 
 from SetUp.verbosity import vrb_print,vrb_setlevel
 
@@ -303,7 +303,9 @@ class Sampler:
                     sync()
                 except:
                     pass
-                                   
+        # Go into idle state to save power (until next timer or IRQ event)
+        idle()
+        
     def sample_loop_timer(self):
         # Method to initiate a timer that calls sample_check (a non-blocking
         # alternative to sampler_loop. sample_check also executes a non-

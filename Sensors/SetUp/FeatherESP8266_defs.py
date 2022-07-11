@@ -36,4 +36,5 @@ check_timer = Timer()
 LCDtimer=Timer()
 SMPLtimer=Timer()
 AQtimer = Timer()
+BTtimer = Timer()
 

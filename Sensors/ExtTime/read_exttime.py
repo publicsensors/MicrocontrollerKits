@@ -1,5 +1,6 @@
 # This script prints temperature readings from a DS18B20 sensor
 from SetUp.verbosity import vrb_print
+from sys import print_exception
 
 # Use driver by roberthh from https://github.com/robert-hh/ads1x15
 from ExtTime.urtc import DS3231
@@ -45,9 +46,10 @@ class read_exttime:
             vrb_print('Setting onboard RTC...',level='med')
             self.rtc.datetime((self.datetime.year,self.datetime.month,self.datetime.day,0,
                                self.datetime.hour,self.datetime.minute,self.datetime.second,0))
-            print('Onboard RTC set to: ',self.rtc.datetime(),level='med')
+            vrb_print('Onboard RTC set to: ',self.rtc.datetime(),level='med')
             return 1
-        except:
+        except Exception as e:
+            print_exception(e)
             return 0
         
     # -------------------------------------------------------------------------------

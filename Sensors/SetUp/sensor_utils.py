@@ -99,9 +99,15 @@ class Sampler:
         self.lcd=pars['lcd']
         self.display_list = []
         self.display_count = 0
-        self.bt_flag=pars['bt_flag']
-
+        
+        self.bt_send=pars['bt_send']
+        self.bt_rec=pars['bt_rec']
+        self.bt_log=pars['bt_log']
+        self.bt_log_prefix=pars['bt_log_prefix']
+        self.bt_start_str=pars['bt_start_str']
+        self.bt_end_str=pars['bt_end_str']
         self.uartBT=uartBT
+        self.bt_display_str=''
 
         # Set up initial sampling if looping is turned on
         # The two options below use the either the setting or the
@@ -127,8 +133,7 @@ class Sampler:
         self.LCDtimer=self.pars['LCDtimer']
         #if self.lcd:
         # Move tests for lcd to sample_display (to prevent accumulation of msgs & enable hc05)
-        if True:
-            self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
+        self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
                            callback=self.sample_display)
         
         # Timer for sample looping
@@ -138,6 +143,12 @@ class Sampler:
         
         # Timer for AQI is added here, so it can be deinited when requested
         self.AQtimer=self.pars['AQtimer']
+
+        # Virtual timer for Bluetooth (BT) listening
+        self.BTtimer=self.pars['BTtimer']
+        if self.bt_rec:
+            self.BTtimer.init(mode=self.BTtimer.PERIODIC,period=pars['bt_rec_interval'],
+                              callback=self.bt_listen)
 
         # Interrupt for sampling on button press
         self.p_smpl_trigger=Pin(self.pars['p_smpl_trigger_lbl'], Pin.IN,pull=Pin.PULL_DOWN)
@@ -177,6 +188,7 @@ class Sampler:
         self.LCDtimer.deinit()
         self.SMPLtimer.deinit()
         self.AQtimer.deinit()
+        self.BTtimer.deinit()
                 
     def sample(self):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 
@@ -192,7 +204,35 @@ class Sampler:
             cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
             vrb_print('\ntaking sensor reading with: ',cmd,level='med')
             exec(cmd)
-                                                                     
+
+    def bt_listen(self,t):
+        """A method to receive display strings via bluetooth (e.g. a HC-05 module)
+           and to forward them to the LCD and REPL
+        """
+        vrb_print('BT listener...',level=16)
+        if self.uartBT.any():
+            vrb_print('...checking for input',level=16)
+            # Convert input to string, drop "b'" and "'"; correct "\n"
+            bt_rec_str = str(self.uartBT.readline())[2:-1].replace('\\n','\n') 
+            if self.bt_start_str in bt_rec_str: # Found string start tag
+                self.bt_display_str=''          # clear string
+                #bt_rec_str = bt_rec_str.split(self.bt_start_str)[1] # remove start tag
+            if self.bt_end_str in bt_rec_str: # Found string end tag
+                end_tag = True
+                bt_rec_str = bt_rec_str.split(self.bt_end_str)[0] # remove end tag
+            else:
+                end_tag = False
+            vrb_print(bt_rec_str,level='high')
+            self.bt_display_str+=bt_rec_str
+            if end_tag:
+                vrb_print('BT received: ',self.bt_display_str,level='low')
+                self.display_list.extend([self.bt_display_str])
+                if self.bt_log: # If requested, write telemetered data to a logfile
+                    timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+                    logfile=open(self.bt_logfilename,'a')
+                    logfile.write(str(timestamp)[1:-1]+' '+self.bt_display_str.replace('\n',' ')+'\n')
+                    logfile.close()
+        
     def sample_display(self,t):
         # A method to display output strings in sequence, callable
         # by a timer irq (t). Display strings come from the
@@ -211,8 +251,19 @@ class Sampler:
             display_str = self.display_list.pop(0)
             vrb_print("display_str = ",display_str,level='base')
             vrb_print('2) sample_display: self.display_list = ',self.display_list,level='high')
-            if self.bt_flag:
-                self.uartBT.write(display_str)
+            # If BT start string is is string, do not resend back through BT
+            if self.bt_start_str in display_str: # Found string start tag
+                display_str = display_str.split(self.bt_start_str)[1] # remove start tag
+                #if self.bt_log: # If requested, write telemetered data to a logfile
+                #    timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+                #    logfile=open(self.bt_logfilename,'a')
+                #    logfile.write(str(timestamp)[1:-1]+' '+display_str.replace('\n',' ')+'\n')
+                #    logfile.close()
+            else: # string not received from BT
+                if self.bt_send: # send lcal display string over BT, adding start/end tags
+                    self.uartBT.write(self.bt_start_str)
+                    self.uartBT.write(display_str)
+                    self.uartBT.write(self.bt_end_str)
             if self.lcd:
                 self.lcd.clear()
                 self.lcd.putstr(display_str)
@@ -382,7 +433,20 @@ class Sampler:
                 log_format+=self.pars['sensor_log_formats'][sensr][s]+','
             log_format=log_format[:-1]+'\n' # drop the trailing comma, add a <cr>
             self.pars['sensor_objs'][sensr].log_format=log_format
-        
+
+        # If requested, initiate a log file for BT telemetered data
+        if self.bt_rec and self.bt_log:
+            nfile+=1
+            timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
+            timestamp_str=self.pars['timestamp_format'] % timestamp
+            logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
+                str(nfile) + '_' + self.pars['bt_log_prefix']+'.csv'
+            vrb_print('creating log file: ',logfilename,level='low')
+            logfile=open(logfilename,'w')
+            logfile.write('HC-05 bluetooth-telemetered display data\n')
+            logfile.close()
+            self.bt_logfilename = logfilename
+            
 
 collect()
 

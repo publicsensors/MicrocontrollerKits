@@ -68,5 +68,5 @@ class read_press:
             self.data_list.extend([data])
             #data_list.extend([data])
             
-        display_str = 't/p/h: '+str(temp)+',\n'+str(press)+','+str(humid)
+        display_str = 't/p/h: '+str(round(temp,2))+',\n'+str(int(press))+','+str(round(humid,1))
         self.display_str_list = [display_str]

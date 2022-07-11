@@ -69,5 +69,5 @@ class read_humidity:
             self.data_list.extend([data])
             #data_list.extend([data])
             
-        display_str = 'h/t: '+str(humid)+',\n'+str(temp)
+        display_str = 'h/t: '+str(round(humid,2))+',\n'+str(round(temp,2))
         self.display_str_list = [display_str]

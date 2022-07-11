@@ -10,7 +10,7 @@ output_setlevel(output_level)
 # Use e.g. "output_setlevel(2)" or "output_setlevel('med') in the terminal to 
 # change output level during sampling
 
-print('\n\nLaunching PublicSensors environmenal sensors...\n\n')
+print('\n\nLaunching PublicSensors environmental sensors...\n\n')
 
 from SetUp.platform_defs import *
 global params
@@ -44,9 +44,10 @@ params.update({'rtc':rtc}) # dictionary item is a valid RTC object
 
 # Link timers to params
 params.update({'check_timer':check_timer}) # dictionary item is either a valid I2C object or False
-params.update({'LCDtimer':LCDtimer}) # dictionary item is either a valid I2C object or False
-params.update({'SMPLtimer':SMPLtimer}) # dictionary item is either a valid I2C object or False
-params.update({'AQtimer':AQtimer}) # dictionary item is either a valid I2C object or False
+params.update({'LCDtimer':LCDtimer}) # add LCD timer
+params.update({'SMPLtimer':SMPLtimer}) # add sample timer
+params.update({'AQtimer':AQtimer}) # add AQI sensor timer
+params.update({'BTtimer':BTtimer}) # add bluetooth listener timer
 
 
 # Initialize I2C interface

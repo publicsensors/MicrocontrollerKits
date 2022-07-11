@@ -104,6 +104,12 @@ params={'setup_dir':'SetUp',
         'sample_interval':10,
         'display_interval':0,
         'output_level':'base', # Output options: 'base', 'low','med', 'high', or number 1-15
-        'bt_flag':0
+        'bt_send':0,
+        'bt_rec':0,
+        'bt_log':1,
+        'bt_log_prefix':'BTtelem',
+        'bt_rec_interval':250,
+        'bt_start_str':'|||>',
+        'bt_end_str':'<|||'
 }
 

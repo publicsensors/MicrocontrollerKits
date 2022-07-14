@@ -9,7 +9,7 @@ from machine import Pin, I2C, SoftI2C, Timer, freq, idle
 
 # Set CPU frequency (note this is persisent across reboots)
 #CPUfreq =168000000 # default (max) freq setting
-CPUfreq =42000000   # reduced freq to save power
+CPUfreq = 42000000   # reduced freq to save power
 freq(CPUfreq)
 vrb_print('Using CPU frequency ',freq(),level='low')
 

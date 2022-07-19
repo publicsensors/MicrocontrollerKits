@@ -254,11 +254,6 @@ class Sampler:
             # If BT start string is is string, do not resend back through BT
             if self.bt_start_str in display_str: # Found string start tag
                 display_str = display_str.split(self.bt_start_str)[1] # remove start tag
-                #if self.bt_log: # If requested, write telemetered data to a logfile
-                #    timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
-                #    logfile=open(self.bt_logfilename,'a')
-                #    logfile.write(str(timestamp)[1:-1]+' '+display_str.replace('\n',' ')+'\n')
-                #    logfile.close()
             else: # string not received from BT
                 if self.bt_send: # send lcal display string over BT, adding start/end tags
                     self.uartBT.write(self.bt_start_str)

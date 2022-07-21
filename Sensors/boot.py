@@ -29,3 +29,6 @@ try:
 except:
     pass
 '''
+
+from SetUp.time_set_utils import setEXT as SetClock
+

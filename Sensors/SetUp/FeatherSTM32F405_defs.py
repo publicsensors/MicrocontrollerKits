@@ -5,7 +5,13 @@ from SetUp.verbosity import vrb_print
 vrb_print('Loading definitions for STM32F405 Feather',level='low')
 
 from pyb import UART # Use pyb UART bc machine.UART clashes with DS18B20s
-from machine import Pin, I2C, SoftI2C, Timer
+from machine import Pin, I2C, SoftI2C, Timer, freq, idle
+
+# Set CPU frequency (note this is persisent across reboots)
+#CPUfreq =168000000 # default (max) freq setting
+CPUfreq = 42000000   # reduced freq to save power
+freq(CPUfreq)
+vrb_print('Using CPU frequency ',freq(),level='low')
 
 board='STM32feather'
 p_pwr1 = Pin('D9', Pin.OUT,value=1)  # Pin 9 is power supplied to the DS18B20, V+

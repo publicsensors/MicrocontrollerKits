@@ -374,8 +374,6 @@ class Sampler:
         vrb_print('Final list of active sensors is: ',new_pars['active_sensors'],level='base')
         vrb_print('Updating pars with: ',new_pars,level='high')
         self.pars.update(new_pars)
-    
-
             
 
     def start_log_files(self):
@@ -394,8 +392,18 @@ class Sampler:
             nfile+=1
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             timestamp_str=self.pars['timestamp_format'] % timestamp
+            #logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
+            #    str(nfile) + '_' + self.pars['sensor_log_prefixes'][sensr]+'.csv'
             logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
-                str(nfile) + '_' + self.pars['sensor_log_prefixes'][sensr]+'.csv'
+                str(nfile) + '_'
+            if self.pars['IDchars']>0: # Add characters from unique ID
+                from ubinascii import hexlify
+                from machine import unique_id
+                sensor_id=str(hexlify(unique_id()))[2:-1]
+                logfilename += sensor_id[:self.pars['IDchars']]+'_'
+            if self.pars['instr_name'] is not None:
+                logfilename += self.pars['instr_name']+'_'
+            logfilename += self.pars['sensor_log_prefixes'][sensr]+'.csv'
             vrb_print('creating log file: ',logfilename,level='low')
             logfile=open(logfilename,'w')
             sensor_log_format=self.pars['sensor_log_formats'][sensr]
@@ -435,7 +443,17 @@ class Sampler:
             timestamp=tuple([list(self.rtc.datetime())[d] for d in [0,1,2,4,5,6]])
             timestamp_str=self.pars['timestamp_format'] % timestamp
             logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
-                str(nfile) + '_' + self.pars['bt_log_prefix']+'.csv'
+                str(nfile) + '_'
+            if self.pars['IDchars']>0: # Add characters from unique ID
+                from ubinascii import hexlify
+                from machine import unique_id
+                sensor_id=str(hexlify(unique_id()))[2:-1]
+                logfilename += sensor_id[:self.pars['IDchars']]+'_'
+            if self.pars['instr_name'] is not None:
+                logfilename += self.pars['instr_name']+'_'
+            logfilename+= self.pars['bt_log_prefix']+'.csv'
+            #logfilename=self.pars['sensor_log_directory']+'/'+timestamp_str+'_'+ \
+            #    str(nfile) + '_' + self.pars['bt_log_prefix']+'.csv'
             vrb_print('creating log file: ',logfilename,level='low')
             logfile=open(logfilename,'w')
             logfile.write('HC-05 bluetooth-telemetered display data\n')

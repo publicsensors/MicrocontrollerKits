@@ -110,6 +110,8 @@ params={'setup_dir':'SetUp',
         'bt_log_prefix':'BTtelem',
         'bt_rec_interval':250,
         'bt_start_str':'|||>',
-        'bt_end_str':'<|||'
+        'bt_end_str':'<|||',
+        'IDchars':4,
+        'instr_name':None
 }
 

@@ -2,9 +2,9 @@
 #
 # This script sets user-specified parameters. Default parameters are set in default_params.py.
 #
-params={'sensor_list':{'distance':0,
+params={'sensor_list':{'distance':1,
                        'temperature':1,
-                       'light':0,
+                       'light':1,
                        'UIV':0,
                        'color':0,
                        'humidity':0,
@@ -34,6 +34,8 @@ params={'sensor_list':{'distance':0,
         'display_interval':8,
         'output_level':'base', # Output options: 'base', 'low','med', 'high', or number 1-15
         'bt_send':0,
-        'bt_rec':0
+        'bt_rec':0,
+        'IDchars':4,
+        'instr_name':'Danny'
 }
 

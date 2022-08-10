@@ -51,7 +51,6 @@ class NmeaParser(object):
         self.nmea_segments = []
         
         self.sentence_types = sentence_types
-        self.save_sentences = save_sentences
         self.data = []
 
     def update(self,  sentence):

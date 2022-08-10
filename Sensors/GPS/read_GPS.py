@@ -27,12 +27,11 @@ global hours, minutes, seconds, day, month, year
 # -------------------------------------------------------------------------------
 # Set up pins for power and usrtGPS
 # -------------------------------------------------------------------------------
+
 class read_GPS:
 
-    #def __init__(self,num_sentences=3,timeout=30,init_timeout=30,i2c=None,rtc=None,smbus=None,
-    #             timeout_ms=5000,sentence_types=["b'$GPGGA"]):
-    def __init__(self,num_sentences=3,timeout=30,init_timeout=30,i2c=None,rtc=None,smbus=None,
-                 timeout_ms=5000,sentence_types=["b'$GPGGA","b'$GPRMC"]):
+    def __init__(self,timeout=30,init_timeout=30,i2c=None,rtc=None,smbus=None,
+                 sentence_types=["b'$GPGGA","b'$GPRMC"]):
         # Turn on GPS power pins, if defined
         for p in ['p_pwr2','p_pwr3','p_pwr4']:
             if p in list(locals().keys()):
@@ -50,7 +49,6 @@ class read_GPS:
         self.display_str_list = [] # bucket for data to be logged        
 
         self.uartGPS=uartGPS
-        self.num_sentences=num_sentences
         self.timeout=timeout
         self.init_timeout=init_timeout
         #self.my_gps = MicropyGPS()  # create GPS parser object
@@ -191,7 +189,14 @@ class read_GPS:
                                 flat_data.append(d)
                         self.data_list.extend([flat_data])
                     break
-                
-        display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)
-        self.display_str_list = [display_str]
+
+        if altitude:
+            display_str = 'GPS: {},\n{} a:{}'.format(dec_lat,dec_long,altitude)
+            self.display_str_list = [display_str]
+        elif kph >= 0:
+            display_str = 'GPS: {},\n{} v:{}'.format(dec_lat,dec_long,round(kph,2))
+            self.display_str_list = [display_str]
+        else:
+            display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)
+            self.display_str_list = [display_str]
             

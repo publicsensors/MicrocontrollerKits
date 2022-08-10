@@ -299,7 +299,7 @@ class Sampler:
                 except:
                     pass
         # Go into idle state to save power (until next timer or IRQ event)
-        idle()
+        #idle()
         
     def sample_loop_timer(self):
         # Method to initiate a timer that calls sample_check (a non-blocking

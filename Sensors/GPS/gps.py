@@ -19,7 +19,7 @@ class NmeaParser(object):
     """NMEA Sentence Parser. Creates object that stores all relevant GPS data and statistics.
     Parses sentences using update(). """
     
-    def __init__(self,sentence_types=["b'$GPGGA","b'$GPRMC"],save_sentences=False):
+    def __init__(self,sentence_types=["b'$GPGGA","b'$GPRMC"]):
         """Setup GPS Object Status Flags, Internal Data Registers, etc"""
 
         #####################
@@ -34,17 +34,17 @@ class NmeaParser(object):
         # Position/Motion
         self.latitude = 0.0
         self.longitude = 0.0
-        self.altitude = 0.0
+        self.altitude = False
 
         # GPS Info
-        self.satellites_in_use = 0
-        self.hdop = 0.0
-        self.fix_stat = 0
+        self.satellites_in_use = False #0
+        self.hdop = False #0.0
+        self.fix_stat = False #0
         
         # Attributes from RMC sentences
         self.date = (0,0,0)
-        self.course = 0
-        self.speed = 0
+        self.course = False
+        self.speed = False
         self.timestamp = (0,0,0)
         
         #raw data segments
@@ -55,17 +55,17 @@ class NmeaParser(object):
         self.data = []
 
     def update(self,  sentence):
-        self.valid_sentence = False
+        self.valid_sentence = False # relates to prefix only (from among sentence_types)
+        self.valid = False          # relates to success in parsing values from sentence
         self.nmea_segments = str(sentence).split(',')
        
         if self.nmea_segments[0] not in self.sentence_types:
             return False
         
-        if self.save_sentences == True:
-            self.data.append(sentence)
-        
         #Parse GPGGA
         if (self.nmea_segments[0] == "b'$GPGGA"):
+            if len(self.nmea_segments) != 15:
+                return False
             print('****got GPGGA****')
             self.valid_sentence = True
             try:
@@ -74,13 +74,14 @@ class NmeaParser(object):
                  
                 # Skip timestamp if receiver doesn't have on yet
                  if utc_string:
-                    hours = int(utc_string[0:2])
-                    minutes = int(utc_string[2:4])
-                    seconds = float(utc_string[4:])
+                     hours = int(utc_string[0:2])
+                     minutes = int(utc_string[2:4])
+                     seconds = float(utc_string[4:])
                  else:
-                    hours = 0
-                    minutes = 0
-                    seconds = 0.0
+                     vrb_print('failed to parse timestamp in $GPGGA sentence...')
+                     hours = False #0
+                     minutes = False #0
+                     seconds = False #0.0
                     
                  # Number of Satellites in Use
                  satellites_in_use = int(self.nmea_segments[7])
@@ -92,7 +93,7 @@ class NmeaParser(object):
                  fix_stat = int(self.nmea_segments[6])
             except ValueError:
                 return False
-            
+
          # Process Location and Speed Data if Fix is GOOD
             if fix_stat:
                 # Longitude / Latitude
@@ -116,7 +117,7 @@ class NmeaParser(object):
                     geoid_height = float(self.nmea_segments[11])
                 except ValueError:
                     return False
-                    
+
                 # Update Object Data
                 self.latitude = lat_degs + (lat_mins/60)
                 if lat_hemi == 'S':
@@ -126,22 +127,25 @@ class NmeaParser(object):
                     self.longitude = -self.longitude
                 self.altitude = altitude
                 self.geoid_height = geoid_height
-                
+
             # Update Object Data
             self.timestamp = (hours, minutes, seconds)
             self.satellites_in_use = satellites_in_use
             self.hdop = hdop
             self.fix_stat = fix_stat
-        
+
             # If Fix is GOOD, update fix timestamp
             if fix_stat:
                 self.fix_time = time()
 
+            self.valid = True
             return True
         #=====================================================================
         #Parse GPRMC
         #=====================================================================
         if (self.nmea_segments[0] == "b'$GPRMC"):
+            if len(self.nmea_segments) != 13:
+                return False
             print('****got GPRMC****')
             self.valid_sentence = True
             try:
@@ -200,9 +204,20 @@ class NmeaParser(object):
                     lon_degs = int(l_string[0:3])
                     lon_mins = float(l_string[3:])
                     lon_hemi = self.nmea_segments[6]
+                    # Update Object Data
+                    self._latitude = [lat_degs, lat_mins, lat_hemi]
+                    self._longitude = [lon_degs, lon_mins, lon_hemi]
                 except ValueError:
                     return False
 
+                # Update Object Data
+                self.latitude = lat_degs + (lat_mins/60)
+                if lat_hemi == 'S':
+                    self.latitude = -self.latitude
+                self.longitude = lon_degs + (lon_mins/60)
+                if lon_hemi == 'W':
+                    self.longitude = -self.longitude
+                #self.altitude = altitude
                 #if lat_hemi not in self.__HEMISPHERES:
                 #    return False
 
@@ -212,6 +227,8 @@ class NmeaParser(object):
                 # Speed
                 try:
                     spd_knt = float(self.nmea_segments[7])
+                    # Include mph and hm/h
+                    self.speed = [spd_knt, spd_knt * 1.151, spd_knt * 1.852]
                 except ValueError:
                     return False
 
@@ -220,29 +237,17 @@ class NmeaParser(object):
                     if self.nmea_segments[8]:
                         course = float(self.nmea_segments[8])
                     else:
-                        course = 0.0
+                        course = False
+                    self.course = course
                 except ValueError:
                     return False
 
                 # TODO - Add Magnetic Variation
 
-                # Update Object Data
-                self._latitude = [lat_degs, lat_mins, lat_hemi]
-                self._longitude = [lon_degs, lon_mins, lon_hemi]
-                # Include mph and hm/h
-                self.speed = [spd_knt, spd_knt * 1.151, spd_knt * 1.852]
-                self.course = course
                 self.valid = True
 
-                # Update Last Fix Time
-                #self.new_fix_time()
-
-            else:  # Clear Position Data if Sentence is 'Invalid'
-                #self._latitude = [0, 0.0, 'N']
-                #self._longitude = [0, 0.0, 'W']
-                #self.speed = [0.0, 0.0, 0.0]
-                #self.course = 0.0
-                self.valid = False
+            else:                  # Original version reset values (but used possibly valid values, e.g. 0).
+                self.valid = False # Here we enter values found but tag the reading as not valid if an error occurred
 
             return True
         

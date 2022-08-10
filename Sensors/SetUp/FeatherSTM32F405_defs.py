@@ -17,6 +17,9 @@ board='STM32feather'
 p_pwr1 = Pin('D9', Pin.OUT,value=1)  # Pin 9 is power supplied to the DS18B20, V+
 p_DS18B20 = Pin('D10', Pin.IN)  # Pin D10 is the data pin for DS18B20 temperature sensors
 uartGPS = UART(6, 9600)
+uartGPS.init(9600, bits=8, parity=None, stop=1,timeout_char=0)
+#uartGPS.init(9600, bits=8, parity=None, stop=1,timeout_char=8)
+#uartGPS.init(9600, bits=8, parity=None, stop=1,timeout_char=500)
 #uartAQ= UART(3, 9600)
 #uartAQ.init(9600, bits=8, parity=None, stop=1)
 uartAQ= UART(3, 9600, bits=8, parity=None, stop=1)

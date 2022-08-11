@@ -122,7 +122,7 @@ class read_GPS:
     # -------------------------------------------------------------------------------
 
     def print_GPS(self,display=True):
-        global GPStime,dec_lat,dec_long, altitude,kph,course
+        global GPStime,dec_lat,dec_long, altitude,kph,course,mps
         # Create a loop to obtain several sentences from the GPS, to make sure
         # all relevant fields in the parser are populated with recent data
         sentence_count = 0
@@ -157,10 +157,13 @@ class read_GPS:
                     try:
                         if len(self.parser.speed)==3:
                             kph = self.parser.speed[2]
+                            mps = kph/3.6 # calculate meters per second
                         else:
                             kph = -1
+                            mps = -1
                     except:
                         kph = -1
+                        mps = -1
                     course = self.parser.course
                     (day, month, year) = self.parser.date
                     (hours, minutes, seconds) = self.parser.timestamp
@@ -193,8 +196,8 @@ class read_GPS:
         if altitude:
             display_str = 'GPS: {},\n{} a:{}'.format(dec_lat,dec_long,altitude)
             self.display_str_list = [display_str]
-        elif kph >= 0:
-            display_str = 'GPS: {},\n{} v:{}'.format(dec_lat,dec_long,round(kph,2))
+        elif mps >= 0:
+            display_str = 'GPS: {},\n{} v:{}'.format(dec_lat,dec_long,round(mps,2))
             self.display_str_list = [display_str]
         else:
             display_str = 'GPS: {},\n   {}'.format(dec_lat,dec_long)

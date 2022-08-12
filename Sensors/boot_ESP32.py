@@ -46,4 +46,7 @@ except:
     pass
 '''
 
-from SetUp.time_set_utils import setEXT as SetClock
+try:
+    from SetUp.time_set_utils import setEXT as SetClock
+except:
+    pass

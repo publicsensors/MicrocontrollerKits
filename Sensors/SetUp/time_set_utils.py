@@ -57,8 +57,8 @@ try:
     extRTC_datetime = extRTC.datetime()
     print('Current external (DS3231) RTC datetime = ',extRTC_datetime)
 except Exception as e:
-    print('Error in getting datetime from external RTC')
-    print_exception(e)
+    print('External RTC not found for getting datetime...')
+    #print_exception(e)
     #exit(1)
 
 def setEXT(year=None,month=None,day=None,weekday=None,hour=None,minute=None,second=None,

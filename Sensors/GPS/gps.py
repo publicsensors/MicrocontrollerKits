@@ -2,6 +2,7 @@
 from time import time
 #from  struct import pack
 from machine import UART #, rng
+from SetUp.verbosity import vrb_print
 
 
 #Minimalistic NMEA-0183 message parser, based on micropyGPS
@@ -57,7 +58,9 @@ class NmeaParser(object):
         self.valid_sentence = False # relates to prefix only (from among sentence_types)
         self.valid = False          # relates to success in parsing values from sentence
         self.nmea_segments = str(sentence).split(',')
-       
+
+        vrb_print('self.nmea_segments[0] = ',self.nmea_segments[0])
+        vrb_print('self.sentence_types = ',self.sentence_types)
         if self.nmea_segments[0] not in self.sentence_types:
             return False
         
@@ -71,7 +74,7 @@ class NmeaParser(object):
                 # UTC Timestamp
                  utc_string = self.nmea_segments[1]
                  
-                # Skip timestamp if receiver doesn't have on yet
+                # Skip timestamp if receiver doesn't have one yet
                  if utc_string:
                      hours = int(utc_string[0:2])
                      minutes = int(utc_string[2:4])
@@ -151,15 +154,17 @@ class NmeaParser(object):
                 # UTC Timestamp
                  utc_string = self.nmea_segments[1]
                  
-                # Skip timestamp if receiver doesn't have on yet
+                # Skip timestamp if receiver doesn't have one yet
                  if utc_string:
                     hours = int(utc_string[0:2])
                     minutes = int(utc_string[2:4])
                     seconds = float(utc_string[4:])
                  else:
-                    hours = 0
-                    minutes = 0
-                    seconds = 0.0
+                     vrb_print('failed to parse timestamp in $GPGGA sentence...')
+                     hours = False #0
+                     minutes = False #0
+                     seconds = False #0.0
+
                  self.timestamp = (hours,minutes,seconds) #####
                  # Number of Satellites in Use
                  #satellites_in_use = int(self.nmea_segments[7])

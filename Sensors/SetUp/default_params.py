@@ -119,6 +119,7 @@ params={'setup_dir':'SetUp',
         'bt_start_str':'|||>',
         'bt_end_str':'<|||',
         'IDchars':4,
-        'instr_name':None
+        'instr_name':None,
+        'speed_of_sound':343.2
 }
 

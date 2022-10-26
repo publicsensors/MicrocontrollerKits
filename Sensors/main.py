@@ -17,6 +17,8 @@ global params
 global sensor_func  # attempt to fix global/local issues with eval of functions
 global sensor_obj, sensor_module
 
+global speed_of_sound
+speed_of_sound = 343.2
 
 params={}
 
@@ -26,7 +28,7 @@ from machine import RTC
 from SetUp.usmbus import SMBus
 from time import sleep
 
-from SetUp.sensor_utils import sample_params, Sampler, trigger_sample
+from SetUp.sensor_utils import sample_params, Sampler, trigger_sample, Params
 from SetUp.lcd_setup import lcd_init
 
 from gc import collect
@@ -83,6 +85,13 @@ except Exception as e:
     print_exception(e)
     vrb_print('Error: failed to initialize LCD interface...',level='low')
 params.update({'lcd':lcd}) # dictionary item is either a valid LCD object or False
+
+## declare global driver parameters, so they may be easily changed from the terminal
+#speed_of_sound = params['speed_of_sound']
+
+# Initialize the Params convenience function
+shared_params={'speed_of_sound':params['speed_of_sound']}
+Params(shared_params)
 
 
 # Instantiate a Sampler object

@@ -24,6 +24,19 @@ sample_trigger=0
 global sample_cycle_flag # flag to turn on/off cyclic sampling at preset intervals
 sample_cycle_flag=0
 
+def Params(p):
+    # A convenience function to make params dictionary entries visible from within modules
+    # and other contexts
+    global pstatic # a static variable to save p
+    if type(p) is dict:
+        pstatic = p
+    elif type(p) is str:
+        try:
+            pvalue = pstatic[p]
+        except:
+            pvalue = None
+        return pvalue
+
 
 def sample_params(user_param_file=None,default_param_file='SetUp.default_params.py',pars={}):
     """ A function to load default and user-specified parameters for the sample cycle.
@@ -305,7 +318,7 @@ class Sampler:
         # Method to initiate a timer that calls sample_check (a non-blocking
         # alternative to sampler_loop. sample_check also executes a non-
         # blocking logger.
-        tmr_period = 50
+        tmr_period = 2*50
         self.check_timer=self.pars['check_timer']
         self.check_timer.init(mode=Timer.PERIODIC,period=tmr_period,callback=self.sample_check)
 

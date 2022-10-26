@@ -8,12 +8,20 @@ from machine import Pin, I2C
 from Acoustic import hcsr04
 from time import sleep_ms
 
+from SetUp.sensor_utils import Params
+
+#global speed_of_sound
+#print('speed of sound = ',speed_of_sound)
+
+speed_of_sound = Params('speed_of_sound')
+
 # -------------------------------------------------------------------------------
 # Set up pins for the DS18B20
 # -------------------------------------------------------------------------------
 class read_dist:
 
-    def __init__(self,i2c=None,rtc=None,hcsr_c=343,smbus=None):
+    def __init__(self,i2c=None,rtc=None,hcsr_c=speed_of_sound,smbus=None):
+    #def __init__(self,i2c=None,rtc=None,hcsr_c=343,smbus=None):
         """ Note: hcsr_c is the speed of sound for hcsr04; default is sos in air, 343
         """
         p_pwr1.value(1)
@@ -27,7 +35,10 @@ class read_dist:
         self.sample_num=0
 
         self.data_list = [] # bucket for data to be logged        
-        self.display_str_list = [] # bucket for data to be logged        
+        self.display_str_list = [] # bucket for data to be logged
+
+        self.hcsr_c = hcsr_c
+        print('Using speed of sound = ',self.hcsr_c)
 
         self.sensor = hcsr04.HCSR04(trigger_pin = p_hcsr_trig, echo_pin = p_hcsr_echo, c = hcsr_c)
 

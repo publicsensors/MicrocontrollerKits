@@ -94,7 +94,7 @@ class SDS011:
             *data, checksum, tail = struct.unpack('<HHBBBs', packet)
             self._pm25 = data[0]/10.0
             self._pm10 = data[1]/10.0
-            checksum_OK = (checksum == (sum(data) % 256))
+            checksum_OK = (checksum == (sum(data) + (data[0]>>8) + (data[1]>>8))  % 256)
             tail_OK = tail == b'\xab'
             self._packet_status = True if (checksum_OK and tail_OK) else False
         except Exception as e:

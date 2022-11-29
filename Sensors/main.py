@@ -51,6 +51,9 @@ params.update({'SMPLtimer':SMPLtimer}) # add sample timer
 params.update({'AQtimer':AQtimer}) # add AQI sensor timer
 params.update({'BTtimer':BTtimer}) # add bluetooth listener timer
 
+# Link file-writing indicator LED to params
+params.update({'fileLED':fileLED}) # add bluetooth listener timer
+
 
 # Initialize I2C interface
 vrb_print('Initializing I2C interface...',level='high')

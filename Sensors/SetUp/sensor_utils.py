@@ -112,6 +112,7 @@ class Sampler:
         self.lcd=pars['lcd']
         self.display_list = []
         self.display_count = 0
+        self.fileLED = pars['fileLED']
         
         self.bt_send=pars['bt_send']
         self.bt_rec=pars['bt_rec']
@@ -144,6 +145,15 @@ class Sampler:
 
         # Virtual timer for LCD display
         self.LCDtimer=self.pars['LCDtimer']
+        # Enforce a sanity check for display interval -- display should complete before new samples are taken
+        try: # will trigger exception if 0 sensors...
+            num_sensors = len(self.pars['active_sensors'])
+            max_display_interval = 0.95 * self.pars['sample_interval']/num_sensors
+            if self.pars['display_interval']>max_display_interval:
+                self.pars['display_interval']=max_display_interval
+                print('==> Reset display_interval to ',self.pars['display_interval'])
+        except:
+            pass
         #if self.lcd:
         # Move tests for lcd to sample_display (to prevent accumulation of msgs & enable hc05)
         self.LCDtimer.init(mode=self.LCDtimer.PERIODIC,period=1000*pars['display_interval'],
@@ -297,6 +307,7 @@ class Sampler:
             sensr=self.pars['active_sensors'][i]
             sensor_obj=self.pars['sensor_objs'][sensr]
             if len(sensor_obj.data_list)>0: # check if data waits to be logged
+                self.fileLED.value(1) # turn on file-writing indicator LED
                 logfile=open(sensor_obj.logfilename,'a')
                 while len(sensor_obj.data_list)>0: # cycle through data lines
                     data=sensor_obj.data_list.pop()
@@ -311,6 +322,7 @@ class Sampler:
                     sync()
                 except:
                     pass
+                self.fileLED.value(0) # turn on file-writing indicator LED
         # Go into idle state to save power (until next timer or IRQ event)
         #idle()
         
@@ -389,7 +401,6 @@ class Sampler:
         vrb_print('Final list of active sensors is: ',new_pars['active_sensors'],level='base')
         vrb_print('Updating pars with: ',new_pars,level='high')
         self.pars.update(new_pars)
-            
 
     def start_log_files(self):
         # A method to initialize data log files

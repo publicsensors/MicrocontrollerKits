@@ -6,7 +6,7 @@ from SetUp.verbosity import vrb_print
 vrb_print('Loading definitions for PYBv1.1',level='low')
 
 from machine import Pin, I2C, Timer
-from pyb import Switch, UART
+from pyb import Switch, UART, LED
 
 board='PBDv1.1'
 # Initalize power pins off; they are turned on by read_XXX classes if called
@@ -46,3 +46,6 @@ LCDtimer=Timer()
 SMPLtimer=Timer()
 AQtimer = Timer()
 BTtimer = Timer()
+
+# Initialize an LED to indicate file-writing in progress:
+fileLED=LED(0,value=0)

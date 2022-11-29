@@ -39,3 +39,6 @@ LCDtimer=Timer(1)
 SMPLtimer=Timer(2)
 AQtimer = Timer(3)
 BTtimer = Timer()
+
+# Initialize an LED to indicate file-writing in progress:
+fileLED=Pin(13,Pin.OUT,value=0)

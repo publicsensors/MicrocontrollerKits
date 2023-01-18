@@ -12,8 +12,8 @@
 import os
 import shutil
 
-def compile_tree(src_dir='/home/dg/PublicSensors/github/publicsensors/MicrocontrollerKits/Sensors',
-                 dest_dir='/home/dg/PublicSensors/github/publicsensors/MicrocontrollerKits/mpySensors',
+def compile_tree(src_dir='Sensors',
+                 dest_dir='mpySensors',
                  compile_suffices=['py'],
                  copy_suffices=['mpy'],
                  skip_files=[],

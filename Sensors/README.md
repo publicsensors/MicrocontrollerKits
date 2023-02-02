@@ -23,20 +23,30 @@ MicroPython firmware is a [free download](https://micropython.org/download/) fro
 
 Then, download or clone a copy of the [MicrocontrollerKits](https://github.com/publicsensors/MicrocontrollerKits) repository onto your local machine.
 
-If your microcontroller supports reading and writing files from a microSD card (Adafruit Feather STM32F405, pyboard, microSD reader-equipped ESP32 or ESP8266), copy the **contents** of the Sensor directory (not the folder itself) onto a microSD card.
+The **recommended** configuration of files and directories to run [PublicSensors](https://www.publicsensors.org) activities is to **copy the entire contents (not the directory itself) of either the** `Sensors` **or the** `mpySensors` **directory**.
 
-Otherwise, copy the contents of the Sensor directory onto the microcontroller's flash memory.
+The `Sensors` and `mpySensors` directories contain functionally equivalent code -- the difference between them is that the code in `mpySensors` has been precompiled to MicroPython m-files.
+M-files require significantly less heap space to load at run-time.
+On microcontrollers with limited heap space, this savings mean that combinations of sensors that exceed available memory in uncompiled Python script form can still run as m-fies.
 
-The complete code set includes drivers for many types of environmental sensors, organized in separate directories (Temperature, Light, GPS, etc.).
+A utility for transcribing an entire directory of Python scripts into its m-files equavalent, `compile_tree.py`, is documented on the PublicSensors [Microcontroller Setup page](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup).
+
+If your microcontroller supports reading and writing files from a microSD card (Adafruit Feather STM32F405, pyboard, microSD reader-equipped ESP32 or ESP8266), copy the **contents** of the Sensor or mpySensor directory (not the folder itself) onto a microSD card.
+
+Otherwise, copy the contents of the `Sensor` or `mpySensor` directory onto the microcontroller's flash memory.
+
+The complete code set in these directories includes drivers for many types of environmental sensors, organized in separate directories (Temperature, Light, GPS, etc.).
 If space is limiting (e.g. on the flash memory of some microcontrollers) you can copy over only the directories for sensors you will be using.
 If you want to use an additional sensor later, simply copy over the corresponding driver directory. The driver for that sensor will be available after the next microcontroller reboot.
 
 The **essential** files and directories to run [PublicSensors](https://www.publicsensors.org) activities are:
 - `boot.py`
 - `main.py`
+- either `public_sensors.py` or `public_sensors.mpy`
 - the `SetUp` directory
 - the `Data` directory
 - one or more directories corresponding to the sensors you intend to use (Temperature, Light, etc.)
+
 
 All data files produced when logging output from environmental sensors are placed into the **Data** subdirectory or folder.
 For notes on accessing these files, see below.

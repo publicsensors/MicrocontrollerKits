@@ -17,8 +17,8 @@ def compile_tree(src_dir='Sensors',
                  compile_suffices=['py'],
                  copy_suffices=['mpy'],
                  skip_files=[],
-                 copy_files=[],
-                 mpy_cross='/home/dg/Micropython/micropython/mpy-cross/mpy-cross',
+                 copy_files=['boot.py','main.py','user_params.py'],
+                 mpy_cross='./mpy-cross',
                  replace_dest=True):
     '''A method to record the elements of a directory tree comprising subdirectories or
        files with specified suffices (expected to be python files). 

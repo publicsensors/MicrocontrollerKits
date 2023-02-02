@@ -25,11 +25,11 @@ Then, download or clone a copy of the [MicrocontrollerKits](https://github.com/p
 
 The **recommended** configuration of files and directories to run [PublicSensors](https://www.publicsensors.org) activities is to **copy the entire contents (not the directory itself) of either the** `Sensors` **or the** `mpySensors` **directory**.
 
-The `Sensors` and `mpySensors` directories contain functionally equivalent code -- the difference between them is that the code in `mpySensors` has been precompiled to MicroPython m-files.
-M-files require significantly less heap space to load at run-time.
-On microcontrollers with limited heap space, this savings mean that combinations of sensors that exceed available memory in uncompiled Python script form can still run as m-fies.
+The `Sensors` and `mpySensors` directories contain functionally equivalent code -- the difference between them is that the code in `mpySensors` has been precompiled to MicroPython mpy-files.
+mpy-files require significantly less heap space to load at run-time.
+On microcontrollers with limited heap space, this savings mean that combinations of sensors that exceed available memory in uncompiled Python script form can still run as mpy-fies.
 
-A utility for transcribing an entire directory of Python scripts into its m-files equavalent, `compile_tree.py`, is documented on the PublicSensors [Microcontroller Setup page](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup).
+A utility for transcribing an entire directory of Python scripts into its mpy-files equavalent, `compile_tree.py`, is documented on the PublicSensors [Microcontroller Setup page](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup).
 
 If your microcontroller supports reading and writing files from a microSD card (Adafruit Feather STM32F405, pyboard, microSD reader-equipped ESP32 or ESP8266), copy the **contents** of the Sensor or mpySensor directory (not the folder itself) onto a microSD card.
 

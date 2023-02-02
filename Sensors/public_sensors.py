@@ -100,6 +100,31 @@ Params(shared_params)
 # Instantiate a Sampler object
 sampler=Sampler(params)
 
+# Define functions to call sensors directly from the command line
+def SampleTemp():
+    sampler.sample(sensor_select=['temperature'])
+
+def SampleLight():
+    sampler.sample(sensor_select=['light'])
+
+def SampleDist():
+    sampler.sample(sensor_select=['distance'])
+
+def SampleUIV():
+    sampler.sample(sensor_select=['UIV'])
+
+def SampleColor():
+    sampler.sample(sensor_select=['color'])
+
+def SampleHumidity():
+    sampler.sample(sensor_select=['humidity'])
+
+def SamplePress():
+    sampler.sample(sensor_select=['pressure'])
+
+def SampleTime():
+    sampler.sample(sensor_select=['exttime'])
+
           
 # Launch sampling cycle
 sampler.sample_loop_timer()

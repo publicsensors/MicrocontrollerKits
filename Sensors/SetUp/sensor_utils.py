@@ -213,20 +213,22 @@ class Sampler:
         self.AQtimer.deinit()
         self.BTtimer.deinit()
                 
-    def sample(self):
+    def sample(self,sensor_select=[]):
         """ A method callable from an irq, e.g ALARM0 for interval sampling and button-press 
-            controlled sampling
+            controlled sampling. sensor_select is an optional list of sensors to sample; if
+            empty, all active sensors are sampled.
         """
         global sensor_obj, sensor_module
         global sample_trigger,sample_cycle_flag
         vrb_print('sample_trigger,sample_cycle_flag =',sample_trigger,sample_cycle_flag,level='med')
         sample_trigger=0
         for i in range(len(self.pars['active_sensors'])):
-            sensr=self.pars['active_sensors'][i]
-            sensor_obj=self.pars['sensor_objs'][sensr]
-            cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
-            vrb_print('\ntaking sensor reading with: ',cmd,level='med')
-            exec(cmd)
+            if (len(sensor_select)==0) or (self.pars['active_sensors'][i] in sensor_select):
+                sensr=self.pars['active_sensors'][i]
+                sensor_obj=self.pars['sensor_objs'][sensr]
+                cmd='sensor_obj.print_'+self.pars['sensor_func_suffices'][sensr]+'()'
+                vrb_print('\ntaking sensor reading with: ',cmd,level='med')
+                exec(cmd)
 
     def bt_listen(self,t):
         """A method to receive display strings via bluetooth (e.g. a HC-05 module)

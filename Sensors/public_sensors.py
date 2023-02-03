@@ -101,36 +101,66 @@ Params(shared_params)
 sampler=Sampler(params)
 
 # Define functions to call sensors directly from the command line
-def SampleTemp():
-    sampler.sample(sensor_select=['temperature'])
-def SampleLight():
-    sampler.sample(sensor_select=['light'])
-def SampleDist():
-    sampler.sample(sensor_select=['distance'])
-def SampleUIV():
-    sampler.sample(sensor_select=['UIV'])
-def SampleColor():
-    sampler.sample(sensor_select=['color'])
-def SampleCO2():
-    sampler.sample(sensor_select=['CO2'])
-def SampleVolt():
-    sampler.sample(sensor_select=['voltage'])
-def SampleGPSalt():
-    sampler.sample(sensor_select=['GPS_alt'])
-def SampleGPSvel():
-    sampler.sample(sensor_select=['GPS_vel'])
-def SampleHumidity():
-    sampler.sample(sensor_select=['humidity'])
-def SamplePress():
-    sampler.sample(sensor_select=['pressure'])
-def SampleAQI():
-    sampler.sample(sensor_select=['AQI'])
-def SampleAQI5003():
-    sampler.sample(sensor_select=['AQI5003'])
-def SampleAQI7003():
-    sampler.sample(sensor_select=['AQI7003'])
-def SampleTime():
-    sampler.sample(sensor_select=['exttime'])
+def SampleTemp(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['temperature'])
+        sleep(interval)
+def SampleLight(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['light'])
+        sleep(interval)
+def SampleDist(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['distance'])
+        sleep(interval)
+def SampleUIV(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['UIV'])
+        sleep(interval)
+def SampleColor(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['color'])
+        sleep(interval)
+def SampleCO2(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['CO2'])
+        sleep(interval)
+def SampleVolt(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['voltage'])
+        sleep(interval)
+def SampleGPSalt(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['GPS_alt'])
+        sleep(interval)
+def SampleGPSvel(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['GPS_vel'])
+        sleep(interval)
+def SampleHumidity(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['humidity'])
+        sleep(interval)
+def SamplePress(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['pressure'])
+        sleep(interval)
+def SampleAQI(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['AQI'])
+        sleep(interval)
+def SampleAQI5003(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['AQI5003'])
+        sleep(interval)
+def SampleAQI7003(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['AQI7003'])
+        sleep(interval)
+def SampleTime(N=1,interval=5):
+    for n in range(N):
+        sampler.sample(sensor_select=['exttime'])
+        sleep(interval)
 
           
 # Launch sampling cycle

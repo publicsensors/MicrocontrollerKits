@@ -103,25 +103,32 @@ sampler=Sampler(params)
 # Define functions to call sensors directly from the command line
 def SampleTemp():
     sampler.sample(sensor_select=['temperature'])
-
 def SampleLight():
     sampler.sample(sensor_select=['light'])
-
 def SampleDist():
     sampler.sample(sensor_select=['distance'])
-
 def SampleUIV():
     sampler.sample(sensor_select=['UIV'])
-
 def SampleColor():
     sampler.sample(sensor_select=['color'])
-
+def SampleCO2():
+    sampler.sample(sensor_select=['CO2'])
+def SampleVolt():
+    sampler.sample(sensor_select=['voltage'])
+def SampleGPSalt():
+    sampler.sample(sensor_select=['GPS_alt'])
+def SampleGPSvel():
+    sampler.sample(sensor_select=['GPS_vel'])
 def SampleHumidity():
     sampler.sample(sensor_select=['humidity'])
-
 def SamplePress():
     sampler.sample(sensor_select=['pressure'])
-
+def SampleAQI():
+    sampler.sample(sensor_select=['AQI'])
+def SampleAQI5003():
+    sampler.sample(sensor_select=['AQI5003'])
+def SampleAQI7003():
+    sampler.sample(sensor_select=['AQI7003'])
 def SampleTime():
     sampler.sample(sensor_select=['exttime'])
 

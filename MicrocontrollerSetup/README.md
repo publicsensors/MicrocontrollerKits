@@ -19,7 +19,7 @@ dfu-util -l
 dfu-util -a 0 -D firmware.dfu
 ```
 
-# Creating a directory of precompiled mpy-files 
+# Using precompiled mpy-files 
 
 When a `.py` file is loaded, it must be compiled before it can be executed.
 This compilation step requires significant amounts of microcontroller heap space, beyond the heap space required to execute the code.
@@ -38,6 +38,10 @@ Against this advantage, mpy-files have two disadvantages:
 In light of these advantages and disadvantages, the recommended configuration for PublicSensors instruments is to use a code base fully compiled into mpy-files with the exception of three files:
 - `boot.py` and `main.py`, which are kept as Python scripts so they will be automatically loaded at boot time; and,
 - `user_params.py`, which is kept as a Python script so that user-specified parameter settings can be easily read and edited.
+
+#### Downloading a precompiled (mpy-file) version of PublicSensors code
+Precompiled code can be downloaded from the PublicSensors website as a [zip achive](https://www.publicsensors.org/mpySensors.zip) or a [tar archive](https://www.publicsensors.org/mpySensors.tar).
+Individual files can be selected for download from the indexed directory at [https://www.publicsensors.org/mpySensors/](https://www.publicsensors.org/mpySensors/).
 
 #### Creating an mpy-file directory tree
 

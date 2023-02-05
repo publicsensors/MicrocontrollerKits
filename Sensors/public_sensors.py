@@ -14,7 +14,7 @@ print('\n\nLaunching PublicSensors environmental sensors...\n\n')
 
 from SetUp.platform_defs import *
 global params
-global sensor_func  # attempt to fix global/local issues with eval of functions
+global sensor_func  # fix global/local issues with eval of functions
 global sensor_obj, sensor_module
 
 global speed_of_sound
@@ -28,7 +28,7 @@ from machine import RTC
 from SetUp.usmbus import SMBus
 from time import sleep
 
-from SetUp.sensor_utils import sample_params, Sampler, trigger_sample, Params
+from SetUp.sensor_utils import sample_params, Sampler, Params, SampleLoop
 from SetUp.lcd_setup import lcd_init
 
 from gc import collect
@@ -161,6 +161,7 @@ def SampleTime(N=1,interval=5):
     for n in range(N):
         sampler.sample(sensor_select=['exttime'])
         sleep(interval)
+        
 
           
 # Launch sampling cycle

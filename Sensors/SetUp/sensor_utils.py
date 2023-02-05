@@ -97,6 +97,17 @@ def set_cycle_flag(p):
     vrb_print('Looping flag (set_cycle: {}) set to {}'.format(p,p.value()),level='low')
     sample_cycle_flag=p.value()
 
+# Convenience function to start and stop loop sampling from the command line
+def SampleLoop(loop=None):
+    global sample_cycle_flag # flag to turn on/off cyclic sampling at preset interval
+    # Set sampling loop
+    if loop == 1:
+        sample_cycle_flag = 1
+        print('Sampling loop flag set to ',loop)
+    elif loop == 0:
+        sample_cycle_flag = 0
+        print('Sampling loop flag set to ',loop)
+    
 class Sampler:
     """ A class to handle sampling from sensors, data logging and user interfaces.
     """
@@ -335,23 +346,6 @@ class Sampler:
         tmr_period = 2*50
         self.check_timer=self.pars['check_timer']
         self.check_timer.init(mode=Timer.PERIODIC,period=tmr_period,callback=self.sample_check)
-
-    def sample_loop(self):
-        global sample_trigger 
-        vrb_print('Starting sample_loop',level='high')
-        while True:
-            if sample_trigger==1:
-                vrb_print('sample triggered...',level='high')
-                sample_trigger=0
-                self.sample()
-                                   
-    def sample_cycle(self):
-        global sample_trigger 
-        vrb_print('Starting cycle with ',self.pars['sample_max'],' samples',level='med')
-        for sample_count in range(self.pars['sample_max']):
-            vrb_print('sample_count = ',sample_count,level='med')
-            self.sample()
-            sleep(self.pars['sample_interval'])
 
     def sensor_select(self):
         """A function to detect, initialize and test alternative sensors for 

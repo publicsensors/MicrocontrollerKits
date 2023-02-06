@@ -29,7 +29,9 @@ The `Sensors` and `mpySensors` directories contain functionally equivalent code 
 mpy-files require significantly less heap space to load at run-time.
 On microcontrollers with limited heap space, this savings mean that combinations of sensors that exceed available memory in uncompiled Python script form can still run as mpy-fies.
 
-A utility for transcribing an entire directory of Python scripts into its mpy-files equavalent, `compile_tree.py`, is documented on the PublicSensors [Microcontroller Setup page](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup).
+Precompiled code in the form of mpy-files can be downloaded from the PublicSensors website as a [zip achive](https://www.publicsensors.org/mpySensors.zip) or a [tar archive](https://www.publicsensors.org/mpySensors.tar).
+Individual files can be selected for download from the indexed directory at [https://www.publicsensors.org/mpySensors/](https://www.publicsensors.org/mpySensors/).
+A utility for transcribing an entire directory of Python scripts into its mpy-files equavalent, `compile_tree.py`. See documentation on the PublicSensors [Microcontroller Setup page](https://github.com/publicsensors/MicrocontrollerKits/tree/main/MicrocontrollerSetup) for details on the precompiled code archives and the `compile_tree.py` utility.
 
 If your microcontroller supports reading and writing files from a microSD card (Adafruit Feather STM32F405, pyboard, microSD reader-equipped ESP32 or ESP8266), copy the **contents** of the Sensor or mpySensor directory (not the folder itself) onto a microSD card.
 
@@ -105,7 +107,43 @@ The sampling process, either triggered by button presses or automatic sampling a
 The PublicSensors MicrocontrollerKits code is designed to be non-blocking, which means that it runs essentially in the background.
 This is to enable a user to do other tasks during sampling, such as setting the onboard Real Time Clock, copying or transferring files, etc.
 
-### Stopping automatic sampling at intervals
+### Manually triggering sampling
+Manual sampling can be triggered in two ways:
+
+If a computer is connected via a serial interface (e.g. with BeagleTerm, Thonny or rshell) the `Sample()` function can be used to immediately trigger a sample from all active sensors (see below for settings that determine active sensors):
+```python
+>>>Sample()
+```
+To manually trigger a sequence of `N` (default: 1) samples at `interval` second intervals (default: 5 sec):
+```python
+>>>Sample(N=10,interval=20)
+```
+where, in this example, 10 samples will be triggered at 20 sec intervals.
+
+To manually trigger a sample from an individual sensor, use the same syntax with the functions corresponding to the desired sensor, e.g. `SampleTemp`, `SampleLight`, etc. See the python script `public_sensor.py` to view or modify all the functions for direct sensor sampling.
+
+If a looping static switch is present, sampling can be **paused** by moving that switch to the `off` position.
+Pressing the sampling button, or moving the looping static switch to the `on` position, will **resume** sampling (using the already-existing data files if they are being recorded).
+
+
+
+### Pausing and resuming automatic sampling at intervals
+Automatic sampling can be paused and restarted in two ways:
+
+If a computer is connected via a serial interface (e.g. with BeagleTerm, Thonny or rshell) the `SampleLoop` function can be used to pause or resume automatic sampling. To start or resume automatic sampling,
+```python
+>>>SampleLoop(1)
+```
+To pause automatic sampling,
+```python
+>>>SampleLoop(0)
+```
+
+If a looping static switch is present, sampling can be **paused** by moving that switch to the `off` position.
+Pressing the sampling button, or moving the looping static switch to the `on` position, will **resume** sampling (using the already-existing data files if they are being recorded).
+
+
+### Terminating automatic sampling at intervals
 Sampling operations are executed by `sampler`, which is an instance of the Sampler class object defined in the Python script `sensor_utils.py` (in the `SetUp` directory).
 
 When the instrument is set to automatically sample at intervals (see below), sampling can be **terminated** by invoking the `stop()` method,
@@ -115,8 +153,6 @@ When the instrument is set to automatically sample at intervals (see below), sam
 This will halt the current series of environmental samples.
 To start a new set of samples (with a new set of data files, if they are being recorded), reboot the microcontroller with `ctrl-d` from a computer interface, or press the `RST` button on the microcontroller.
 
-If a looping static switch is present, sampling can be **paused** by moving that switch to the `off` position.
-Pressing the sampling button, or moving the looping static switch to the `on` position, will **resume** sampling (using the already-existing data files if they are being recorded).
 
 ## Setting up sampling parameters
 The [parameter](https://en.wikipedia.org/wiki/Parameter) settings that users most frequently want to modify are specified in the form of a dictionary, called `params`, in `user_params.py` in the `SetUp` directory:

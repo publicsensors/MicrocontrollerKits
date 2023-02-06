@@ -101,6 +101,10 @@ Params(shared_params)
 sampler=Sampler(params)
 
 # Define functions to call sensors directly from the command line
+def Sample(N=1,interval=5):
+    for n in range(N):
+        sampler.sample()
+        sleep(interval)
 def SampleTemp(N=1,interval=5):
     for n in range(N):
         sampler.sample(sensor_select=['temperature'])

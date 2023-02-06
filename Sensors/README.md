@@ -122,8 +122,7 @@ where, in this example, 10 samples will be triggered at 20 sec intervals.
 
 To manually trigger a sample from an individual sensor, use the same syntax with the functions corresponding to the desired sensor, e.g. `SampleTemp`, `SampleLight`, etc. See the python script `public_sensor.py` to view or modify all the functions for direct sensor sampling.
 
-If a looping static switch is present, sampling can be **paused** by moving that switch to the `off` position.
-Pressing the sampling button, or moving the looping static switch to the `on` position, will **resume** sampling (using the already-existing data files if they are being recorded).
+If a momentary sampling switch is present, sampling can be triggered by pressing the sampling button (data will be added to the already-existing data files if they are being recorded).
 
 
 

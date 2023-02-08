@@ -112,11 +112,11 @@ Manual sampling can be triggered in two ways:
 
 If a computer is connected via a serial interface (e.g. with BeagleTerm, Thonny or rshell) the `Sample()` function can be used to immediately trigger a sample from all active sensors (see below for settings that determine active sensors):
 ```python
->>>Sample()
+>>> Sample()
 ```
 To manually trigger a sequence of `N` (default: 1) samples at `interval` second intervals (default: 5 sec):
 ```python
->>>Sample(N=10,interval=20)
+>>> Sample(N=10,interval=20)
 ```
 where, in this example, 10 samples will be triggered at 20 sec intervals.
 
@@ -131,11 +131,11 @@ Automatic sampling can be paused and restarted in two ways:
 
 If a computer is connected via a serial interface (e.g. with BeagleTerm, Thonny or rshell) the `SampleLoop` function can be used to pause or resume automatic sampling. To start or resume automatic sampling,
 ```python
->>>SampleLoop(1)
+>>> SampleLoop(1)
 ```
 To pause automatic sampling,
 ```python
->>>SampleLoop(0)
+>>> SampleLoop(0)
 ```
 
 If a looping static switch is present, sampling can be **paused** by moving that switch to the `off` position.
